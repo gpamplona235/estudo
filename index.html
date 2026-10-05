@@ -9205,7 +9205,13 @@ function escutar(){
     snap.forEach(d=>{ const x=d.data(); if(x&&x.k!=null) remoto[x.k]=x; });
     let mudouLocal=false;
     Object.entries(remoto).forEach(([k,x])=>{
-      if((x.t||0)>(tempos[k]||0)){
+      if(tempos[k]===1&&k in local&&x.v!=null){
+        // parte que este aparelho nunca sincronizou: junta as duas versões em vez de escolher uma
+        const junto=juntar(local[k],JSON.parse(x.v));
+        tempos[k]=Date.now(); pendentes.add(k);
+        if(JSON.stringify(junto)!==JSON.stringify(local[k])){ local[k]=junto; mudouLocal=true; }
+      }
+      else if((x.t||0)>(tempos[k]||0)){
         if(x.v==null) delete local[k]; else local[k]=JSON.parse(x.v);
         tempos[k]=x.t; mudouLocal=true;
       }
@@ -9222,6 +9228,24 @@ function escutar(){
     }
     if(pendentes.size) enviar(); else mostrarSelo(snap.metadata.fromCache?'Sem internet: salvo neste aparelho':'Progresso salvo na nuvem');
   },()=>mostrarSelo('Não consegui ligar à nuvem: salvando neste aparelho'));
+}
+
+/* Junta duas versões de uma parte do progresso (só na primeira sincronização de um aparelho):
+   objetos → todas as chaves (na mesma chave, a versão da nuvem); listas → todos os itens sem
+   repetir, em ordem de data quando têm data (histórico de respostas). */
+function juntar(a,b){
+  if(Array.isArray(a)&&Array.isArray(b)){
+    const vistos=new Set(), r=[];
+    a.concat(b).forEach(x=>{ const s=JSON.stringify(x); if(!vistos.has(s)){ vistos.add(s); r.push(x); } });
+    if(r.every(x=>x&&typeof x.t==='number')) r.sort((x,y)=>x.t-y.t);
+    return r;
+  }
+  if(a&&b&&typeof a==='object'&&typeof b==='object'&&!Array.isArray(a)&&!Array.isArray(b)){
+    const r=Object.assign({},a);
+    Object.keys(b).forEach(k=>{ r[k]=k in a?juntar(a[k],b[k]):b[k]; });
+    return r;
+  }
+  return b;
 }
 
 /* Envia as partes que mudaram, em lote, menos de 1 segundo depois da última mudança. */
