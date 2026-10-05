@@ -993,7 +993,7 @@ body.em-foco{overflow:hidden}
   .side{display:none}
   .topo{padding:8px 16px;padding-top:calc(8px + env(safe-area-inset-top,0px));gap:10px;min-height:56px}
   .topo .marca-m{display:flex;flex:none}
-  .topo .marca-m svg{width:34px;height:34px}
+  .topo .marca-m{font:700 18px/1 var(--f-tit);color:var(--tx);text-decoration:none;align-items:center}
   .busca kbd{display:none}
   #pill-rev{display:none}
   .pill .txt{display:none}
@@ -1058,7 +1058,7 @@ body.em-foco{overflow:hidden}
 
 <div class="app">
   <aside class="side" aria-label="Menu principal">
-    <a class="marca" href="#/hoje" aria-label="Caderno de Estudos · início"><svg aria-hidden="true"><use href="#logo"/></svg><span class="nome"><b>Caderno</b><small>de estudos</small></span></a>
+    <a class="marca" href="#/hoje" aria-label="Caderno de Estudos · início"><span class="nome"><b>Caderno</b><small>de estudos</small></span></a>
     <nav aria-label="Seções" style="display:flex;flex-direction:column;gap:3px">
       <a class="nv" href="#/hoje" data-nav="hoje"><svg class="ic" aria-hidden="true"><use href="#i-hoje"/></svg><span class="lab">Hoje</span></a>
       <a class="nv" href="#/biblioteca" data-nav="biblioteca"><svg class="ic" aria-hidden="true"><use href="#i-bib"/></svg><span class="lab">Biblioteca</span></a>
@@ -1072,7 +1072,7 @@ body.em-foco{overflow:hidden}
 
   <div class="main">
     <header class="topo">
-      <a class="marca-m" href="#/hoje" aria-label="Caderno de Estudos · início"><svg aria-hidden="true"><use href="#logo"/></svg></a>
+      <a class="marca-m" href="#/hoje" aria-label="Caderno de Estudos · início">Caderno</a>
       <div class="busca" role="search">
         <svg class="ic" aria-hidden="true"><use href="#i-busca"/></svg>
         <input id="busca" type="search" placeholder="Buscar aula, assunto ou questão…" aria-label="Buscar aula, assunto ou número de questão" autocomplete="off" aria-controls="busca-res" aria-expanded="false">
