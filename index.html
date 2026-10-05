@@ -10395,6 +10395,11 @@ css.textContent=`
 #nv-tela .nv-erro{color:#c62d2d;font-size:15px;min-height:1.2em}
 #nv-selo{position:fixed;right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));z-index:9000;display:flex;align-items:center;gap:8px;padding:6px 10px;border:1px solid var(--lin-forte,#ccc);border-radius:999px;background:var(--card,#fff);color:var(--mut,#555);font:500 13px/1 system-ui,sans-serif}
 #nv-selo button{font:inherit;border:0;background:none;color:inherit;text-decoration:underline;cursor:pointer;padding:0}
+#nv-selo .nv-nuvem{text-decoration:none;font-size:15px;line-height:1}
+#nv-selo:not(.aberto){padding:6px 8px}
+#nv-selo:not(.aberto) .nv-info{display:none}
+#nv-selo.alerta .nv-nuvem{color:#c62d2d}
+body.em-foco #nv-selo{display:none}
 `;
 document.head.appendChild(css);
 const tela=document.createElement('div'); tela.id='nv-tela';
@@ -10405,8 +10410,16 @@ tela.innerHTML='<form autocomplete="on"><h1>Caderno de Estudos</h1><p>Entre para
 const selo=document.createElement('div'); selo.id='nv-selo'; selo.hidden=true;
 const pronto=f=>document.body?f():document.addEventListener('DOMContentLoaded',f);
 pronto(()=>{document.body.appendChild(tela);document.body.appendChild(selo);});
-const mostrarSelo=t=>{ selo.innerHTML='<span>'+t+'</span>'+(usuario?'<button type="button">Sair</button>':''); selo.hidden=false;
-  const b=selo.querySelector('button'); if(b) b.onclick=()=>firebase.auth().signOut().then(()=>location.reload()); };
+// o selo aparece aberto por alguns segundos e depois vira só uma nuvem ☁ (clicando, abre de novo);
+// no modo foco (revisão) ele some, para não cobrir os botões
+let tSelo=null;
+selo.addEventListener('click',e=>{ if(e.target.closest('.nv-sair')){ firebase.auth().signOut().then(()=>location.reload()); return; }
+  if(e.target.closest('.nv-nuvem')){ selo.classList.toggle('aberto'); clearTimeout(tSelo); if(selo.classList.contains('aberto')) tSelo=setTimeout(()=>selo.classList.remove('aberto'),6000); } });
+const mostrarSelo=t=>{ const alerta=/não|sem internet/i.test(t);
+  selo.innerHTML='<button type="button" class="nv-nuvem" title="Situação do salvamento" aria-label="Situação do salvamento">☁</button><span class="nv-info"><span>'+t+'</span>'+(usuario?' <button type="button" class="nv-sair">Sair</button>':'')+'</span>';
+  selo.hidden=false; selo.classList.toggle('alerta',alerta);
+  const jaAberto=selo.classList.contains('aberto'); selo.classList.add('aberto'); clearTimeout(tSelo);
+  if(!/Salvando|Sincronizando/.test(t)||jaAberto) tSelo=setTimeout(()=>selo.classList.remove('aberto'),alerta?8000:3000); };
 
 /* ---------- carregar o Firebase (precisa de internet) ---------- */
 const V='10.12.2', urls=['app','auth','firestore'].map(m=>'https://www.gstatic.com/firebasejs/'+V+'/firebase-'+m+'-compat.js');
@@ -11341,8 +11354,9 @@ if(!location.hash||location.hash==='#') history.replaceState(null,'','#/hoje');
 rota(false);
 /* =========================================================
    Leitor em voz alta (síntese de voz do próprio navegador)
-   - Selecione um trecho da aula → botão "Ouvir" lê só o trecho. ▶ no título de cada seção lê a seção.
-   - Barra no rodapé: pausar/continuar, parar, velocidade e voz (guardadas no progresso).
+   - ▶ no título de uma seção lê dali até o fim da aula. Selecionando um trecho: "Só o trecho" ou
+     "Ler daqui em diante" (começa onde a seleção começa). Durante a leitura, clicar num parágrafo pula para ele.
+   - Barra no rodapé: ⏮ anterior, ↺ repetir, ❚❚ pausar, ⏭ próximo, ■ parar, velocidade e voz (no progresso).
    - Marcador: a palavra falada fica pintada (CSS Custom Highlight, sem mexer no texto da página) e o
      parágrafo ganha contorno. Cada parágrafo vira um "trecho" com o mapa letra → nó de texto, que
      sobrevive à troca das siglas pela pronúncia (PPA → "pê pê á").
@@ -11422,7 +11436,8 @@ if(fala&&window.SpeechSynthesisUtterance){
   .le-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--lin-forte);background:var(--card);color:var(--tx2,var(--tx));border-radius:999px;padding:4px 12px;font:600 13.5px/1 var(--f-ui,system-ui);cursor:pointer;min-height:34px}
   .le-btn:hover{border-color:var(--pri);color:var(--pri)}
   .sec h2 .le-btn{vertical-align:middle;margin-left:10px;padding:4px 10px;min-height:30px;font-size:13px}
-  #le-sel{position:absolute;z-index:8000;box-shadow:0 4px 14px rgba(0,0,0,.18)}
+  #le-sel{position:absolute;z-index:8000;display:flex;gap:6px}
+  #le-sel .le-btn{box-shadow:0 4px 14px rgba(0,0,0,.18)}
   #le-sel[hidden],#le-barra[hidden]{display:none}
   #le-barra{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:9500;display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:8px 12px;border:1px solid var(--lin-forte);border-radius:16px;background:var(--card);color:var(--tx);box-shadow:0 6px 24px rgba(0,0,0,.2);font:500 14px/1.2 var(--f-ui,system-ui)}
   #le-barra button{min-width:40px}
@@ -11433,12 +11448,17 @@ if(fala&&window.SpeechSynthesisUtterance){
   @media (max-width:560px){#le-barra select{max-width:130px}}
   `;
   document.head.appendChild(css);
-  const selBtn=document.createElement('button'); selBtn.type='button'; selBtn.id='le-sel'; selBtn.className='le-btn'; selBtn.hidden=true; selBtn.innerHTML='▶ Ouvir';
+  const selBox=document.createElement('div'); selBox.id='le-sel'; selBox.hidden=true;
+  selBox.innerHTML='<button type="button" class="le-btn" data-sel="trecho">▶ Só o trecho</button><button type="button" class="le-btn" data-sel="daqui">▶ Ler daqui em diante</button>';
   const barra=document.createElement('div'); barra.id='le-barra'; barra.hidden=true; barra.setAttribute('role','region'); barra.setAttribute('aria-label','Leitura em voz alta');
-  barra.innerHTML='<button type="button" class="le-btn" data-le="pausa" title="Pausar">❚❚</button><button type="button" class="le-btn" data-le="parar" title="Parar">■</button>'+
+  barra.innerHTML='<button type="button" class="le-btn" data-le="ant" title="Parágrafo anterior" aria-label="Parágrafo anterior">⏮</button>'+
+    '<button type="button" class="le-btn" data-le="rep" title="Repetir este parágrafo" aria-label="Repetir este parágrafo">↺</button>'+
+    '<button type="button" class="le-btn" data-le="pausa" title="Pausar">❚❚</button>'+
+    '<button type="button" class="le-btn" data-le="prox" title="Próximo parágrafo" aria-label="Próximo parágrafo">⏭</button>'+
+    '<button type="button" class="le-btn" data-le="parar" title="Parar">■</button>'+
     '<label>Velocidade <select data-le="vel">'+[0.8,0.9,1,1.1,1.2,1.35,1.5,1.75].map(v=>'<option value="'+v+'">'+String(v).replace('.',',')+'×</option>').join('')+'</select></label>'+
     '<select data-le="voz" aria-label="Voz"></select>';
-  document.body.appendChild(selBtn); document.body.appendChild(barra);
+  document.body.appendChild(selBox); document.body.appendChild(barra);
   const selVel=$('[data-le="vel"]',barra), selVoz=$('[data-le="voz"]',barra), bPausa=$('[data-le="pausa"]',barra);
   selVel.value=String(est.leVel||1);
   function pintarVozes(){ const v=vozAtual(); selVoz.innerHTML=vozes.map(x=>'<option'+(v&&x.name===v.name?' selected':'')+'>'+esc(x.name)+'</option>').join('')||'<option>Voz padrão</option>'; }
@@ -11455,8 +11475,9 @@ if(fala&&window.SpeechSynthesisUtterance){
     if(q.top<80||q.bottom>innerHeight-110) (el||r.startContainer.parentElement).scrollIntoView({block:'center',behavior:'smooth'}); }
 
   /* ---------- fila de leitura ---------- */
-  // item = {tr: trecho, el: bloco (ou null), a, b: letras do trecho a ler}
-  let fila=[], i=0, pausado=false, geracao=0;
+  // blocosAtuais = todos os parágrafos da aula [{tr, el}]; fila = itens a falar {tr, el, bi, a, b}
+  // (contínuo: um item por bloco; frase a frase: o bloco cortado em frases). i = item atual.
+  let blocosAtuais=[], fila=[], i=0, pausado=false, geracao=0;
   function utter(itens){ // junta itens numa fala; devolve a fala e onde começa cada item
     const partes=[], ini=[], maps=[], fins=[]; let p=0;
     itens.forEach(it=>{ const {s,mapa,fim}=pronunciar(it.tr.texto.slice(it.a,it.b)); ini.push(p); partes.push(s); maps.push(mapa); fins.push(fim); p+=s.length+2; });
@@ -11469,8 +11490,8 @@ if(fala&&window.SpeechSynthesisUtterance){
     return e=>{ if(g!==geracao||e.name==='sentence') return;
       let k=0; while(k+1<f.ini.length&&f.ini[k+1]<=e.charIndex) k++;
       const it=fila[base+k], loc=e.charIndex-f.ini[k], s=f.partes[k];
-      if(loc<0||loc>=s.length) return;
-      let fim=e.charLength?loc+e.charLength:loc+(s.slice(loc).search(/\s|$/));
+      if(!it||loc<0||loc>=s.length) return;
+      const fim=e.charLength?loc+e.charLength:loc+(s.slice(loc).search(/\s|$/));
       const a=it.a+f.maps[k][loc], b=it.a+f.fins[k][Math.max(loc,Math.min(fim,s.length)-1)];
       if(base+k!==i){ i=base+k; marcarBloco(it.el); }
       const r=rangeDe(it.tr,a,b); pintar('le-palavra',r); seguir(r,null);
@@ -11486,61 +11507,93 @@ if(fala&&window.SpeechSynthesisUtterance){
     f.u.onerror=e=>{ if(g!==geracao||e.error==='interrupted'||e.error==='canceled') return; if(continuo()) parar(); else { i++; falar(); } };
     fala.speak(f.u);
   }
-  // blocos = [{tr, el}]: contínuo → um item por bloco; frase a frase → o bloco cortado em frases
-  function ler(blocos,inicio){
-    geracao++; fala.cancel(); fila=[];
-    blocos.forEach(({tr,el})=>{ if(!tr.texto.trim()) return;
-      if(continuo()) fila.push({tr,el,a:0,b:tr.texto.length}); else frases(tr.texto).forEach(([a,b])=>fila.push({tr,el,a,b})); });
-    if(!fila.length) return;
-    i=Math.max(0,fila.findIndex(x=>x.el===inicio)); pausado=false; bPausa.textContent='❚❚'; bPausa.title='Pausar'; barra.hidden=false;
+  // monta a fila com todos os blocos e devolve o item onde começar (bloco ib, a partir da letra desde)
+  function montarFila(ib,desde){
+    fila=[]; let inicio=-1;
+    blocosAtuais.forEach(({tr,el},bi)=>{
+      const partes=continuo()?[[0,tr.texto.length]]:frases(tr.texto);
+      partes.forEach(([a,b])=>{
+        if(bi===ib&&desde){ if(b<=desde) return; if(a<desde) a=desde; }
+        if(bi===ib&&inicio<0) inicio=fila.length;
+        fila.push({tr,el,bi,a,b});
+      });
+    });
+    return Math.max(0,inicio);
+  }
+  function tocar(ib,desde){ // começa (ou recomeça) a leitura no bloco ib
+    if(ib<0) ib=0; if(ib>=blocosAtuais.length){ parar(); return; }
+    geracao++; fala.cancel(); i=montarFila(ib,desde||0); pausado=false;
+    bPausa.textContent='❚❚'; bPausa.title='Pausar'; barra.hidden=false;
     setTimeout(falar,60); // o Chrome às vezes ignora a fala logo após cancel()
   }
+  function ler(blocos,inicioEl,desde){
+    blocosAtuais=blocos.filter(b=>b.tr.texto.trim()); if(!blocosAtuais.length) return;
+    tocar(Math.max(0,blocosAtuais.findIndex(b=>b.el&&b.el===inicioEl)),desde);
+  }
+  const blocoAtual=()=>fila[i]?fila[i].bi:0;
   function pausar(){ if(!fila.length) return;
     if(continuo()){ if(pausado){ pausado=false; fala.resume(); } else { pausado=true; fala.pause(); } }
     else if(pausado){ pausado=false; geracao++; falar(); } else { pausado=true; geracao++; fala.cancel(); } // o pause() do Chrome falha com as vozes do Google
     bPausa.textContent=pausado?'▶':'❚❚'; bPausa.title=pausado?'Continuar':'Pausar'; }
-  // mudou voz ou velocidade: recomeça do bloco atual
-  function reiniciar(){ if(!fila.length) return; const el=fila[i].el, vistos=[], blocos=[];
-    fila.forEach(x=>{ if(!vistos.includes(x.tr)){ vistos.push(x.tr); blocos.push({tr:x.tr,el:x.el}); } });
-    const p=pausado; ler(blocos,el); if(p) setTimeout(pausar,120); }
+  const reiniciar=()=>{ if(fila.length) tocar(blocoAtual()); }; // mudou voz ou velocidade
   function parar(){ geracao++; fala.cancel(); fila=[]; i=0; pausado=false; marcarBloco(null); pintar('le-palavra',null); pintar('le-frase',null); barra.hidden=true; }
-  barra.addEventListener('click',e=>{ const b=e.target.closest('[data-le]'); if(!b) return; if(b.dataset.le==='pausa') pausar(); else if(b.dataset.le==='parar') parar(); });
+  barra.addEventListener('click',e=>{ const b=e.target.closest('[data-le]'); if(!b) return;
+    const acao=b.dataset.le;
+    if(acao==='pausa') pausar(); else if(acao==='parar') parar();
+    else if(acao==='ant') tocar(blocoAtual()-1); else if(acao==='rep') tocar(blocoAtual()); else if(acao==='prox') tocar(blocoAtual()+1); });
 
-  /* ---------- o que ler: os blocos de uma seção ---------- */
-  const BLOCOS='h2, h3, p, li, .cmd, .definicao, tr, .elo, .forma, .tres > div, .mao, .carimbo';
-  function blocosDe(raiz){
-    const els=$$(BLOCOS,raiz).filter(el=>!el.closest('.questao, .le-btn, .sumario, .treino-barra, .texto-base.colapsado .tb-corpo'));
+  /* ---------- o que ler: todos os parágrafos da aula ---------- */
+  const BLOCOS='h1, h2, h3, p, li, .cmd, .definicao, tr, .elo, .forma, .tres > div, .mao, .carimbo';
+  const FORA='.questao, .le-btn, .sumario, .treino-barra, .meta, .texto-base.colapsado .tb-corpo';
+  function blocosDaAula(cap){
+    const els=$$('.aula-cab, .sec-main',cap).flatMap(r=>$$(BLOCOS,r)).filter(el=>!el.closest(FORA));
     return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>({tr:trecho(el.matches('h2,h3')&&$('.t',el)||el),el}));
   }
   function botoesSecoes(raiz){
     $$('.sec h2',raiz).forEach(h=>{ if($('.le-btn',h)) return;
-      const b=document.createElement('button'); b.type='button'; b.className='le-btn le-sec'; b.title='Ouvir esta seção'; b.setAttribute('aria-label','Ouvir esta seção'); b.textContent='▶ Ouvir';
+      const b=document.createElement('button'); b.type='button'; b.className='le-btn le-sec'; b.title='Ouvir a partir daqui'; b.setAttribute('aria-label','Ouvir a partir desta seção'); b.textContent='▶ Ouvir';
       h.appendChild(b); });
   }
   document.addEventListener('click',e=>{
-    const s=e.target.closest('.le-sec'); if(s){ e.preventDefault(); ler(blocosDe(s.closest('.sec').querySelector('.sec-main')||s.closest('.sec'))); }
+    // ▶ da seção: lê desta seção até o fim da aula
+    const s=e.target.closest('.le-sec');
+    if(s){ e.preventDefault(); const cap=s.closest('.capitulo'), sec=s.closest('.sec'), blocos=blocosDaAula(cap);
+      const prim=blocos.find(b=>sec.contains(b.el)); ler(blocos,prim&&prim.el); return; }
+    // durante a leitura, clicar num parágrafo da aula pula para ele
+    if(barra.hidden||e.target.closest('button, a, select, input, label, .questao, #le-barra, #le-sel')) return;
+    const sel=getSelection(); if(sel&&!sel.isCollapsed) return;
+    const ib=blocosAtuais.findIndex(b=>b.el&&b.el.contains(e.target));
+    if(ib>=0) tocar(ib);
   });
   new MutationObserver(()=>botoesSecoes(document)).observe(document.body,{childList:true,subtree:true});
   botoesSecoes(document);
 
-  /* ---------- trecho selecionado ---------- */
+  /* ---------- trecho selecionado: "só o trecho" ou "daqui em diante" ---------- */
   let selRange=null;
   function mostrarSel(){
     const s=getSelection(), t=s&&s.rangeCount?s.toString().trim():'';
     const no=s&&s.anchorNode&&(s.anchorNode.parentElement||s.anchorNode);
-    if(t.length<3||!no||!no.closest('.capitulo')||no.closest('.questao')){ selBtn.hidden=true; return; }
-    const r=s.getRangeAt(0).getBoundingClientRect(); if(!r.width&&!r.height){ selBtn.hidden=true; return; }
-    selRange=s.getRangeAt(0).cloneRange(); selBtn.hidden=false;
+    if(t.length<3||!no||!no.closest('.capitulo')||no.closest('.questao')){ selBox.hidden=true; return; }
+    const r=s.getRangeAt(0).getBoundingClientRect(); if(!r.width&&!r.height){ selBox.hidden=true; return; }
+    selRange=s.getRangeAt(0).cloneRange(); selBox.hidden=false;
     const toque=matchMedia('(pointer:coarse)').matches; // no celular, abaixo da seleção (o menu do sistema fica em cima)
-    const top=(toque?r.bottom+10:r.top-46)+scrollY, left=Math.min(Math.max(8,r.left+r.width/2-45+scrollX),scrollX+innerWidth-110);
-    selBtn.style.top=Math.max(scrollY+6,top)+'px'; selBtn.style.left=left+'px';
+    const top=(toque?r.bottom+10:r.top-50)+scrollY, left=Math.min(Math.max(8,r.left+r.width/2-140+scrollX),scrollX+innerWidth-300);
+    selBox.style.top=Math.max(scrollY+6,top)+'px'; selBox.style.left=Math.max(scrollX+8,left)+'px';
   }
   let tSel=null;
   document.addEventListener('selectionchange',()=>{ clearTimeout(tSel); tSel=setTimeout(mostrarSel,250); });
-  selBtn.addEventListener('mousedown',e=>e.preventDefault()); // não desfaz a seleção ao clicar
-  selBtn.addEventListener('click',()=>{ selBtn.hidden=true; if(!selRange) return;
-    const raiz=selRange.commonAncestorContainer.nodeType===1?selRange.commonAncestorContainer:selRange.commonAncestorContainer.parentElement;
-    getSelection().removeAllRanges(); ler([{tr:trecho(raiz,selRange),el:null}]); });
+  selBox.addEventListener('mousedown',e=>e.preventDefault()); // não desfaz a seleção ao clicar
+  selBox.addEventListener('click',e=>{ const b=e.target.closest('[data-sel]'); if(!b||!selRange) return; selBox.hidden=true;
+    const r=selRange; getSelection().removeAllRanges();
+    if(b.dataset.sel==='daqui'){
+      const cap=(r.startContainer.parentElement||r.startContainer).closest('.capitulo'), blocos=blocosDaAula(cap);
+      const ib=blocos.findIndex(x=>x.el.contains(r.startContainer));
+      if(ib>=0){ const tr=blocos[ib].tr; let desde=tr.pos.findIndex(p=>p&&p[0]===r.startContainer&&p[1]>=r.startOffset); if(desde<0) desde=0;
+        ler(blocos,blocos[ib].el,desde); return; }
+    }
+    const raiz=r.commonAncestorContainer.nodeType===1?r.commonAncestorContainer:r.commonAncestorContainer.parentElement;
+    ler([{tr:trecho(raiz,r),el:null}]);
+  });
   addEventListener('hashchange',parar);
   addEventListener('keydown',e=>{ if(e.key==='Escape'&&!barra.hidden) parar(); });
 }
