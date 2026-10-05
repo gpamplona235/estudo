@@ -11343,9 +11343,12 @@ rota(false);
    Leitor em voz alta (síntese de voz do próprio navegador)
    - Selecione um trecho da aula → botão "Ouvir" lê só o trecho. ▶ no título de cada seção lê a seção.
    - Barra no rodapé: pausar/continuar, parar, velocidade e voz (guardadas no progresso).
-   - Vozes neurais (Edge: "Francisca/Antonio Online (Natural)"): a seção vai numa fala só, contínua,
-     e o destaque acompanha pelo evento de fronteira de palavra. Vozes do Google (Chrome) cortam
-     falas longas: aí lê frase por frase.
+   - Marcador: a palavra falada fica pintada (CSS Custom Highlight, sem mexer no texto da página) e o
+     parágrafo ganha contorno. Cada parágrafo vira um "trecho" com o mapa letra → nó de texto, que
+     sobrevive à troca das siglas pela pronúncia (PPA → "pê pê á").
+   - Vozes neurais (Edge "Francisca/Antonio Online (Natural)"): tudo numa fala contínua, e o evento
+     de fronteira de palavra move o marcador. Vozes do Google (Chrome) cortam falas longas e não
+     avisam as palavras: lê frase a frase e pinta a frase inteira.
    ========================================================= */
 const fala=window.speechSynthesis;
 if(fala&&window.SpeechSynthesisUtterance){
@@ -11354,18 +11357,55 @@ if(fala&&window.SpeechSynthesisUtterance){
     [/\bRREO\b/g,'érre érre é ó'],[/\bRGF\b/g,'érre gê éfe'],[/\bCMO\b/g,'cê ême ó'],[/\bTCU\b/g,'tê cê u'],[/\bCF\/88\b/g,'Constituição de 88'],
     [/\bCF\b/g,'Constituição Federal'],[/\bADCT\b/g,'á dê cê tê'],[/\bLC\b/g,'lei complementar'],[/\bMP\b/g,'Ministério Público'],
     [/§§/g,'parágrafos '],[/§\s*/g,'parágrafo '],[/\barts?\.\s*/g,m=>m.startsWith('arts')?'artigos ':'artigo '],[/\bn[º°]\s*/g,'número '],
-    [/→/g,', depois, '],[/←/g,', '],[/×/g,' versus '],[/\s=\s/g,' é igual a '],[/\be\.g\./g,'por exemplo'],[/\(s\)/g,'s']
+    [/→/g,', depois, '],[/←/g,', '],[/×/g,' versus '],[/\s=\s/g,' é igual a '],[/\(s\)/g,'s'],[/[▶■●◆✓·]/g,' ']
   ];
-  const pronunciar=t=>PRON.reduce((s,[r,v])=>s.replace(r,v),t);
-  const limpar=t=>String(t).replace(/\s+/g,' ').replace(/[▶■●◆✓]/g,'').trim();
-  // corta em frases curtas (até ~220 caracteres), porque o Chrome interrompe falas longas
+  // troca as siglas pela pronúncia guardando, para cada letra falada, o pedaço do texto original
+  // de onde ela veio: mapa[k] = início, fim[k] = fim (assim "pê pê á" pinta a sigla PPA inteira)
+  function pronunciar(t){
+    let s=t, mapa=[...t].map((_,k)=>k), fim=[...t].map((_,k)=>k+1);
+    for(const [r,v] of PRON){
+      let out='', m2=[], f2=[], ult=0; r.lastIndex=0; let m;
+      while((m=r.exec(s))){ const rep=typeof v==='function'?v(m[0]):v, e=m.index+m[0].length;
+        out+=s.slice(ult,m.index); m2.push(...mapa.slice(ult,m.index)); f2.push(...fim.slice(ult,m.index));
+        const ini0=mapa[m.index], fim0=fim[Math.max(m.index,e-1)];
+        out+=rep; for(let k=0;k<rep.length;k++){ m2.push(ini0); f2.push(fim0); }
+        ult=e; if(!m[0].length) r.lastIndex++; }
+      out+=s.slice(ult); m2.push(...mapa.slice(ult)); f2.push(...fim.slice(ult)); s=out; mapa=m2; fim=f2;
+    }
+    return {s,mapa,fim};
+  }
+
+  /* ---------- trechos: texto do parágrafo + onde cada letra está na página ---------- */
+  const CELULAS='td,th,.t,.d,.c,.cab,.corpo,.pro,.rot,.cmd > code,.cmd > span,.tres > div > strong,.tres > div > span,.carimbo > b';
+  const IGNORAR='.le-btn,.n,script,style';
+  // monta {texto, pos:[[nó,offset] ou null]} a partir dos nós de texto (de raiz, ou só do range)
+  function trecho(raiz,range){
+    let texto='', pos=[], celAnt, quebra=false;
+    const sep=s=>{ if(!texto||/\s$/.test(texto)) return; if(s==='. '&&/[.:;!?]$/.test(texto)) s=' '; for(const c of s){ texto+=c; pos.push(null); } };
+    const w=document.createTreeWalker(raiz,NodeFilter.SHOW_TEXT|NodeFilter.SHOW_ELEMENT,{acceptNode:n=>n.nodeType===1&&n.matches(IGNORAR)?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT});
+    for(let n=w.currentNode;n;n=w.nextNode()){
+      if(n.nodeType===1){ if(n.tagName==='BR') quebra=true; continue; }
+      if(range&&!range.intersectsNode(n)) continue;
+      let a=0,b=n.data.length; if(range){ if(n===range.startContainer) a=range.startOffset; if(n===range.endContainer) b=range.endOffset; }
+      const cel=n.parentElement.closest(CELULAS);
+      if(quebra||(celAnt!==undefined&&cel!==celAnt)) sep('. '); else if(texto&&!/\s$/.test(texto)&&/^\s/.test(n.data.slice(a))) sep(' ');
+      quebra=false; celAnt=cel;
+      for(let k=a;k<b;k++){ const c=n.data[k];
+        if(/\s/.test(c)){ if(texto&&!/\s$/.test(texto)){ texto+=' '; pos.push([n,k]); } }
+        else{ texto+=c; pos.push([n,k]); } }
+    }
+    while(/\s$/.test(texto)){ texto=texto.slice(0,-1); pos.pop(); }
+    return {texto,pos};
+  }
+  const rangeDe=(tr,a,b)=>{ // range na página entre as letras a e b do trecho (pula separadores)
+    while(a<b&&!tr.pos[a]) a++; while(b>a&&!tr.pos[b-1]) b--; if(a>=b) return null;
+    const r=document.createRange(); r.setStart(tr.pos[a][0],tr.pos[a][1]); r.setEnd(tr.pos[b-1][0],tr.pos[b-1][1]+1); return r; };
+  // frases curtas (até ~220 letras) para as vozes do Google
   function frases(t){
-    const out=[];
-    String(t).split(/(?<=[.!?;:])\s+/).forEach(f=>{
-      while(f.length>220){ let i=f.lastIndexOf(',',220); if(i<80) i=f.lastIndexOf(' ',220); if(i<1) i=220; out.push(f.slice(0,i+1)); f=f.slice(i+1).trim(); }
-      if(f.trim()) out.push(f);
-    });
-    return out;
+    const out=[]; let a=0; const re=/[.!?;:](?=\s|$)/g; let m;
+    const empurra=(x,y)=>{ while(y-x>220){ let c=t.lastIndexOf(',',x+220); if(c<x+80) c=t.lastIndexOf(' ',x+220); if(c<=x) c=x+220; out.push([x,c+1]); x=c+1; } if(t.slice(x,y).trim()) out.push([x,y]); };
+    while((m=re.exec(t))){ empurra(a,m.index+1); a=m.index+1; }
+    empurra(a,t.length); return out;
   }
 
   /* ---------- vozes ---------- */
@@ -11373,8 +11413,10 @@ if(fala&&window.SpeechSynthesisUtterance){
   const carregarVozes=()=>{ vozes=fala.getVoices().filter(v=>/^pt(-|_)?BR/i.test(v.lang)||/^pt$/i.test(v.lang)); if(!vozes.length) vozes=fala.getVoices().filter(v=>/^pt/i.test(v.lang)); pintarVozes(); };
   const pontuar=v=>(/natural|online|neural/i.test(v.name)?4:0)+(/google/i.test(v.name)?3:0)+(/luciana|francisca|antonio|felipe/i.test(v.name)?2:0)+(/pt-BR/i.test(v.lang)?1:0);
   const vozAtual=()=>vozes.find(v=>v.name===est.leVoz)||vozes.slice().sort((a,b)=>pontuar(b)-pontuar(a))[0]||null;
+  const continuo=()=>{ const v=vozAtual(); return !!v&&!/google/i.test(v.name); };
 
   /* ---------- interface ---------- */
+  const realce=!!(window.CSS&&CSS.highlights&&window.Highlight);
   const css=document.createElement('style');
   css.textContent=`
   .le-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;border:1.5px solid var(--lin-forte);background:var(--card);color:var(--tx2,var(--tx));border-radius:999px;padding:4px 12px;font:600 13.5px/1 var(--f-ui,system-ui);cursor:pointer;min-height:34px}
@@ -11385,85 +11427,91 @@ if(fala&&window.SpeechSynthesisUtterance){
   #le-barra{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(14px + env(safe-area-inset-bottom,0px));z-index:9500;display:flex;flex-wrap:wrap;align-items:center;gap:8px;max-width:calc(100% - 24px);padding:8px 12px;border:1px solid var(--lin-forte);border-radius:16px;background:var(--card);color:var(--tx);box-shadow:0 6px 24px rgba(0,0,0,.2);font:500 14px/1.2 var(--f-ui,system-ui)}
   #le-barra button{min-width:40px}
   #le-barra select{font:inherit;padding:6px 8px;border:1px solid var(--lin-forte);border-radius:10px;background:var(--campo);color:var(--tx);max-width:190px}
-  #le-barra .le-txt{max-width:220px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--mut)}
-  .le-lendo{outline:3px solid var(--pri);outline-offset:4px;border-radius:6px;background:var(--pri-suave)}
-  @media (max-width:560px){#le-barra .le-txt{display:none}#le-barra select{max-width:130px}}
+  .le-lendo{outline:2px solid var(--pri);outline-offset:5px;border-radius:6px}
+  ::highlight(le-palavra){background-color:#ffd43b;color:#111}
+  ::highlight(le-frase){background-color:rgba(255,212,59,.35)}
+  @media (max-width:560px){#le-barra select{max-width:130px}}
   `;
   document.head.appendChild(css);
   const selBtn=document.createElement('button'); selBtn.type='button'; selBtn.id='le-sel'; selBtn.className='le-btn'; selBtn.hidden=true; selBtn.innerHTML='▶ Ouvir';
   const barra=document.createElement('div'); barra.id='le-barra'; barra.hidden=true; barra.setAttribute('role','region'); barra.setAttribute('aria-label','Leitura em voz alta');
   barra.innerHTML='<button type="button" class="le-btn" data-le="pausa" title="Pausar">❚❚</button><button type="button" class="le-btn" data-le="parar" title="Parar">■</button>'+
     '<label>Velocidade <select data-le="vel">'+[0.8,0.9,1,1.1,1.2,1.35,1.5,1.75].map(v=>'<option value="'+v+'">'+String(v).replace('.',',')+'×</option>').join('')+'</select></label>'+
-    '<select data-le="voz" aria-label="Voz"></select><span class="le-txt"></span>';
+    '<select data-le="voz" aria-label="Voz"></select>';
   document.body.appendChild(selBtn); document.body.appendChild(barra);
-  const selVel=$('[data-le="vel"]',barra), selVoz=$('[data-le="voz"]',barra), txt=$('.le-txt',barra), bPausa=$('[data-le="pausa"]',barra);
+  const selVel=$('[data-le="vel"]',barra), selVoz=$('[data-le="voz"]',barra), bPausa=$('[data-le="pausa"]',barra);
   selVel.value=String(est.leVel||1);
   function pintarVozes(){ const v=vozAtual(); selVoz.innerHTML=vozes.map(x=>'<option'+(v&&x.name===v.name?' selected':'')+'>'+esc(x.name)+'</option>').join('')||'<option>Voz padrão</option>'; }
   carregarVozes(); if('onvoiceschanged' in fala) fala.onvoiceschanged=carregarVozes;
-  selVel.onchange=()=>{ est.leVel=+selVel.value; salvar(); reiniciarFrase(); };
-  selVoz.onchange=()=>{ est.leVoz=selVoz.value; salvar(); reiniciarFrase(); };
+  selVel.onchange=()=>{ est.leVel=+selVel.value; salvar(); reiniciar(); };
+  selVoz.onchange=()=>{ est.leVoz=selVoz.value; salvar(); reiniciar(); };
+
+  /* ---------- marcadores ---------- */
+  let contorno=null;
+  function marcarBloco(el){ if(contorno===el) return; if(contorno) contorno.classList.remove('le-lendo'); contorno=el||null; if(el) el.classList.add('le-lendo'); }
+  function pintar(nome,r){ if(!realce) return; if(r) CSS.highlights.set(nome,new Highlight(r)); else CSS.highlights.delete(nome); }
+  function seguir(r,el){ // rola a página se a palavra (ou o bloco) sair da tela
+    const q=(r&&r.getBoundingClientRect())||(el&&el.getBoundingClientRect()); if(!q) return;
+    if(q.top<80||q.bottom>innerHeight-110) (el||r.startContainer.parentElement).scrollIntoView({block:'center',behavior:'smooth'}); }
 
   /* ---------- fila de leitura ---------- */
-  // fila = [{t: frase, el: elemento a destacar}], i = posição atual
-  let fila=[], i=0, pausado=false, geracao=0, destacado=null;
-  function destacar(el){ if(destacado===el) return; if(destacado) destacado.classList.remove('le-lendo'); destacado=el||null;
-    if(el){ el.classList.add('le-lendo'); const r=el.getBoundingClientRect(); if(r.top<70||r.bottom>innerHeight-90) el.scrollIntoView({block:'center',behavior:'smooth'}); } }
-  const continuo=()=>{ const v=vozAtual(); return !!v&&!/google/i.test(v.name); };
-  // modo contínuo: tudo a partir do bloco i numa fala só; o destaque segue a posição falada
-  function falarContinuo(){
-    const g=geracao, base=i, partes=[], ini=[]; let pos=0;
-    for(let k=base;k<fila.length;k++){ const t=pronunciar(fila[k].t); ini.push(pos); partes.push(t); pos+=t.length+2; }
+  // item = {tr: trecho, el: bloco (ou null), a, b: letras do trecho a ler}
+  let fila=[], i=0, pausado=false, geracao=0;
+  function utter(itens){ // junta itens numa fala; devolve a fala e onde começa cada item
+    const partes=[], ini=[], maps=[], fins=[]; let p=0;
+    itens.forEach(it=>{ const {s,mapa,fim}=pronunciar(it.tr.texto.slice(it.a,it.b)); ini.push(p); partes.push(s); maps.push(mapa); fins.push(fim); p+=s.length+2; });
     const u=new SpeechSynthesisUtterance(partes.join('\n\n')), v=vozAtual();
-    u.voice=v; u.lang=v.lang; u.rate=+(est.leVel||1);
-    let atual=base; destacar(fila[base].el); txt.textContent=fila[base].t;
-    u.onboundary=e=>{ if(g!==geracao) return; let k=0; while(k+1<ini.length&&ini[k+1]<=e.charIndex) k++;
-      if(base+k!==atual){ atual=base+k; i=atual; destacar(fila[atual].el); txt.textContent=fila[atual].t; } };
-    u.onend=()=>{ if(g===geracao&&!pausado) parar(); };
-    u.onerror=e=>{ if(g===geracao&&e.error!=='interrupted'&&e.error!=='canceled') parar(); };
-    fala.speak(u);
+    if(v){ u.voice=v; u.lang=v.lang; } else u.lang='pt-BR';
+    u.rate=+(est.leVel||1);
+    return {u,ini,partes,maps,fins};
+  }
+  function aoFalarPalavra(g,base,f){ // evento de palavra: pinta a palavra e o bloco
+    return e=>{ if(g!==geracao||e.name==='sentence') return;
+      let k=0; while(k+1<f.ini.length&&f.ini[k+1]<=e.charIndex) k++;
+      const it=fila[base+k], loc=e.charIndex-f.ini[k], s=f.partes[k];
+      if(loc<0||loc>=s.length) return;
+      let fim=e.charLength?loc+e.charLength:loc+(s.slice(loc).search(/\s|$/));
+      const a=it.a+f.maps[k][loc], b=it.a+f.fins[k][Math.max(loc,Math.min(fim,s.length)-1)];
+      if(base+k!==i){ i=base+k; marcarBloco(it.el); }
+      const r=rangeDe(it.tr,a,b); pintar('le-palavra',r); seguir(r,null);
+    };
   }
   function falar(){
     if(i>=fila.length){ parar(); return; }
-    if(continuo()){ falarContinuo(); return; }
-    const g=geracao, item=fila[i], u=new SpeechSynthesisUtterance(pronunciar(item.t)), v=vozAtual();
-    if(v){ u.voice=v; u.lang=v.lang; } else u.lang='pt-BR';
-    u.rate=+(est.leVel||1);
-    u.onend=()=>{ if(g!==geracao||pausado) return; i++; falar(); };
-    u.onerror=e=>{ if(g!==geracao||e.error==='interrupted'||e.error==='canceled') return; i++; falar(); };
-    destacar(item.el); txt.textContent=item.t;
-    fala.speak(u);
+    const g=geracao, base=i, its=continuo()?fila.slice(i):[fila[i]], f=utter(its), it=fila[i];
+    marcarBloco(it.el); pintar('le-palavra',null);
+    if(!continuo()){ const r=rangeDe(it.tr,it.a,it.b); pintar('le-frase',r); seguir(r,it.el); } else { pintar('le-frase',null); seguir(null,it.el); }
+    f.u.onboundary=aoFalarPalavra(g,base,f);
+    f.u.onend=()=>{ if(g!==geracao||pausado) return; if(continuo()) parar(); else { i++; falar(); } };
+    f.u.onerror=e=>{ if(g!==geracao||e.error==='interrupted'||e.error==='canceled') return; if(continuo()) parar(); else { i++; falar(); } };
+    fala.speak(f.u);
   }
-  function ler(itens){
+  // blocos = [{tr, el}]: contínuo → um item por bloco; frase a frase → o bloco cortado em frases
+  function ler(blocos,inicio){
     geracao++; fala.cancel(); fila=[];
-    // contínuo: um item por bloco (fala fluida); frase a frase: blocos cortados em frases
-    itens.forEach(({t,el})=>{ const c=limpar(t); if(!c) return; if(continuo()) fila.push({t:c,el}); else frases(c).forEach(f=>fila.push({t:f,el})); });
+    blocos.forEach(({tr,el})=>{ if(!tr.texto.trim()) return;
+      if(continuo()) fila.push({tr,el,a:0,b:tr.texto.length}); else frases(tr.texto).forEach(([a,b])=>fila.push({tr,el,a,b})); });
     if(!fila.length) return;
-    i=0; pausado=false; bPausa.textContent='❚❚'; bPausa.title='Pausar'; barra.hidden=false;
+    i=Math.max(0,fila.findIndex(x=>x.el===inicio)); pausado=false; bPausa.textContent='❚❚'; bPausa.title='Pausar'; barra.hidden=false;
     setTimeout(falar,60); // o Chrome às vezes ignora a fala logo após cancel()
   }
-  // pausar = cancelar e lembrar a frase (o pause() do Chrome é instável com as vozes do Google)
   function pausar(){ if(!fila.length) return;
-    if(continuo()){ if(pausado){ pausado=false; fala.resume(); bPausa.textContent='❚❚'; bPausa.title='Pausar'; } else { pausado=true; fala.pause(); bPausa.textContent='▶'; bPausa.title='Continuar'; } return; }
-    if(pausado){ pausado=false; bPausa.textContent='❚❚'; bPausa.title='Pausar'; geracao++; falar(); }
-    else{ pausado=true; geracao++; fala.cancel(); bPausa.textContent='▶'; bPausa.title='Continuar'; } }
-  // mudou voz ou velocidade: recomeça do bloco/frase atual (refaz a fila se mudou o modo)
-  function reiniciarFrase(){ if(!fila.length) return; const el=fila[i]&&fila[i].el; const blocos=[]; fila.forEach(x=>{ const u=blocos[blocos.length-1]; if(u&&u.el===x.el&&x.el) u.t+=' '+x.t; else blocos.push({t:x.t,el:x.el}); });
-    const k=Math.max(0,blocos.findIndex(b=>b.el===el)); const p=pausado; ler(blocos.slice(k)); if(p) pausar(); }
-  function parar(){ geracao++; fala.cancel(); fila=[]; i=0; pausado=false; destacar(null); barra.hidden=true; }
+    if(continuo()){ if(pausado){ pausado=false; fala.resume(); } else { pausado=true; fala.pause(); } }
+    else if(pausado){ pausado=false; geracao++; falar(); } else { pausado=true; geracao++; fala.cancel(); } // o pause() do Chrome falha com as vozes do Google
+    bPausa.textContent=pausado?'▶':'❚❚'; bPausa.title=pausado?'Continuar':'Pausar'; }
+  // mudou voz ou velocidade: recomeça do bloco atual
+  function reiniciar(){ if(!fila.length) return; const el=fila[i].el, vistos=[], blocos=[];
+    fila.forEach(x=>{ if(!vistos.includes(x.tr)){ vistos.push(x.tr); blocos.push({tr:x.tr,el:x.el}); } });
+    const p=pausado; ler(blocos,el); if(p) setTimeout(pausar,120); }
+  function parar(){ geracao++; fala.cancel(); fila=[]; i=0; pausado=false; marcarBloco(null); pintar('le-palavra',null); pintar('le-frase',null); barra.hidden=true; }
   barra.addEventListener('click',e=>{ const b=e.target.closest('[data-le]'); if(!b) return; if(b.dataset.le==='pausa') pausar(); else if(b.dataset.le==='parar') parar(); });
 
-  /* ---------- o que ler ---------- */
+  /* ---------- o que ler: os blocos de uma seção ---------- */
   const BLOCOS='h2, h3, p, li, .cmd, .definicao, tr, .elo, .forma, .tres > div, .mao, .carimbo';
   function blocosDe(raiz){
     const els=$$(BLOCOS,raiz).filter(el=>!el.closest('.questao, .le-btn, .sumario, .treino-barra, .texto-base.colapsado .tb-corpo'));
-    return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>{
-      let t=el.matches('tr')?$$('th,td',el).map(c=>c.innerText).join(', '):el.matches('h2,h3')?($('.t',el)||el).innerText.replace(/▶ Ouvir/,''):el.innerText;
-      if(el.matches('.carimbo')) t=t.replace(/já caiu/i,'Já caiu em: ');
-      return {t:t.replace(/\n+/g,'. '),el};
-    }).filter(x=>limpar(x.t));
+    return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>({tr:trecho(el.matches('h2,h3')&&$('.t',el)||el),el}));
   }
-
-  /* ---------- botão em cada seção da aula ---------- */
   function botoesSecoes(raiz){
     $$('.sec h2',raiz).forEach(h=>{ if($('.le-btn',h)) return;
       const b=document.createElement('button'); b.type='button'; b.className='le-btn le-sec'; b.title='Ouvir esta seção'; b.setAttribute('aria-label','Ouvir esta seção'); b.textContent='▶ Ouvir';
@@ -11476,13 +11524,13 @@ if(fala&&window.SpeechSynthesisUtterance){
   botoesSecoes(document);
 
   /* ---------- trecho selecionado ---------- */
-  let selTexto='';
+  let selRange=null;
   function mostrarSel(){
     const s=getSelection(), t=s&&s.rangeCount?s.toString().trim():'';
     const no=s&&s.anchorNode&&(s.anchorNode.parentElement||s.anchorNode);
     if(t.length<3||!no||!no.closest('.capitulo')||no.closest('.questao')){ selBtn.hidden=true; return; }
     const r=s.getRangeAt(0).getBoundingClientRect(); if(!r.width&&!r.height){ selBtn.hidden=true; return; }
-    selTexto=t; selBtn.hidden=false;
+    selRange=s.getRangeAt(0).cloneRange(); selBtn.hidden=false;
     const toque=matchMedia('(pointer:coarse)').matches; // no celular, abaixo da seleção (o menu do sistema fica em cima)
     const top=(toque?r.bottom+10:r.top-46)+scrollY, left=Math.min(Math.max(8,r.left+r.width/2-45+scrollX),scrollX+innerWidth-110);
     selBtn.style.top=Math.max(scrollY+6,top)+'px'; selBtn.style.left=left+'px';
@@ -11490,7 +11538,9 @@ if(fala&&window.SpeechSynthesisUtterance){
   let tSel=null;
   document.addEventListener('selectionchange',()=>{ clearTimeout(tSel); tSel=setTimeout(mostrarSel,250); });
   selBtn.addEventListener('mousedown',e=>e.preventDefault()); // não desfaz a seleção ao clicar
-  selBtn.addEventListener('click',()=>{ selBtn.hidden=true; ler([{t:selTexto,el:null}]); });
+  selBtn.addEventListener('click',()=>{ selBtn.hidden=true; if(!selRange) return;
+    const raiz=selRange.commonAncestorContainer.nodeType===1?selRange.commonAncestorContainer:selRange.commonAncestorContainer.parentElement;
+    getSelection().removeAllRanges(); ler([{tr:trecho(raiz,selRange),el:null}]); });
   addEventListener('hashchange',parar);
   addEventListener('keydown',e=>{ if(e.key==='Escape'&&!barra.hidden) parar(); });
 }
