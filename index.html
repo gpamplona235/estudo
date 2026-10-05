@@ -9474,7 +9474,9 @@ const idDe=k=>encodeURIComponent(k).replace(/\./g,'%2E');
    ao voltar para a aba, se estiver escondida). As próprias gravações voltam com o mesmo
    horário e são ignoradas. */
 function escutar(){
-  ouvinte=colecao().onSnapshot(snap=>{
+  // includeMetadataChanges: avisa também quando o servidor confirma (sem isso, o aviso
+  // ficaria preso no "cache" da primeira leitura, mesmo com internet)
+  ouvinte=colecao().onSnapshot({includeMetadataChanges:true},snap=>{
     const local=ler(CHAVE), remoto=montar(snap);
     let mudouLocal=false;
     Object.entries(remoto).forEach(([k,x])=>{
@@ -9499,7 +9501,10 @@ function escutar(){
       enviar().then(()=>{ if(document.hidden) recarregar=true; else location.reload(); });
       return;
     }
-    if(pendentes.size) enviar(); else mostrarSelo(snap.metadata.fromCache?'Sem internet: salvo neste aparelho':'Progresso salvo na nuvem');
+    if(pendentes.size) enviar();
+    else if(snap.metadata.hasPendingWrites) mostrarSelo(navigator.onLine?'Salvando…':'Sem internet: envio quando a conexão voltar');
+    else if(snap.metadata.fromCache) mostrarSelo(navigator.onLine?'Sincronizando…':'Sem internet: salvo neste aparelho');
+    else mostrarSelo('Progresso salvo na nuvem');
   },x=>mostrarSelo('Não consegui ligar à nuvem ('+(x&&x.code||'erro')+'): salvando neste aparelho'));
 }
 
