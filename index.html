@@ -9177,7 +9177,7 @@ function iniciar(){
     e.preventDefault(); erro.textContent=''; form.querySelector('button').disabled=true;
     firebase.auth().signInWithEmailAndPassword(form.email.value.trim(),form.senha.value).catch(x=>{
       form.querySelector('button').disabled=false;
-      erro.textContent=/network/.test(x.code)?'Sem internet. Tente de novo.':/too-many/.test(x.code)?'Muitas tentativas. Espere alguns minutos.':'E-mail ou senha incorretos.';
+      erro.textContent=/network/.test(x.code)?'Sem internet. Tente de novo.':/too-many/.test(x.code)?'Muitas tentativas. Espere alguns minutos.':/wrong-password|user-not-found|invalid-credential|invalid-email/.test(x.code)?'E-mail ou senha incorretos.':'Não consegui entrar ('+x.code+').';
     });
   };
   firebase.auth().onAuthStateChanged(u=>{
@@ -9201,8 +9201,7 @@ const idDe=k=>encodeURIComponent(k).replace(/\./g,'%2E');
    horário e são ignoradas. */
 function escutar(){
   ouvinte=colecao().onSnapshot(snap=>{
-    const local=ler(CHAVE), remoto={};
-    snap.forEach(d=>{ const x=d.data(); if(x&&x.k!=null) remoto[x.k]=x; });
+    const local=ler(CHAVE), remoto=montar(snap);
     let mudouLocal=false;
     Object.entries(remoto).forEach(([k,x])=>{
       if(tempos[k]===1&&k in local&&x.v!=null){
@@ -9222,12 +9221,26 @@ function escutar(){
       setOrig.call(localStorage,CHAVE,JSON.stringify(local)); gravar(CHAVE_T,tempos);
       Object.entries(local).forEach(([k,v])=>foto[k]=JSON.stringify(v));
       Object.keys(foto).forEach(k=>{ if(!(k in local)) delete foto[k]; });
-      enviar();
-      if(document.hidden) recarregar=true; else location.reload();
+      // só recarrega depois que o envio terminar (senão a gravação é cortada no meio)
+      enviar().then(()=>{ if(document.hidden) recarregar=true; else location.reload(); });
       return;
     }
     if(pendentes.size) enviar(); else mostrarSelo(snap.metadata.fromCache?'Sem internet: salvo neste aparelho':'Progresso salvo na nuvem');
-  },()=>mostrarSelo('Não consegui ligar à nuvem: salvando neste aparelho'));
+  },x=>mostrarSelo('Não consegui ligar à nuvem ('+(x&&x.code||'erro')+'): salvando neste aparelho'));
+}
+
+/* Lê os documentos da nuvem. Partes grandes vêm divididas em pedaços (documentos "parte~i"):
+   só usa a parte quando todos os pedaços da mesma gravação já chegaram. */
+function montar(snap){
+  const principais={}, pedacos={}, r={};
+  snap.forEach(d=>{ const x=d.data(); if(!x) return;
+    if(x.pk!=null) (pedacos[x.pk]=pedacos[x.pk]||[]).push(x); else if(x.k!=null) principais[x.k]=x; });
+  Object.entries(principais).forEach(([k,x])=>{
+    if(!x.n){ r[k]=x; return; }
+    const ps=(pedacos[k]||[]).filter(p=>p.t===x.t).sort((a,b)=>a.i-b.i);
+    if(ps.length===x.n) r[k]={k,t:x.t,v:ps.map(p=>p.v).join('')};
+  });
+  return r;
 }
 
 /* Junta duas versões de uma parte do progresso (só na primeira sincronização de um aparelho):
@@ -9249,15 +9262,27 @@ function juntar(a,b){
 }
 
 /* Envia as partes que mudaram, em lote, menos de 1 segundo depois da última mudança. */
+const PEDACO=500000; // um documento do Firestore aceita até 1 MB
+function gravarParte(k,local){
+  const t=tempos[k]||Date.now(), doc=colecao().doc(idDe(k));
+  if(!(k in local)) return doc.set({k,t,n:0,v:null});
+  const s=JSON.stringify(local[k]);
+  if(s.length<=PEDACO) return doc.set({k,t,n:0,v:s});
+  const n=Math.ceil(s.length/PEDACO), ps=[];
+  for(let i=0;i<n;i++) ps.push(colecao().doc(idDe(k)+'~'+i).set({pk:k,t,i,v:s.slice(i*PEDACO,(i+1)*PEDACO)}));
+  return Promise.all(ps).then(()=>doc.set({k,t,n,v:null}));
+}
 function enviar(){
   clearTimeout(timer);
   if(!usuario||!pendentes.size) return Promise.resolve();
-  const local=ler(CHAVE), lote=db.batch(), lista=[...pendentes]; pendentes.clear();
-  lista.forEach(k=>lote.set(colecao().doc(idDe(k)),{k,t:tempos[k]||Date.now(),v:k in local?JSON.stringify(local[k]):null}));
-  mostrarSelo('Salvando…');
-  const feito=lote.commit().then(()=>mostrarSelo('Progresso salvo na nuvem')).catch(()=>{ lista.forEach(k=>pendentes.add(k)); mostrarSelo('Não salvou na nuvem ainda: tentarei de novo'); });
-  if(!navigator.onLine) mostrarSelo('Sem internet: envio quando a conexão voltar');
-  return feito;
+  const local=ler(CHAVE), lista=[...pendentes]; pendentes.clear();
+  mostrarSelo(navigator.onLine?'Salvando…':'Sem internet: envio quando a conexão voltar');
+  // cada parte vai separada: se uma falhar, as outras chegam
+  return Promise.all(lista.map(k=>gravarParte(k,local).then(()=>null,x=>{ pendentes.add(k); return (x&&x.code)||'erro'; }))).then(erros=>{
+    const e=erros.filter(Boolean);
+    if(!e.length) mostrarSelo('Progresso salvo na nuvem');
+    else{ mostrarSelo('Não salvou '+e.length+' parte(s) ('+e[0]+'): tentarei de novo'); clearTimeout(timer); timer=setTimeout(enviar,15000); }
+  });
 }
 
 /* Cada vez que o app salva no navegador, descobre quais partes mudaram. */
