@@ -686,6 +686,164 @@ code{font-family:var(--f-mono);font-size:.86em;background:var(--codigo);border-r
 .conf li.ok{background:var(--ok-suave);border-color:var(--pri)}.conf li.ok .ic{color:var(--ok)}
 .conf li.al{background:var(--err-suave);border-color:var(--err)}.conf li.al .ic{color:var(--err)}
 
+/* ---------- Edital ---------- */
+.ed-cab .chip .ic{width:15px;height:15px}
+.anel .tr{fill:none;stroke:var(--trilho)}
+.anel .vl{fill:none;stroke:var(--pri);stroke-linecap:round;transition:stroke-dashoffset .9s cubic-bezier(.3,.7,.2,1)}
+.anel.ouro .vl{stroke:var(--dest-forte)}
+.ed-hero{display:grid;grid-template-columns:auto minmax(0,1fr);gap:26px 34px;align-items:center;background:var(--card);border:1px solid var(--lin);border-top:4px solid var(--pri);border-radius:var(--r2);padding:24px 26px;box-shadow:var(--som)}
+.ed-anel{position:relative;width:200px;height:200px;flex:none}
+.ed-anel svg{width:100%;height:100%;display:block}
+.ed-num{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center}
+.ed-num b{font:700 46px/1 var(--f-tit);letter-spacing:-.02em;color:var(--pri-forte);font-variant-numeric:tabular-nums}
+.ed-num span{font-size:14px;color:var(--mut);margin-top:6px;max-width:130px}
+.ed-info{display:flex;flex-direction:column;gap:16px;min-width:0}
+.ed-alvo{margin:0 0 12px;font-size:17px}
+.ed-alvo b{color:var(--tx)}
+.ed-conq{list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:relative}
+.ed-conq::before{content:"";position:absolute;left:10%;right:10%;top:19px;height:3px;background:var(--trilho);border-radius:3px}
+.ed-conq li{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;position:relative}
+.ed-conq .pt{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;background:var(--card);border:2px solid var(--lin-forte);font:600 12px var(--f-mono);color:var(--mut)}
+.ed-conq .pt .ic{width:20px;height:20px;stroke-width:2.6}
+.ed-conq .nm{font-size:12.5px;line-height:1.25;color:var(--mut)}
+.ed-conq li.ok .pt{background:var(--pri);border-color:var(--pri);color:var(--pri-tx)}
+.ed-conq li.ok .nm{color:var(--tx2);font-weight:600}
+.ed-conq li.prox .pt{border-color:var(--dest-forte);color:var(--tx);box-shadow:0 0 0 4px var(--dest);animation:ed-pulso 2.2s ease-in-out infinite}
+.ed-conq li.prox .nm{color:var(--tx);font-weight:700}
+@keyframes ed-pulso{50%{box-shadow:0 0 0 8px transparent}}
+.ed-lado2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.ed-prova,.ed-seq{border:1px solid var(--lin);border-radius:var(--r2);padding:12px 14px;background:var(--campo);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;min-width:0}
+.ed-dias{font:700 30px/1 var(--f-tit);color:var(--pri-forte);font-variant-numeric:tabular-nums}
+.ed-prova>span,.ed-seq>span{font-size:14.5px;color:var(--tx2)}
+.ed-data{flex-basis:100%;display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;font-size:13px;color:var(--mut);margin-top:6px}
+.ed-data input{font-size:14px;padding:5px 8px;border:1.5px solid var(--lin-forte);border-radius:var(--r);background:var(--card)}
+.ed-rit{display:flex;gap:10px;align-items:flex-start;margin:0;padding:10px 14px;border-radius:var(--r2);font-size:15px}
+.ed-rit .ic{margin-top:2px}
+.ed-rit.ok{background:var(--ok-suave);color:var(--tx)}.ed-rit.ok .ic{color:var(--ok)}
+.ed-rit.al{background:var(--chu-suave);color:var(--tx)}.ed-rit.al .ic{color:var(--chu)}
+.ed-proj{margin:0;font-size:15px;color:var(--tx2)}
+.ed-sug{margin-top:18px}
+.ed-sug ol{list-style:none;margin:0;padding:0;display:flex;flex-direction:column}
+.ed-sug li{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:12px 0;border-top:1px solid var(--lin)}
+.ed-sug li:first-child{border-top:0;padding-top:2px}
+.ed-sug .tx{display:flex;flex-direction:column;min-width:0}
+.ed-sug .tx b{font-weight:600;font-size:16px}
+.ed-sug .tx small{color:var(--mut);font-size:13.5px}
+.ed-g2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:18px;margin-top:18px}
+.ed-cal{display:grid;grid-template-rows:repeat(7,1fr);grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:4px;max-width:420px}
+.ed-cal i,.ed-leg i{display:block;aspect-ratio:1;border-radius:3px;background:var(--campo);border:1px solid var(--lin)}
+.ed-cal i.fut{background:none;border-color:transparent}
+.ed-cal i.n1,.ed-leg i.n1{background:var(--hl);border-color:var(--hl)}
+.ed-cal i.n2,.ed-leg i.n2{background:var(--hl-forte);border-color:var(--hl-forte)}
+.ed-cal i.n3,.ed-leg i.n3{background:var(--pri-forte);border-color:var(--pri-forte)}
+.ed-cal i.hj{outline:2px solid var(--dest-forte);outline-offset:1px}
+.ed-leg{display:flex;flex-wrap:wrap;gap:6px 14px;margin:12px 0 0;font-size:13px;color:var(--mut)}
+.ed-leg span{display:inline-flex;align-items:center;gap:6px}
+.ed-leg i{width:13px;height:13px}
+.ed-res ul{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px}
+.ed-res a{display:grid;grid-template-columns:minmax(0,1fr) minmax(60px,110px) auto;gap:12px;align-items:center;padding:7px 8px;border-radius:var(--r);color:var(--tx);text-decoration:none;font-size:14.5px}
+.ed-res a:hover{background:var(--campo)}
+.ed-res .nm{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ed-res .mono{font-size:13px;color:var(--mut)}
+.bp.ouro i{background:var(--dest-forte)}
+.ed-barra{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:30px 0 14px}
+.ed-barra .seg{margin:0}
+.ed-busca{flex:1;min-width:180px;height:42px;border:1.5px solid var(--lin-forte);border-radius:999px;padding:0 16px;background:var(--card);font-size:15px}
+.ed-mat{background:var(--card);border:1px solid var(--lin);border-radius:var(--r2);margin:0 0 12px;box-shadow:var(--som);scroll-margin-top:80px}
+.ed-mat.completa{border-color:var(--dest-forte)}
+.ed-mcab{display:flex;align-items:center;gap:10px;padding:6px 10px}
+.ed-abre{flex:1;display:flex;align-items:center;gap:14px;border:0;background:none;padding:8px 6px;cursor:pointer;text-align:left;min-width:0}
+.ed-abre .anel{width:52px;height:52px;flex:none}
+.ed-abre .tx{flex:1;display:flex;flex-direction:column;min-width:0}
+.ed-abre .tx b{font:600 18px/1.25 var(--f-tit)}
+.ed-abre .tx small{color:var(--mut);font-size:14px;margin-top:2px}
+.ed-abre .seta{font-size:18px;color:var(--mut);transition:transform .2s}
+.ed-abre[aria-expanded="true"] .seta{transform:rotate(180deg)}
+.selo{display:inline-block;background:var(--dest);color:var(--tx);font-weight:700;border-radius:999px;padding:1px 9px;font-size:12.5px}
+.ed-tops{list-style:none;margin:0;padding:0 10px 8px;border-top:1px solid var(--lin)}
+.ed-top{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 14px;align-items:start;padding:12px 6px;border-bottom:1px solid var(--lin)}
+.ed-top:last-child{border-bottom:0}
+.ed-top .tx{display:flex;flex-direction:column;gap:3px;min-width:0;padding-top:5px}
+.ed-top .nm{font-size:16.5px;line-height:1.45}
+.ed-top.feito .nm{color:var(--mut)}
+.ed-top small{font:500 12.5px var(--f-mono);color:var(--ok)}
+.ed-top small.ed-dica{font:600 13.5px var(--f-ui);color:var(--chu)}
+.ed-ck{width:36px;height:36px;border-radius:50%;border:2px solid var(--lin-forte);background:var(--card);display:grid;place-items:center;cursor:pointer;color:transparent;flex:none;transition:background .15s,border-color .15s}
+.ed-ck:hover{border-color:var(--pri);color:var(--pri-suave)}
+.ed-ck .ic{width:20px;height:20px;stroke-width:2.8}
+.ed-ck[aria-pressed="true"]{background:var(--pri);border-color:var(--pri);color:var(--pri-tx);animation:ed-pop .35s ease-out}
+@keyframes ed-pop{40%{transform:scale(1.22)}}
+.ed-ck.meio{border-color:var(--pri);background:conic-gradient(var(--hl-forte) var(--v),var(--card) 0)}
+.ed-partes{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:6px}
+.ed-pt{border:1.5px dashed var(--lin-forte);background:var(--card);border-radius:999px;padding:4px 12px;font-size:14px;color:var(--tx2);cursor:pointer;min-height:32px;transition:background .15s}
+.ed-pt:hover{border-color:var(--pri)}
+.ed-pt[aria-pressed="true"]{border-style:solid;border-color:var(--pri);background:var(--pri-suave);color:var(--mut);text-decoration:line-through;text-decoration-color:var(--pri);text-decoration-thickness:2px}
+.ed-pt[aria-pressed="true"]::before{content:"✓ ";color:var(--pri);text-decoration:none;display:inline-block;margin-right:2px;font-weight:700}
+.ed-partes small.ed-cont{font:500 12.5px var(--f-mono);color:var(--mut)}
+.ed-plab{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--mut);margin-top:6px}
+.ed-lks{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px}
+.ed-lk{display:inline-flex;align-items:center;gap:6px;border-radius:999px;padding:3px 11px;font-size:13px;font-weight:600;text-decoration:none;background:var(--pri-suave);color:var(--pri-forte);border:1px solid transparent}
+.ed-lk i{width:8px;height:8px;border-radius:50%;border:2px solid currentColor}
+.ed-lk .ic{width:14px;height:14px;stroke-width:2.6}
+.ed-lk:hover{border-color:var(--pri)}
+.ed-lk.ok{background:var(--pri);color:var(--pri-tx)}
+.ed-lk.breve{background:var(--campo);color:var(--mut);border-color:var(--lin)}
+.ed-x{border:0;background:none;color:var(--err);font-size:18px;line-height:1;cursor:pointer;padding:2px 6px;margin-left:-4px}
+.ed-ord{display:flex;align-items:center;gap:2px;flex-wrap:wrap}
+.ed-in{width:100%;font-size:15.5px;padding:8px 12px;border:1.5px solid var(--lin-forte);border-radius:var(--r);background:var(--campo);color:var(--tx)}
+.ed-in.tit{font:600 17px var(--f-tit)}
+.ed-in:focus{outline:none;border-color:var(--pri);background:var(--card)}
+.ed-sel{max-width:100%;font-size:14px;padding:6px 8px;border:1.5px solid var(--pri);border-radius:var(--r);background:var(--card)}
+.ed-novo{padding:12px 6px}
+.ed-novo-m{margin:4px 0 12px}
+.ed-vz{padding:14px 6px}
+.ed-ferr{margin-top:28px;border:1px solid var(--lin);border-radius:var(--r2);background:var(--card)}
+.ed-ferr summary{cursor:pointer;padding:14px 18px;font-weight:600;color:var(--tx2)}
+.ed-ferr-g{display:flex;flex-direction:column;gap:18px;padding:4px 18px 18px}
+.ed-campo{display:flex;flex-direction:column;gap:8px;font-size:15px}
+.ed-campo small{color:var(--mut);font-size:13.5px}
+.ed-campo .btn{align-self:flex-start}
+.ed-msg{margin:0;padding:10px 14px;border-radius:var(--r2);background:var(--pri-suave);color:var(--tx)}
+#ed-toast{position:fixed;left:50%;bottom:28px;transform:translate(-50%,30px);opacity:0;pointer-events:none;z-index:120;transition:transform .3s,opacity .3s;width:max-content;max-width:calc(100vw - 32px)}
+#ed-toast.vis{transform:translate(-50%,0);opacity:1}
+#ed-toast div{display:flex;flex-direction:column;gap:2px;background:var(--grafite);color:var(--bg);border-radius:14px;padding:12px 20px;box-shadow:0 12px 34px rgba(0,0,0,.25);font-size:15px;text-align:center}
+#ed-toast div b{font:700 17px var(--f-tit)}
+#ed-toast div.grande{background:var(--dest-forte);color:#1d1600;padding:16px 26px}
+#ed-toast div.grande b{font-size:21px}
+.confete{position:fixed;width:8px;height:12px;border-radius:2px;pointer-events:none;z-index:130}
+.ed-hoje{display:flex;align-items:center;gap:18px;text-decoration:none;color:var(--tx)}
+.ed-hoje:hover{border-color:var(--pri)}
+.ed-anel.mini{width:84px;height:84px;display:grid;place-items:center}
+.ed-anel.mini svg{position:absolute;inset:0}
+.ed-anel.mini b{position:relative;font:700 20px var(--f-tit);color:var(--pri-forte)}
+.ed-hoje .tx{flex:1;display:flex;flex-direction:column;gap:3px;min-width:0}
+.ed-hoje .tx>b{font:600 17px/1.3 var(--f-tit)}
+.ed-hoje small{color:var(--mut);font-size:14px}
+.ed-hoje small.prox{color:var(--tx2)}
+.ed-hoje .cont{color:var(--pri);font-weight:600;white-space:nowrap}
+@media (max-width:900px){
+  .ed-g2{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:720px){
+  .ed-hero{grid-template-columns:minmax(0,1fr);justify-items:center;padding:20px 16px}
+  .ed-info{width:100%}
+  .ed-anel{width:176px;height:176px}
+  .ed-num b{font-size:40px}
+  .ed-conq .nm{display:none}
+  .ed-conq li.prox .nm{display:block;position:absolute;top:40px;white-space:nowrap;font-size:12px}
+  .ed-conq{margin-bottom:22px}
+  .ed-lado2{grid-template-columns:minmax(0,1fr)}
+  .ed-data input{flex:1;min-width:0}
+  .ed-conq .pt{width:34px;height:34px}
+  .ed-conq::before{top:16px}
+  .ed-sug li{grid-template-columns:auto minmax(0,1fr)}
+  .ed-sug li .btn{grid-column:2;justify-self:start}
+  .ed-top{grid-template-columns:auto minmax(0,1fr)}
+  .ed-top .ed-ord{grid-column:2}
+  .ed-hoje .cont{display:none}
+  #ed-toast{bottom:84px}
+}
+
 /* ---------- Hoje ---------- */
 .hoje-g{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(0,1fr);gap:18px;align-items:start}
 .passo{display:grid;grid-template-columns:28px minmax(0,1fr) auto;gap:6px 14px;align-items:center;padding:14px 0;border-top:1px solid var(--lin)}
@@ -1005,7 +1163,7 @@ body.em-foco{overflow:hidden}
   #trilha{padding:12px 16px 0}
   .pg-cab h1{font-size:26px}
   .pg-cab.peq h1{font-size:24px}
-  .nav-baixo{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--top);border-top:1px solid var(--lin);padding-bottom:env(safe-area-inset-bottom,0px)}
+  .nav-baixo{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));position:fixed;left:0;right:0;bottom:0;z-index:40;background:var(--top);border-top:1px solid var(--lin);padding-bottom:env(safe-area-inset-bottom,0px)}
   .nav-baixo a{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 2px 7px;font-size:11.5px;font-weight:600;color:var(--mut);text-decoration:none;position:relative;min-height:56px}
   .nav-baixo a .ic{width:24px;height:24px}
   .nav-baixo a[aria-current="page"]{color:var(--pri-forte)}
@@ -1046,6 +1204,7 @@ body.em-foco{overflow:hidden}
     <symbol id="i-rev" viewBox="0 0 24 24"><rect x="3.5" y="5" width="12.5" height="15" rx="2"/><path d="M7.5 2.8h10.6a2 2 0 0 1 2 2v12.4"/><path class="acs" d="M12.6 14.2a3 3 0 1 1-.8-2.4"/><path class="acs" d="M12.2 9.6v2.3H9.9"/></symbol>
     <symbol id="i-est" viewBox="0 0 24 24"><path d="M2.5 20.5h19"/><path d="M5.5 20.5v-6"/><path d="M10 20.5V11"/><path d="M14.5 20.5v-4"/><path d="M19 20.5V8"/><path class="acs" d="M4.5 10.5 9.5 6l4 3 6-5.5"/></symbol>
     <symbol id="i-sal" viewBox="0 0 24 24"><path d="M7 3h10a1.2 1.2 0 0 1 1.2 1.2V21l-6.2-4.2L5.8 21V4.2A1.2 1.2 0 0 1 7 3z"/><path class="acs" d="m9.2 9.6 2 2 3.8-3.9"/></symbol>
+    <symbol id="i-edital" viewBox="0 0 24 24"><rect x="4.5" y="4" width="15" height="17.5" rx="2"/><path d="M9 2.5h6v3H9z"/><path class="acs" d="m7.8 11 1.4 1.4 2.4-2.6"/><path d="M13.5 11h3"/><path class="acs" d="m7.8 16 1.4 1.4 2.4-2.6"/><path d="M13.5 16h3"/></symbol>
     <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.4 15.4 5.1 5.1"/></symbol>
     <symbol id="i-chute" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle class="fill" cx="8.5" cy="8.5" r="1.5"/><circle class="fill" cx="15.5" cy="15.5" r="1.5"/><circle class="fill" cx="12" cy="12" r="1.5"/></symbol>
     <symbol id="i-hist" viewBox="0 0 24 24"><path d="M4.4 12a7.6 7.6 0 1 0 2.2-5.4"/><path d="M4 3.8v3.6h3.6"/><path class="acs" d="M12 8v4.5l3 2"/></symbol>
@@ -1068,6 +1227,7 @@ body.em-foco{overflow:hidden}
       <a class="nv" href="#/revisao" data-nav="revisao"><svg class="ic" aria-hidden="true"><use href="#i-rev"/></svg><span class="lab">Revisão</span><span class="cnt rev" data-cont="rev" hidden></span></a>
       <a class="nv" href="#/estatisticas" data-nav="estatisticas"><svg class="ic" aria-hidden="true"><use href="#i-est"/></svg><span class="lab">Estatísticas</span></a>
       <a class="nv" href="#/salvas" data-nav="salvas"><svg class="ic" aria-hidden="true"><use href="#i-sal"/></svg><span class="lab">Salvas</span><span class="cnt" data-cont="sal" hidden></span></a>
+      <a class="nv" href="#/edital" data-nav="edital"><svg class="ic" aria-hidden="true"><use href="#i-edital"/></svg><span class="lab">Edital</span></a>
     </nav>
     <div id="recentes"></div>
     <div class="side-pe"><button class="nv" type="button" data-acao="tema" title="Alternar tema claro/escuro"><svg class="ic" aria-hidden="true"><use href="#i-tema"/></svg><span class="lab">Tema claro/escuro</span></button></div>
@@ -11975,6 +12135,7 @@ fimpara</pre>
       <div class="pg" id="pg-revisao" hidden></div>
       <div class="pg" id="pg-estatisticas" hidden></div>
       <div class="pg" id="pg-salvas" hidden></div>
+      <div class="pg" id="pg-edital" hidden></div>
     </main>
   </div>
 </div>
@@ -11985,6 +12146,7 @@ fimpara</pre>
   <a href="#/revisao" data-nav="revisao"><svg class="ic" aria-hidden="true"><use href="#i-rev"/></svg>Revisão<span class="cnt rev" data-cont="rev" hidden></span></a>
   <a href="#/estatisticas" data-nav="estatisticas"><svg class="ic" aria-hidden="true"><use href="#i-est"/></svg>Números</a>
   <a href="#/salvas" data-nav="salvas"><svg class="ic" aria-hidden="true"><use href="#i-sal"/></svg>Salvas<span class="cnt" data-cont="sal" hidden></span></a>
+  <a href="#/edital" data-nav="edital"><svg class="ic" aria-hidden="true"><use href="#i-edital"/></svg>Edital</a>
 </nav>
 
 <div id="foco" class="foco" role="dialog" aria-modal="true" aria-label="Modo foco" hidden></div>
@@ -12587,7 +12749,7 @@ function pintarProgressoAula(id){
 /* =========================================================
    Páginas
    ========================================================= */
-const PAGINAS=['hoje','biblioteca','aula','revisao','estatisticas','salvas'];
+const PAGINAS=['hoje','biblioteca','aula','revisao','estatisticas','salvas','edital'];
 function mostrarPagina(p){
   PAGINAS.forEach(x=>{const el=$('#pg-'+x); if(el) el.hidden=x!==p;});
   const nav=p==='aula'?'biblioteca':p;
@@ -12615,7 +12777,7 @@ function renderHoje(){
       (ult?'<div class="passo">'+ic('i-check','ck'+(ultS&&ultS.resp===ultS.total?' ok':''))+'<div class="tx"><b>Continuar: '+esc(ult.ap)+' · Aula '+ult.num+'</b><small>'+esc(ult.nome)+' · '+ultS.resp+' de '+ultS.total+' questões</small></div><a class="btn out" href="#/aula/'+ultCap+'">Abrir</a></div>':'')+
       '<div class="passo">'+ic('i-check','ck'+(feitas>=meta?' ok':''))+'<div class="tx"><b>Meta do dia: '+meta+' questões</b><small>'+feitas+' feitas hoje'+(feitas>=meta?' · meta batida!':' · faltam '+(meta-feitas))+'</small><div class="bp"><i style="width:'+Math.min(100,pct(feitas,meta))+'%"></i></div></div><label class="meta-ed">meta <input type="number" min="5" max="300" step="5" value="'+meta+'" id="meta-in" aria-label="Meta diária de questões"></label></div>'+
     '</section><section class="card" aria-labelledby="t-aten"><h2 class="ct" id="t-aten">Precisa de atenção</h2>'+(recs.length?'<div class="atens">'+recs.map((r,i)=>{const t=rotuloCap(r.id);return '<a class="aten" href="#/aula/'+r.id+'"><span class="n">'+(i+1)+'</span><span class="tx"><b>'+esc(t.ap)+' · Aula '+t.num+'</b><small>'+esc(r.mot[0]||'')+'</small></span></a>';}).join('')+'</div><a class="link" href="#/estatisticas">Ver análise completa →</a>':'<p class="mut">Nada preocupante por enquanto. Responda questões e esta lista se ajusta sozinha.</p>')+'</section></div>'+
-    '<h2 class="sec-h">Em andamento</h2><div class="aps">'+emAnd.slice(0,3).map(cardApostila).join('')+'<a class="ap ap-mais" href="#/biblioteca">'+ic('i-bib')+'<span>Ver a Biblioteca</span><small>'+APS.length+' apostilas · '+MAPA.length+' matérias</small></a></div>';
+    edCartaoHoje()+'<h2 class="sec-h">Em andamento</h2><div class="aps">'+emAnd.slice(0,3).map(cardApostila).join('')+'<a class="ap ap-mais" href="#/biblioteca">'+ic('i-bib')+'<span>Ver a Biblioteca</span><small>'+APS.length+' apostilas · '+MAPA.length+' matérias</small></a></div>';
   $('#meta-in',pg).onchange=e=>{const v=Math.max(5,Math.min(300,+e.target.value||30)); est.meta=v; salvar(); renderHoje();};
   trilhaTopo('');
 }
@@ -12924,6 +13086,328 @@ resB.addEventListener('click',e=>{ if(e.target.closest('a')){ resB.hidden=true; 
 document.addEventListener('keydown',e=>{ if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&foco.hidden){ e.preventDefault(); campo.focus(); } });
 
 /* =========================================================
+   Edital: o conteúdo do concurso, tópico por tópico
+   est.ed = {atual, editais:{id:{id,titulo,prova,o,mats:{id:{id,titulo,o,tops:{id:{id,txt,o,feito,ln}}}}}}}
+   - feito: "AAAA-MM-DD" (dia em que concluiu), "antes" (veio do outro sistema) ou "" (falta).
+   - ln: aulas do Caderno ligadas ao tópico ("ib3-2") ou apostila inteira ("cred").
+   - Tudo em objetos com id (nunca listas) e apagar = marcar del:1. Assim a junção da nuvem
+     entre dois aparelhos não duplica nem ressuscita nada.
+   ========================================================= */
+const EDITAL_INICIAL={"atual": "e1790435925143", "editais": {"e1790435925143": {"id": "e1790435925143", "titulo": "Lagoa da Prata/MG 2026 — Analista de Sistemas + Técnico em Contabilidade", "prova": "", "o": 0, "mats": {"m1790435925011": {"id": "m1790435925011", "titulo": "Português (comum aos 2 cargos)", "o": 0, "tops": {"t1790435924989": {"id": "t1790435924989", "txt": "Compreensão e interpretação de textos", "o": 0, "feito": "", "ln": ["ib1-2", "ib1-3"]}, "t1790435924990": {"id": "t1790435924990", "txt": "Gêneros e tipos de textos", "o": 1, "feito": "", "ln": ["ib1-6", "ib1-7"]}, "t1790435924991": {"id": "t1790435924991", "txt": "Articulação textual: operadores sequenciais e expressões referenciais", "o": 2, "feito": "", "ln": ["ib5-4", "ib1-10"]}, "t1790435924992": {"id": "t1790435924992", "txt": "Coerência e coesão textuais", "o": 3, "feito": "", "ln": ["ib1-10"]}, "t1790435924993": {"id": "t1790435924993", "txt": "Estratégias argumentativas", "o": 4, "feito": "", "ln": ["ib1-4"]}, "t1790435924994": {"id": "t1790435924994", "txt": "Discursos direto, indireto e indireto livre", "o": 5, "feito": "", "ln": ["ib1-9"]}, "t1790435924995": {"id": "t1790435924995", "txt": "Variação linguística: diversidade de usos da língua", "o": 6, "feito": "", "ln": ["ib1-9"]}, "t1790435924996": {"id": "t1790435924996", "txt": "Significação das palavras", "o": 7, "feito": "", "ln": ["ib2-1"]}, "t1790435924997": {"id": "t1790435924997", "txt": "Processos de formação de palavras", "o": 8, "feito": "", "ln": ["ib5-5"]}, "t1790435924998": {"id": "t1790435924998", "txt": "Classes de palavras: identificação, flexão e emprego (substantivo, adjetivo, pronome, advérbio, preposição e conjunção)", "o": 9, "feito": "", "ln": ["ib4-1", "ib4-2", "ib4-3", "ib4-4", "ib5-3", "ib5-4"]}, "t1790435924999": {"id": "t1790435924999", "txt": "Verbo: flexão, conjugação, correlação dos modos e tempos verbais, vozes", "o": 10, "feito": "", "ln": ["ib5-1", "ib5-2"]}, "t1790435925000": {"id": "t1790435925000", "txt": "Uso dos pronomes relativos", "o": 11, "feito": "", "ln": ["ib4-4", "ib5-6"]}, "t1790435925001": {"id": "t1790435925001", "txt": "Colocação dos pronomes pessoais oblíquos átonos", "o": 12, "feito": "antes", "ln": ["ib4-5"]}, "t1790435925002": {"id": "t1790435925002", "txt": "Estrutura da oração e do período: aspectos sintáticos e semânticos", "o": 13, "feito": "", "ln": ["ib6"]}, "t1790435925003": {"id": "t1790435925003", "txt": "Concordância verbal e nominal", "o": 14, "feito": "", "ln": ["ib7-3", "ib7-4"]}, "t1790435925004": {"id": "t1790435925004", "txt": "Regência verbal e nominal", "o": 15, "feito": "", "ln": ["ib7-5"]}, "t1790435925005": {"id": "t1790435925005", "txt": "Emprego do sinal indicativo da crase", "o": 16, "feito": "", "ln": ["ib7-6"]}, "t1790435925006": {"id": "t1790435925006", "txt": "Usos da pontuação", "o": 17, "feito": "", "ln": ["ib7-1", "ib7-2"]}, "t1790435925007": {"id": "t1790435925007", "txt": "Ortografia oficial", "o": 18, "feito": "", "ln": ["ib3-3"]}, "t1790435925008": {"id": "t1790435925008", "txt": "Acentuação gráfica", "o": 19, "feito": "antes", "ln": ["ib3-1", "ib3-2"]}, "t1790435925009": {"id": "t1790435925009", "txt": "Figuras de linguagem (cai no Técnico)", "o": 20, "feito": "", "ln": ["ib2-2"]}, "t1790435925010": {"id": "t1790435925010", "txt": "Figuras de sintaxe (cai no Técnico)", "o": 21, "feito": "", "ln": ["ib2-2"]}}}, "m1790435925028": {"id": "m1790435925028", "titulo": "Raciocínio Lógico (idêntico nos 2 cargos)", "o": 1, "tops": {"t1790435925012": {"id": "t1790435925012", "txt": "Noções básicas da lógica matemática: proposições e conectivos", "o": 0, "feito": "antes", "ln": ["eql-1", "eql-2"]}, "t1790435925013": {"id": "t1790435925013", "txt": "Equivalência e implicação lógica", "o": 1, "feito": "", "ln": ["eql"]}, "t1790435925014": {"id": "t1790435925014", "txt": "Argumentos válidos; problemas com tabelas e argumentação", "o": 2, "feito": ""}, "t1790435925015": {"id": "t1790435925015", "txt": "Verdades e mentiras: resolução de problemas", "o": 3, "feito": ""}, "t1790435925016": {"id": "t1790435925016", "txt": "Linguagem dos conjuntos: notação, representação, pertinência e igualdade", "o": 4, "feito": ""}, "t1790435925017": {"id": "t1790435925017", "txt": "Relação de inclusão, subconjuntos e conjunto das partes", "o": 5, "feito": ""}, "t1790435925018": {"id": "t1790435925018", "txt": "Conjunto unitário, vazio e universo; conjunto finito e infinito", "o": 6, "feito": ""}, "t1790435925019": {"id": "t1790435925019", "txt": "Operações com conjuntos (união, interseção, diferença)", "o": 7, "feito": ""}, "t1790435925020": {"id": "t1790435925020", "txt": "Operações de adição, subtração, multiplicação, divisão, potenciação e radiciação", "o": 8, "feito": ""}, "t1790435925021": {"id": "t1790435925021", "txt": "Números decimais e valor absoluto", "o": 9, "feito": ""}, "t1790435925022": {"id": "t1790435925022", "txt": "Propriedades no conjunto dos números naturais; decomposição em fatores primos", "o": 10, "feito": ""}, "t1790435925023": {"id": "t1790435925023", "txt": "Múltiplos e divisores; máximo divisor comum e mínimo múltiplo comum", "o": 11, "feito": ""}, "t1790435925024": {"id": "t1790435925024", "txt": "Sequências (com números, com figuras, de palavras)", "o": 12, "feito": ""}, "t1790435925025": {"id": "t1790435925025", "txt": "Análise combinatória", "o": 13, "feito": ""}, "t1790435925026": {"id": "t1790435925026", "txt": "Probabilidade", "o": 14, "feito": ""}, "t1790435925027": {"id": "t1790435925027", "txt": "Problemas envolvendo raciocínio lógico", "o": 15, "feito": ""}}}, "m1790435925049": {"id": "m1790435925049", "titulo": "Noções de Informática (comum aos 2 cargos)", "o": 2, "tops": {"t1790435925029": {"id": "t1790435925029", "txt": "Windows 10: janelas, menus, barra de tarefas e área de trabalho", "o": 0, "feito": ""}, "t1790435925030": {"id": "t1790435925030", "txt": "Gerenciamento de arquivos e pastas; tipos de arquivos e extensões; Windows Explorer", "o": 1, "feito": ""}, "t1790435925031": {"id": "t1790435925031", "txt": "Compartilhamento de arquivos e uso da área de transferência", "o": 2, "feito": ""}, "t1790435925032": {"id": "t1790435925032", "txt": "Configurações básicas do Windows: resolução de tela, cores, fontes e impressoras", "o": 3, "feito": ""}, "t1790435925033": {"id": "t1790435925033", "txt": "Word 2016 e superior: criação, edição, formatação, impressão, tabelas, gráficos e mala direta", "o": 4, "feito": ""}, "t1790435925034": {"id": "t1790435925034", "txt": "Excel 2016 e superior: fórmulas, gráficos, classificação e organização de dados", "o": 5, "feito": ""}, "t1790435925035": {"id": "t1790435925035", "txt": "PowerPoint 2016 e superior: criação, edição, formatação e impressão de apresentações", "o": 6, "feito": ""}, "t1790435925036": {"id": "t1790435925036", "txt": "Microsoft 365 (Word, Excel, PowerPoint, Teams e Outlook): colaboração e integração entre aplicativos", "o": 7, "feito": ""}, "t1790435925037": {"id": "t1790435925037", "txt": "Conhecimentos de internet: noções básicas e recursos de pesquisa e busca", "o": 8, "feito": ""}, "t1790435925038": {"id": "t1790435925038", "txt": "Correio eletrônico: enviar e receber mensagens, anexos, catálogo de endereços e organização das mensagens", "o": 9, "feito": ""}, "t1790435925039": {"id": "t1790435925039", "txt": "Navegadores: Google Chrome, Mozilla Firefox e Microsoft Edge", "o": 10, "feito": ""}, "t1790435925040": {"id": "t1790435925040", "txt": "Noções de rede de computadores: internet e intranet, tecnologias, protocolos e procedimentos", "o": 11, "feito": ""}, "t1790435925041": {"id": "t1790435925041", "txt": "Noções de hardware e software; organização e arquitetura de computadores", "o": 12, "feito": "", "ln": ["bar"]}, "t1790435925042": {"id": "t1790435925042", "txt": "Segurança da informação: políticas, classificação da informação, segurança física e lógica", "o": 13, "feito": ""}, "t1790435925043": {"id": "t1790435925043", "txt": "Análise e gerenciamento de riscos; ameaças, tipos de ataques e vulnerabilidade", "o": 14, "feito": ""}, "t1790435925044": {"id": "t1790435925044", "txt": "Vírus, malwares e golpes digitais; boas práticas de senhas e proteção de dados", "o": 15, "feito": ""}, "t1790435925045": {"id": "t1790435925045", "txt": "Sistemas de backup: tipos, meios de armazenamento e planos de contingência", "o": 16, "feito": "antes"}, "t1790435925046": {"id": "t1790435925046", "txt": "Segurança em nuvem e ética digital", "o": 17, "feito": ""}, "t1790435925047": {"id": "t1790435925047", "txt": "Inteligência artificial em ferramentas de produtividade; assistentes virtuais e automação de tarefas", "o": 18, "feito": ""}, "t1790435925048": {"id": "t1790435925048", "txt": "Redes sociais: conceitos, características, vantagens e desvantagens", "o": 19, "feito": "antes"}}}, "m1790435925057": {"id": "m1790435925057", "titulo": "Conhecimentos Gerais (idêntico nos 2 cargos)", "o": 3, "tops": {"t1790435925050": {"id": "t1790435925050", "txt": "Fatos políticos, econômicos e sociais do Brasil e do mundo dos últimos 5 anos", "o": 0, "feito": ""}, "t1790435925051": {"id": "t1790435925051", "txt": "Aspectos geográficos, históricos, econômicos, sociais e políticos do Brasil, do Estado e do Município", "o": 1, "feito": ""}, "t1790435925052": {"id": "t1790435925052", "txt": "Noções de cidadania; símbolos nacionais, estaduais e municipais", "o": 2, "feito": ""}, "t1790435925053": {"id": "t1790435925053", "txt": "Atualidades: economia, ecologia, meio ambiente, justiça, segurança pública, saúde, cultura e educação", "o": 3, "feito": ""}, "t1790435925054": {"id": "t1790435925054", "txt": "Atualidades: qualidade de vida, esportes, turismo, georreferenciamento e inovações tecnológicas e científicas", "o": 4, "feito": ""}, "t1790435925055": {"id": "t1790435925055", "txt": "Realidade econômica, cultural, histórica, geográfica e socioambiental de Minas Gerais", "o": 5, "feito": ""}, "t1790435925056": {"id": "t1790435925056", "txt": "Notícias em geral do site da Prefeitura de Lagoa da Prata", "o": 6, "feito": ""}}}, "m1790435925060": {"id": "m1790435925060", "titulo": "Legislação Municipal (só Analista de Sistemas)", "o": 4, "tops": {"t1790435925058": {"id": "t1790435925058", "txt": "Lei Orgânica do Município de Lagoa da Prata", "o": 0, "feito": ""}, "t1790435925059": {"id": "t1790435925059", "txt": "Lei Complementar Municipal nº 003/1991 e alterações posteriores", "o": 1, "feito": ""}}}, "m1790435925097": {"id": "m1790435925097", "titulo": "Específicos — Técnico em Contabilidade (402)", "o": 5, "tops": {"t1790435925061": {"id": "t1790435925061", "txt": "Contabilidade: conceito, objeto e finalidade", "o": 0, "feito": "antes"}, "t1790435925062": {"id": "t1790435925062", "txt": "Patrimônio: ativo, passivo e patrimônio líquido", "o": 1, "feito": ""}, "t1790435925063": {"id": "t1790435925063", "txt": "Equação fundamental patrimonial", "o": 2, "feito": ""}, "t1790435925064": {"id": "t1790435925064", "txt": "Receita e despesa; regimes de caixa e de competência", "o": 3, "feito": ""}, "t1790435925065": {"id": "t1790435925065", "txt": "Diferenças entre capital e patrimônio", "o": 4, "feito": ""}, "t1790435925066": {"id": "t1790435925066", "txt": "Fatos contábeis e alterações na situação líquida", "o": 5, "feito": "antes"}, "t1790435925067": {"id": "t1790435925067", "txt": "Princípios fundamentais de contabilidade", "o": 6, "feito": "antes"}, "t1790435925068": {"id": "t1790435925068", "txt": "Contas: conceito, teorias, elementos essenciais, funções e funcionamento", "o": 7, "feito": ""}, "t1790435925069": {"id": "t1790435925069", "txt": "Plano de contas; contas patrimoniais e de resultado", "o": 8, "feito": ""}, "t1790435925070": {"id": "t1790435925070", "txt": "Escrituração: lançamentos, elementos e composição", "o": 9, "feito": ""}, "t1790435925071": {"id": "t1790435925071", "txt": "Livros de escrituração fiscal e escrituração contábil", "o": 10, "feito": ""}, "t1790435925072": {"id": "t1790435925072", "txt": "Lei de Diretrizes Orçamentárias (LDO)", "o": 11, "feito": "", "ln": ["orc-5", "orc-6"]}, "t1790435925073": {"id": "t1790435925073", "txt": "Lei Orçamentária Anual (LOA)", "o": 12, "feito": "", "ln": ["orc-7", "orc-8"]}, "t1790435925074": {"id": "t1790435925074", "txt": "Orçamento governamental: conceito, classificação e tipos", "o": 13, "feito": ""}, "t1790435925075": {"id": "t1790435925075", "txt": "Princípios orçamentários", "o": 14, "feito": ""}, "t1790435925076": {"id": "t1790435925076", "txt": "Ciclo orçamentário e elaboração do orçamento; exercício financeiro", "o": 15, "feito": "", "ln": ["orc-9"]}, "t1790435925077": {"id": "t1790435925077", "txt": "Orçamento por programas e diretrizes orçamentárias", "o": 16, "feito": "", "ln": ["orc-4"]}, "t1790435925078": {"id": "t1790435925078", "txt": "Programação financeira e transferências financeiras", "o": 17, "feito": ""}, "t1790435925079": {"id": "t1790435925079", "txt": "Aprovação, execução, acompanhamento, fiscalização e avaliação do orçamento público", "o": 18, "feito": "", "ln": ["orc-10"]}, "t1790435925080": {"id": "t1790435925080", "txt": "Créditos adicionais", "o": 19, "feito": "", "ln": ["cred"]}, "t1790435925081": {"id": "t1790435925081", "txt": "Processo de elaboração da proposta orçamentária e processo orçamentário", "o": 20, "feito": "", "ln": ["orc-9", "orc-10", "orc-11"]}, "t1790435925082": {"id": "t1790435925082", "txt": "Métodos, técnicas e instrumentos do orçamento público", "o": 21, "feito": ""}, "t1790435925083": {"id": "t1790435925083", "txt": "Normas legais aplicáveis ao orçamento público", "o": 22, "feito": ""}, "t1790435925084": {"id": "t1790435925084", "txt": "LDO e LOA: finalidade, importância e relação com o Plano Plurianual", "o": 23, "feito": "", "ln": ["orc-1", "orc-2"]}, "t1790435925085": {"id": "t1790435925085", "txt": "Dispositivos da Lei de Responsabilidade Fiscal", "o": 24, "feito": "", "ln": ["orc-6", "orc-8"]}, "t1790435925086": {"id": "t1790435925086", "txt": "Princípios, objetivos e efeitos da LRF no planejamento e no processo orçamentário", "o": 25, "feito": ""}, "t1790435925087": {"id": "t1790435925087", "txt": "Instrumentos de transparência fiscal", "o": 26, "feito": ""}, "t1790435925088": {"id": "t1790435925088", "txt": "Relatório de gestão fiscal: características e conteúdo", "o": 27, "feito": ""}, "t1790435925089": {"id": "t1790435925089", "txt": "Levantamento de contas, tomada de contas e prestação de contas na administração pública", "o": 28, "feito": ""}, "t1790435925090": {"id": "t1790435925090", "txt": "Responsabilidades dos dirigentes e demais usuários de recursos públicos", "o": 29, "feito": ""}, "t1790435925091": {"id": "t1790435925091", "txt": "Julgamento e penalidades aos responsáveis pelos recursos públicos", "o": 30, "feito": ""}, "t1790435925092": {"id": "t1790435925092", "txt": "Normas brasileiras de contabilidade aplicadas ao setor público", "o": 31, "feito": ""}, "t1790435925093": {"id": "t1790435925093", "txt": "Manual de Contabilidade Aplicada ao Setor Público (MCASP)", "o": 32, "feito": ""}, "t1790435925094": {"id": "t1790435925094", "txt": "Subsistemas contábeis do setor público", "o": 33, "feito": ""}, "t1790435925095": {"id": "t1790435925095", "txt": "Procedimentos contábeis orçamentários, patrimoniais e específicos", "o": 34, "feito": ""}, "t1790435925096": {"id": "t1790435925096", "txt": "Plano de Contas Aplicado ao Setor Público (PCASP)", "o": 35, "feito": ""}}}, "m1790435925142": {"id": "m1790435925142", "titulo": "Específicos — Analista de Sistemas (510)", "o": 6, "tops": {"t1790435925098": {"id": "t1790435925098", "txt": "Internet: conceitos básicos (URL, links, sites, portais, segurança e navegação)", "o": 0, "feito": ""}, "t1790435925099": {"id": "t1790435925099", "txt": "Conceitos e padrões da tecnologia Web; intranets e extranets", "o": 1, "feito": ""}, "t1790435925100": {"id": "t1790435925100", "txt": "Utilização dos principais navegadores e do correio eletrônico", "o": 2, "feito": ""}, "t1790435925101": {"id": "t1790435925101", "txt": "Mecanismos de busca (Google, Yahoo, Bing)", "o": 3, "feito": ""}, "t1790435925102": {"id": "t1790435925102", "txt": "Hardware: conceitos, componentes e periféricos", "o": 4, "feito": ""}, "t1790435925103": {"id": "t1790435925103", "txt": "Tipos de memória (RAM, ROM, cache, virtual, internas e auxiliares); bit e bytes", "o": 5, "feito": "antes"}, "t1790435925104": {"id": "t1790435925104", "txt": "Programas em memória ROM; tempo de acesso e ciclo de memória", "o": 6, "feito": ""}, "t1790435925105": {"id": "t1790435925105", "txt": "Funcionalidade dos drivers de dispositivos", "o": 7, "feito": ""}, "t1790435925106": {"id": "t1790435925106", "txt": "Unidade central de processamento: organização, execução de instruções, registradores e clock", "o": 8, "feito": ""}, "t1790435925107": {"id": "t1790435925107", "txt": "Barramentos, padrões e interfaces; placas", "o": 9, "feito": "", "ln": ["bar"]}, "t1790435925108": {"id": "t1790435925108", "txt": "Portas serial, paralela, USB e PS-2", "o": 10, "feito": "", "ln": ["bar-7"]}, "t1790435925109": {"id": "t1790435925109", "txt": "Dispositivos de armazenamento; memória primária e memória secundária", "o": 11, "feito": "", "ln": ["bar-6"]}, "t1790435925110": {"id": "t1790435925110", "txt": "Sistemas de arquivos", "o": 12, "feito": ""}, "t1790435925111": {"id": "t1790435925111", "txt": "Periféricos; multimídia e impressão; dispositivos de entrada e saída", "o": 13, "feito": "antes"}, "t1790435925112": {"id": "t1790435925112", "txt": "Configuração de Setup e do sistema operacional", "o": 14, "feito": ""}, "t1790435925113": {"id": "t1790435925113", "txt": "Montagem, configuração e manutenção de microcomputadores", "o": 15, "feito": ""}, "t1790435925114": {"id": "t1790435925114", "txt": "Segurança: conceitos, vírus eletrônico, cuidados, prevenção e antivírus", "o": 16, "feito": ""}, "t1790435925115": {"id": "t1790435925115", "txt": "Software básico, sistema operacional, software utilitário, aplicativo e interfaces", "o": 17, "feito": ""}, "t1790435925116": {"id": "t1790435925116", "txt": "MS Windows 10: conceitos, ambiente gráfico, janelas e barras, painel de controle", "o": 18, "feito": ""}, "t1790435925117": {"id": "t1790435925117", "txt": "MS Windows 10: pastas, arquivos e atalhos; recursos de rede e compartilhamento", "o": 19, "feito": ""}, "t1790435925118": {"id": "t1790435925118", "txt": "MS Windows 10: área de transferência, mapeamento de dispositivos e impressão", "o": 20, "feito": ""}, "t1790435925119": {"id": "t1790435925119", "txt": "MS Word 2007/2010: conceitos, operações básicas e estrutura dos documentos", "o": 21, "feito": ""}, "t1790435925120": {"id": "t1790435925120", "txt": "MS Excel 2007/2010: estrutura das planilhas, células, linhas, colunas, pastas e gráficos", "o": 22, "feito": ""}, "t1790435925121": {"id": "t1790435925121", "txt": "MS PowerPoint e MS Access 2007/2010: usabilidade e conceitos básicos", "o": 23, "feito": ""}, "t1790435925122": {"id": "t1790435925122", "txt": "Software livre: conceitos e filosofia", "o": 24, "feito": "antes"}, "t1790435925123": {"id": "t1790435925123", "txt": "Linux: comandos", "o": 25, "feito": ""}, "t1790435925124": {"id": "t1790435925124", "txt": "BrOffice.Org 2.1 e Star Office 9", "o": 26, "feito": ""}, "t1790435925125": {"id": "t1790435925125", "txt": "Dispositivos de armazenamento e cópia de segurança (backup); uso dos menus", "o": 27, "feito": "antes"}, "t1790435925126": {"id": "t1790435925126", "txt": "Redes: noções, conceitos e hardware de redes", "o": 28, "feito": ""}, "t1790435925127": {"id": "t1790435925127", "txt": "Configuração de roteadores e switches; funcionamento básico dos equipamentos de rede", "o": 29, "feito": "antes"}, "t1790435925128": {"id": "t1790435925128", "txt": "Endereçamento IP, máscaras e sub-rede", "o": 30, "feito": ""}, "t1790435925129": {"id": "t1790435925129", "txt": "Arquiteturas, topologias e protocolos de rede", "o": 31, "feito": ""}, "t1790435925130": {"id": "t1790435925130", "txt": "Linguagem de programação estruturada: compiladores, ambientes de desenvolvimento e prototipação", "o": 32, "feito": "", "ln": ["alg-1", "alg-2"]}, "t1790435925131": {"id": "t1790435925131", "txt": "Programação estruturada: divisão modular e refinamentos sucessivos", "o": 33, "feito": ""}, "t1790435925132": {"id": "t1790435925132", "txt": "Programação estruturada x orientada a objetos: diferenças", "o": 34, "feito": ""}, "t1790435925133": {"id": "t1790435925133", "txt": "Conceitos de orientação a objetos em uma linguagem de programação", "o": 35, "feito": ""}, "t1790435925134": {"id": "t1790435925134", "txt": "Classes e objetos; comunicação", "o": 36, "feito": ""}, "t1790435925135": {"id": "t1790435925135", "txt": "Associações e agregações", "o": 37, "feito": ""}, "t1790435925136": {"id": "t1790435925136", "txt": "Herança, polimorfismo e sobrecarga; reuso", "o": 38, "feito": ""}, "t1790435925137": {"id": "t1790435925137", "txt": "Tipos de dados e cadeias de caracteres", "o": 39, "feito": "", "ln": ["alg-3"]}, "t1790435925138": {"id": "t1790435925138", "txt": "Estruturas de controle de seleção e repetição", "o": 40, "feito": "", "ln": ["alg-4", "alg-5"]}, "t1790435925139": {"id": "t1790435925139", "txt": "Vetores e matrizes", "o": 41, "feito": ""}, "t1790435925140": {"id": "t1790435925140", "txt": "Funções, bibliotecas e ponteiros", "o": 42, "feito": ""}, "t1790435925141": {"id": "t1790435925141", "txt": "Lei Geral de Proteção de Dados (Lei Federal nº 13.709 e atualizações)", "o": 43, "feito": ""}}}}}}};
+let seqId=0;
+const novoId=p=>p+Date.now().toString(36)+(seqId++).toString(36)+Math.random().toString(36).slice(2,5);
+function ED(){ if(!est.ed||!est.ed.editais){ est.ed=JSON.parse(JSON.stringify(EDITAL_INICIAL)); salvar(); } return est.ed; }
+const vivos=o=>Object.values(o||{}).filter(x=>x&&!x.del).sort((a,b)=>(a.o||0)-(b.o||0));
+function edAtual(){ const d=ED(); let e=d.editais[d.atual]; if(!e||e.del){ e=vivos(d.editais)[0]||null; if(e) d.atual=e.id; } return e; }
+/* Partes de um tópico que dá para riscar separadamente. Automático: o que vem depois do ":",
+   separado por vírgula, ";" ou " e " (sem cortar dentro de parênteses nem em "e de/da/do").
+   t.partes (lista) substitui o automático quando o usuário edita; t.pf = {parte: dia riscado}. */
+function partesAuto(txt){
+  const i=txt.indexOf(':'), corpo=i>=0?txt.slice(i+1):txt, out=[]; let dep=0, cur='';
+  const fecha=()=>{ const x=cur.trim().replace(/[.;,]$/,'').trim(); if(x) out.push(x); cur=''; };
+  for(let k=0;k<corpo.length;k++){ const c=corpo[k];
+    if(c==='(') dep++; else if(c===')') dep=Math.max(0,dep-1);
+    if(!dep&&(c===','||c===';')){ fecha(); continue; }
+    if(!dep&&c===' '&&/^ e (?!(de|da|do|das|dos)\b)/i.test(corpo.slice(k,k+8))){ fecha(); k+=2; continue; }
+    cur+=c; }
+  fecha();
+  if(i<0&&!/[,;]/.test(corpo.replace(/\([^)]*\)/g,''))) return [];  // sem ":" e sem vírgula: é um assunto só ("Lei X e alterações")
+  return out.length>1?out:[];
+}
+const partes=t=>Array.isArray(t.partes)?t.partes:partesAuto(t.txt||'');
+const parteFeita=(t,x)=>!!(t.feito||(t.pf&&t.pf[x]));
+function valorTop(t){ if(t.feito) return 1; const ps=partes(t); return ps.length?ps.filter(x=>parteFeita(t,x)).length/ps.length:0; }
+function statMat(m){ const ts=vivos(m.tops), f=ts.filter(t=>t.feito).length, pts=ts.reduce((a,t)=>a+valorTop(t),0); return {total:ts.length,feitos:f,pts,p:ts.length?Math.floor(100*pts/ts.length+1e-9):0}; }
+function statEd(e){ let total=0,feitos=0,pts=0; vivos(e.mats).forEach(m=>{const s=statMat(m);total+=s.total;feitos+=s.feitos;pts+=s.pts;}); return {total,feitos,pts,p:total?Math.floor(100*pts/total+1e-9):0}; }
+const alcancou=(s,p)=>s.total>0&&s.pts>=p*s.total/100-1e-9;
+const CONQ=[[10,'Aquecimento'],[25,'Embalado'],[50,'Metade do edital'],[75,'Reta final'],[100,'Edital fechado']];
+const proxConq=s=>CONQ.find(([p])=>!alcancou(s,p));
+const faltamPara=(s,p)=>Math.max(1,Math.ceil(p*s.total/100-s.pts-1e-9));
+const ehData=f=>/^\d{4}-\d\d-\d\d$/.test(f||'');
+
+/* ---------- aulas do Caderno ligadas a um tópico ---------- */
+function progCap(id){ if(!DADOS[id]) return {resp:0,total:0}; const st=est['q:'+id]||{}, ns=Object.keys(DADOS[id].questoes); return {resp:ns.filter(n=>st[n]).length,total:ns.length}; }
+function infoLink(l){
+  if(CAP[l]){ const c=CAP[l], s=progCap(l); return {href:'#/aula/'+l,rot:c.ap+' · Aula '+c.num,nome:c.nome,pronta:!!(c.pronta&&DADOS[l]),feita:s.total>0&&s.resp===s.total}; }
+  const ap=apPorId(l); if(!ap) return null;
+  const p=progressoAp(l); return {href:'#/biblioteca/a/'+l,rot:ap.nome,nome:'apostila inteira',pronta:ap.aulas.some(a=>a.pronta),feita:p.total>0&&p.resp===p.total};
+}
+
+/* ---------- ritmo, constância e sugestões ---------- */
+function diasTopicos(e){ const m={}; vivos(e.mats).forEach(x=>vivos(x.tops).forEach(t=>{ if(ehData(t.feito)) m[t.feito]=(m[t.feito]||0)+1; })); return m; }
+function diasPartes(e){ const m={}; vivos(e.mats).forEach(x=>vivos(x.tops).forEach(t=>Object.values(t.pf||{}).forEach(d=>{ if(ehData(d)) m[d]=(m[d]||0)+1; }))); return m; }
+function diasQuestoes(){ const s=new Set(); LOG().forEach(x=>{ if(x.tipo==='resp') s.add(dstr(new Date(x.t))); }); return s; }
+function sequencia(top,qs){ let n=0, d=hoje(); if(!top[d]&&!qs.has(d)) d=somaDias(d,-1); while(top[d]||qs.has(d)){ n++; d=somaDias(d,-1); } return n; }
+function proximos(e,n){
+  const pend=[];
+  vivos(e.mats).forEach(m=>{ const s=statMat(m); vivos(m.tops).forEach((t,i)=>{ if(t.feito) return;
+    const pronto=(t.ln||[]).some(l=>{const k=infoLink(l);return k&&k.pronta;});
+    pend.push({t,m,i,p:s.p,pronto}); }); });
+  pend.sort((a,b)=>(b.pronto-a.pronto)||(a.p-b.p)||(a.m.o-b.m.o)||(a.i-b.i));
+  const out=[], usadas=new Set();
+  pend.forEach(x=>{ if(out.length<n&&!usadas.has(x.m.id)){ out.push(x); usadas.add(x.m.id); } });
+  pend.forEach(x=>{ if(out.length<n&&!out.includes(x)) out.push(x); });
+  return out;
+}
+function anel(p,tam,esp,cls){
+  const c=tam/2, r=(tam-esp)/2, vol=2*Math.PI*r;
+  return '<svg class="anel'+(cls?' '+cls:'')+'" viewBox="0 0 '+tam+' '+tam+'" aria-hidden="true"><circle class="tr" cx="'+c+'" cy="'+c+'" r="'+r+'" stroke-width="'+esp+'"/>'+
+    '<circle class="vl" cx="'+c+'" cy="'+c+'" r="'+r+'" stroke-width="'+esp+'" stroke-dasharray="'+vol.toFixed(2)+'" stroke-dashoffset="'+(vol*(1-p/100)).toFixed(2)+'" transform="rotate(-90 '+c+' '+c+')"/></svg>';
+}
+
+/* ---------- página ---------- */
+const edUI={filtro:'todos',busca:'',editar:false,ligando:null,msg:''};
+const abertas=()=>est.edAb=est.edAb||{};
+function renderEdital(id){
+  const pg=$('#pg-edital'), d=ED();
+  if(id&&d.editais[id]&&!d.editais[id].del&&d.atual!==id){ d.atual=id; salvar(); }
+  const e=edAtual();
+  trilhaTopo('');
+  if(!e){ pg.innerHTML='<header class="pg-cab peq"><h1>Edital</h1><p class="sub">Monte aqui o conteúdo do seu concurso e marque cada tópico que concluir.</p></header>'+
+    '<div class="vazio">'+ic('i-edital')+'<b>Nenhum edital ainda.</b><span>Crie um novo ou importe o backup do outro sistema.</span></div>'+ferramentas(null); return; }
+  const s=statEd(e), pc=proxConq(s), top=diasTopicos(e), pts=diasPartes(e), qs=diasQuestoes(), ativ=Object.assign({},pts); Object.entries(top).forEach(([dd,n])=>ativ[dd]=(ativ[dd]||0)+n);
+  const seq=sequencia(ativ,qs);
+  const lim14=somaDias(hoje(),-13), feitos14=Object.entries(top).filter(([dd])=>dd>=lim14).reduce((a,[,n])=>a+n,0), porSem=feitos14/2, rest=s.total-s.feitos;
+  let ritmo='';
+  if(!rest) ritmo='<p class="ed-rit ok">'+ic('i-ok')+'<span><b>Edital fechado!</b> Agora é revisar e fazer simulados.</span></p>';
+  else{
+    const dias=e.prova?difDias(hoje(),e.prova):null;
+    if(dias!==null&&dias>0){
+      const precisa=Math.ceil(rest/Math.max(1,dias/7)), bom=porSem>=precisa;
+      ritmo='<p class="ed-rit '+(bom?'ok':'al')+'">'+ic(bom?'i-ok':'i-alerta')+'<span>'+(bom?'<b>No ritmo certo.</b> ':'<b>Acelere um pouco.</b> ')+'Para fechar até a prova: <b>'+precisa+' '+(precisa===1?'tópico':'tópicos')+' por semana</b>. Seu ritmo nas últimas 2 semanas: <b>'+String(Math.round(porSem*10)/10).replace('.',',')+'</b> por semana.</span></p>';
+    }
+    if(feitos14>=3) ritmo+='<p class="ed-proj">No seu ritmo atual, você fecha o edital em <b>'+fdata(somaDias(hoje(),Math.ceil(rest/porSem*7)))+'</b>.</p>';
+    else ritmo+='<p class="ed-proj">Conclua '+(3-feitos14)+' '+(3-feitos14===1?'tópico':'tópicos')+' nestas 2 semanas e o Caderno calcula quando você fecha o edital.</p>';
+  }
+  const prova=e.prova?difDias(hoje(),e.prova):null;
+  const cont=e.prova?(prova>1?'<b class="ed-dias">'+prova+'</b><span>dias para a prova</span>':prova===1?'<b class="ed-dias">1</b><span>dia para a prova: amanhã!</span>':prova===0?'<b class="ed-dias">Hoje</b><span>é o dia da prova. Boa sorte!</span>':'<b class="ed-dias">✓</b><span>a prova já passou</span>'):'<b class="ed-dias">?</b><span>Quando é a prova?</span>';
+  const trilha='<ol class="ed-conq" aria-label="Conquistas">'+CONQ.map(([p,n])=>{const ok=alcancou(s,p);return '<li class="'+(ok?'ok':'')+(pc&&pc[0]===p?' prox':'')+'"><span class="pt">'+(ok?ic('i-ok'):p+'%')+'</span><span class="nm">'+n+'</span></li>';}).join('')+'</ol>';
+  const sug=proximos(e,3);
+  pg.innerHTML=
+    '<header class="pg-cab peq ed-cab"><span class="chip">'+ic('i-edital')+'Edital</span><h1>'+esc(e.titulo)+'</h1></header>'+
+    '<section class="ed-hero" aria-label="Seu progresso no edital">'+
+      '<div class="ed-anel">'+anel(s.p,200,18)+'<div class="ed-num"><b>'+s.p+'%</b><span>'+s.feitos+' de '+s.total+' tópicos</span></div></div>'+
+      '<div class="ed-info">'+
+        '<div class="ed-meta">'+(pc?'<span class="ct">Próxima conquista</span><p class="ed-alvo"><b>'+pc[1]+'</b> ('+pc[0]+'%): falta'+(faltamPara(s,pc[0])===1?' ':'m ')+'<b>'+faltamPara(s,pc[0])+'</b> '+(faltamPara(s,pc[0])===1?'tópico':'tópicos')+'.</p>':'<span class="ct">Conquistas</span><p class="ed-alvo"><b>Todas desbloqueadas.</b></p>')+trilha+'</div>'+
+        '<div class="ed-lado2"><div class="ed-prova">'+cont+'<label class="ed-data">Data da prova <input type="date" data-ed="prova" value="'+esc(e.prova||'')+'"></label></div>'+
+        '<div class="ed-seq"><b class="ed-dias">'+seq+'</b><span>'+(seq===1?'dia seguido':'dias seguidos')+' estudando</span></div></div>'+
+        ritmo+
+      '</div>'+
+    '</section>'+
+    (sug.length?'<section class="card ed-sug" aria-labelledby="ed-t-sug"><h2 class="ct" id="ed-t-sug">Próximos passos</h2><ol>'+sug.map(x=>{
+      const l=(x.t.ln||[]).map(infoLink).find(k=>k&&k.pronta);
+      return '<li>'+botaoCk(x.t,x.m)+'<div class="tx"><b>'+esc(x.t.txt)+'</b><small>'+esc(x.m.titulo)+' · '+statMat(x.m).p+'% feito</small></div>'+(l?'<a class="btn out mini" href="'+l.href+'">'+ic('i-aula')+'Estudar no Caderno</a>':'')+'</li>';}).join('')+'</ol></section>':'')+
+    '<div class="ed-g2">'+
+      '<section class="card ed-mapa" aria-labelledby="ed-t-cal"><h2 class="ct" id="ed-t-cal">Sua constância · 12 semanas</h2>'+calendario(top,qs,pts)+'</section>'+
+      '<section class="card ed-res" aria-labelledby="ed-t-mat"><h2 class="ct" id="ed-t-mat">Matérias</h2><ul>'+vivos(e.mats).map(m=>{const sm=statMat(m);return '<li><a href="#ed-'+m.id+'" data-ed="ir" data-m="'+m.id+'"><span class="nm">'+esc(m.titulo)+'</span><span class="bp'+(sm.p===100?' ouro':'')+'"><i style="width:'+sm.p+'%"></i></span><span class="mono">'+sm.feitos+'/'+sm.total+'</span></a></li>';}).join('')+'</ul></section>'+
+    '</div>'+
+    '<div class="ed-barra"><div class="seg" role="group" aria-label="Mostrar">'+[['todos','Todos',s.total],['falta','Falta estudar',rest],['feitos','Concluídos',s.feitos]].map(([v,t,n])=>'<button type="button" data-ed="filtro" data-v="'+v+'" aria-pressed="'+(edUI.filtro===v)+'">'+t+' <span>'+n+'</span></button>').join('')+'</div>'+
+      '<input class="ed-busca" type="search" data-ed="busca" placeholder="Procurar tópico…" aria-label="Procurar tópico" value="'+esc(edUI.busca)+'">'+
+      '<button type="button" class="btn '+(edUI.editar?'pri':'out')+' mini" data-ed="editar" aria-pressed="'+edUI.editar+'">'+(edUI.editar?'Concluir edição':'Editar edital')+'</button></div>'+
+    '<div id="ed-lista">'+lista(e)+'</div>'+
+    ferramentas(e)+
+    '<div id="ed-toast" role="status" aria-live="polite"></div>';
+}
+function botaoCk(t,m){ const v=valorTop(t); return '<button type="button" class="ed-ck'+(!t.feito&&v>0?' meio':'')+'" style="--v:'+Math.round(v*100)+'%" data-ed="ck" data-m="'+m.id+'" data-t="'+t.id+'" aria-pressed="'+!!t.feito+'" aria-label="'+(t.feito?'Desmarcar':'Marcar como concluído')+': '+esc(t.txt)+'">'+ic('i-ok')+'</button>'; }
+function calendario(top,qs,pts){
+  const h=hoje(), dw=new Date(h+'T12:00').getDay(), ini=somaDias(h,-(7*11+dw)); let cel='', ativos=0, tops=0;
+  for(let i=0;i<84;i++){ const d=somaDias(ini,i); if(d>h){ cel+='<i class="fut"></i>'; continue; }
+    const n=top[d]||0, pt=pts[d]||0, q=qs.has(d); if(n||pt||q) ativos++; tops+=n;
+    cel+='<i class="'+(n>=3?'n3':n||pt?'n2':q?'n1':'')+(d===h?' hj':'')+'" title="'+fdata(d)+': '+(n?n+(n===1?' tópico concluído':' tópicos concluídos'):pt?pt+(pt===1?' parte riscada':' partes riscadas'):q?'respondeu questões':'sem estudo')+'"></i>'; }
+  return '<div class="ed-cal" role="img" aria-label="'+ativos+' dias de estudo e '+tops+' tópicos concluídos nas últimas 12 semanas">'+cel+'</div>'+
+    '<p class="ed-leg"><span><i></i>sem estudo</span><span><i class="n1"></i>questões</span><span><i class="n2"></i>tópicos ou partes</span><span><i class="n3"></i>3 ou mais</span></p>';
+}
+function lista(e){
+  const b=edUI.busca.trim().toLowerCase(), ed=edUI.editar, ab=abertas();
+  let html='', algum=false;
+  vivos(e.mats).forEach((m,mi,ms)=>{
+    const sm=statMat(m);
+    const ts=vivos(m.tops).filter(t=>(edUI.filtro==='todos'||(edUI.filtro==='feitos')===!!t.feito)&&(!b||t.txt.toLowerCase().includes(b)));
+    if((b||edUI.filtro!=='todos')&&!ts.length&&!ed) return;
+    algum=true;
+    const aberta=ed||!!b||edUI.filtro!=='todos'||ab[m.id]===1;  // fechadas por padrão: a página fica curta
+    html+='<section class="ed-mat'+(sm.p===100?' completa':'')+'" id="ed-'+m.id+'">'+
+      '<div class="ed-mcab">'+
+        (ed?'<input class="ed-in tit" data-ed="nome-m" data-m="'+m.id+'" value="'+esc(m.titulo)+'" aria-label="Nome da matéria">'+
+          '<span class="ed-ord"><button type="button" class="btn fant mini" data-ed="sobe-m" data-m="'+m.id+'"'+(mi?'':' disabled')+' aria-label="Subir matéria">↑</button><button type="button" class="btn fant mini" data-ed="desce-m" data-m="'+m.id+'"'+(mi<ms.length-1?'':' disabled')+' aria-label="Descer matéria">↓</button>'+
+          '<button type="button" class="btn fant mini perigo" data-ed="apaga-m" data-m="'+m.id+'"><span>Apagar</span></button></span>'
+        :'<button type="button" class="ed-abre" data-ed="abre" data-m="'+m.id+'" aria-expanded="'+aberta+'">'+anel(sm.p,52,6,sm.p===100?'ouro':'')+
+          '<span class="tx"><b>'+esc(m.titulo)+'</b><small>'+sm.feitos+' de '+sm.total+' tópicos'+(sm.p===100?' · <span class="selo">Matéria concluída</span>':' · '+sm.p+'%')+'</small></span><span class="seta" aria-hidden="true">▾</span></button>')+
+      '</div>'+
+      (aberta?'<ul class="ed-tops">'+ts.map((t,ti)=>topico(t,m,ti,ts.length)).join('')+
+        (ed?'<li class="ed-novo"><input class="ed-in" data-ed="novo-t" data-m="'+m.id+'" placeholder="+ Novo tópico (Enter para adicionar)" aria-label="Novo tópico em '+esc(m.titulo)+'"></li>':'')+
+        (!ts.length&&!ed?'<li class="mut ed-vz">Nada aqui com esse filtro.</li>':'')+'</ul>':'')+
+    '</section>';
+  });
+  if(ed) html+='<div class="ed-novo-m"><input class="ed-in" data-ed="novo-m" placeholder="+ Nova matéria (Enter para adicionar)" aria-label="Nova matéria"></div>';
+  else if(!algum) html='<div class="vazio">'+ic('i-busca')+'<b>Nenhum tópico encontrado.</b><span>Tente outra palavra ou mude o filtro.</span></div>';
+  return html;
+}
+function topico(t,m,i,n){
+  const ed=edUI.editar, lk=(t.ln||[]).map(l=>[l,infoLink(l)]).filter(x=>x[1]), ps=partes(t);
+  const todasFeitas=lk.length&&lk.every(([,k])=>k.feita);
+  const quando=t.feito?(ehData(t.feito)?'concluído em '+fdata(t.feito):'concluído antes'):'';
+  return '<li class="ed-top'+(t.feito?' feito':'')+'" data-t="'+t.id+'">'+botaoCk(t,m)+
+    '<div class="tx">'+(ed?'<input class="ed-in" data-ed="nome-t" data-m="'+m.id+'" data-t="'+t.id+'" value="'+esc(t.txt)+'" aria-label="Texto do tópico">':'<span class="nm">'+esc(t.txt)+'</span>')+
+      (quando?'<small>'+quando+'</small>':'')+
+      (ps.length&&!ed?'<div class="ed-partes" aria-label="Partes deste tópico">'+ps.map((x,k)=>'<button type="button" class="ed-pt" data-ed="parte" data-m="'+m.id+'" data-t="'+t.id+'" data-i="'+k+'" aria-pressed="'+parteFeita(t,x)+'">'+esc(x)+'</button>').join('')+(t.feito?'':'<small class="ed-cont">'+ps.filter(x=>parteFeita(t,x)).length+' de '+ps.length+' partes</small>')+'</div>':'')+
+      (ed?'<label class="ed-plab">Partes que dá para riscar separadamente (separe por ;)<input class="ed-in" data-ed="partes-t" data-m="'+m.id+'" data-t="'+t.id+'" value="'+esc(ps.join('; '))+'" placeholder="Sem partes"></label>':'')+
+      (!t.feito&&todasFeitas?'<small class="ed-dica">Você já respondeu tudo das aulas ligadas. Pode marcar como concluído!</small>':'')+
+      (lk.length||ed?'<div class="ed-lks">'+lk.map(([l,k])=>(k.pronta?'<a class="ed-lk'+(k.feita?' ok':'')+'" href="'+k.href+'" title="'+esc(k.nome)+'">':'<span class="ed-lk breve" title="Aula ainda não publicada">')+(k.feita?ic('i-ok'):'<i aria-hidden="true"></i>')+esc(k.rot)+(k.pronta?'':' · em breve')+(k.pronta?'</a>':'</span>')+
+        (ed?'<button type="button" class="ed-x" data-ed="desliga" data-m="'+m.id+'" data-t="'+t.id+'" data-l="'+l+'" aria-label="Tirar a ligação com '+esc(k.rot)+'">×</button>':'')).join('')+
+        (ed?(edUI.ligando===t.id?seletorAulas(m,t):'<button type="button" class="btn fant mini" data-ed="liga" data-t="'+t.id+'">+ Ligar aula do Caderno</button>'):'')+'</div>':'')+
+    '</div>'+
+    (ed?'<span class="ed-ord"><button type="button" class="btn fant mini" data-ed="sobe-t" data-m="'+m.id+'" data-t="'+t.id+'"'+(i?'':' disabled')+' aria-label="Subir">↑</button><button type="button" class="btn fant mini" data-ed="desce-t" data-m="'+m.id+'" data-t="'+t.id+'"'+(i<n-1?'':' disabled')+' aria-label="Descer">↓</button><button type="button" class="btn fant mini perigo" data-ed="apaga-t" data-m="'+m.id+'" data-t="'+t.id+'"><span>Apagar</span></button></span>':'')+
+  '</li>';
+}
+function seletorAulas(m,t){
+  return '<select class="ed-sel" data-ed="liga-sel" data-m="'+m.id+'" data-t="'+t.id+'" aria-label="Escolha a aula"><option value="">Escolha a aula…</option>'+
+    APS.map(ap=>'<optgroup label="'+esc(ap.materia+' › '+ap.nome)+'"><option value="'+ap.id+'">'+esc(ap.nome)+' (apostila inteira)</option>'+ap.aulas.map(a=>'<option value="'+a.cap+'">Aula '+a.num+' · '+esc(a.nome)+(a.pronta?'':' (em breve)')+'</option>').join('')+'</optgroup>').join('')+'</select>';
+}
+function ferramentas(e){
+  const outros=vivos(ED().editais);
+  return '<details class="ed-ferr"'+(e?'':' open')+'><summary>Mais opções: outros editais, importar, apagar</summary><div class="ed-ferr-g">'+
+    (outros.length>1?'<label class="esc">Edital aberto <select data-ed="trocar">'+outros.map(x=>'<option value="'+x.id+'"'+(e&&x.id===e.id?' selected':'')+'>'+esc(x.titulo)+'</option>').join('')+'</select></label>':'')+
+    (e?'<label class="ed-campo">Nome deste edital<input class="ed-in" data-ed="nome-e" value="'+esc(e.titulo)+'"></label>':'')+
+    '<div class="ed-campo"><b>Novo edital colando a lista</b><small>Cole o conteúdo programático. Linhas que terminam com ":" ou começam com "#" viram matérias; as outras viram tópicos (pode separar tópicos com ";").</small>'+
+      '<input class="ed-in" id="ed-nl-tit" placeholder="Nome do edital (ex.: Prefeitura X 2027)"><textarea class="ed-in" id="ed-nl-txt" rows="6" placeholder="Português:&#10;Ortografia; Acentuação; Crase&#10;Raciocínio Lógico:&#10;Proposições e conectivos"></textarea>'+
+      '<button type="button" class="btn out mini" data-ed="criar-lista">Criar edital</button></div>'+
+    '<div class="ed-campo"><b>Importar backup do outro sistema</b><small>Escolha o arquivo .json. Editais novos são adicionados; nos que já existem, os tópicos marcados lá também ficam marcados aqui (nada é desmarcado).</small>'+
+      '<input type="file" accept=".json,application/json" data-ed="arquivo"></div>'+
+    (edUI.msg?'<p class="ed-msg" role="status">'+edUI.msg+'</p>':'')+
+    (e?'<div class="ed-campo"><button type="button" class="btn fant mini perigo" data-ed="apaga-e"><span>Apagar este edital</span></button></div>':'')+
+  '</div></details>';
+}
+
+/* ---------- comemoração ---------- */
+const FRASES=['Mais um!','Boa!','Isso aí!','Arrasou!','Segue firme!','Um a menos!'];
+function aviso(html,grande){
+  const t=$('#ed-toast'); if(!t) return;
+  t.innerHTML='<div class="'+(grande?'grande':'')+'">'+html+'</div>'; t.classList.remove('vis'); void t.offsetWidth; t.classList.add('vis');
+  clearTimeout(aviso.tm); aviso.tm=setTimeout(()=>t.classList.remove('vis'),grande?4200:2600);
+}
+function confete(el,n){
+  if(!el||matchMedia('(prefers-reduced-motion: reduce)').matches||!Element.prototype.animate) return;
+  const r=el.getBoundingClientRect(), cs=getComputedStyle(document.documentElement);
+  const cores=['--pri','--dest-forte','--coral','--roxo','--hl-forte'].map(v=>cs.getPropertyValue(v).trim());
+  for(let i=0;i<n;i++){
+    const p=document.createElement('i'); p.className='confete';
+    p.style.left=(r.left+r.width/2)+'px'; p.style.top=(r.top+r.height/2)+'px'; p.style.background=cores[i%cores.length];
+    document.body.appendChild(p);
+    const ang=Math.random()*Math.PI*2, dist=40+Math.random()*(n>30?220:110);
+    p.animate([{transform:'translate(-50%,-50%) rotate(0)',opacity:1},{transform:'translate('+(Math.cos(ang)*dist)+'px,'+(Math.sin(ang)*dist+60)+'px) rotate('+(Math.random()*720-360)+'deg)',opacity:0}],{duration:900+Math.random()*700,easing:'cubic-bezier(.2,.7,.3,1)'}).onfinish=()=>p.remove();
+  }
+}
+
+/* ---------- ações ---------- */
+function acharMat(mid){ const e=edAtual(); return e&&e.mats[mid]; }
+function moverO(lst,obj,dir){ const i=lst.indexOf(obj), j=i+dir; if(j<0||j>=lst.length) return; lst.forEach((x,k)=>x.o=k); const t=lst[i].o; lst[i].o=lst[j].o; lst[j].o=t; }
+function reEdital(focoSel){ renderEdital(); if(focoSel){ const el=$(focoSel); if(el) el.focus({preventScroll:true}); } }
+function confirmar(b,txt){ if(b.classList.contains('confirma')) return true; b.classList.add('confirma'); $('span',b).textContent=txt; return false; }
+function marcar(b){
+  const e=edAtual(), m=acharMat(b.dataset.m), t=m&&m.tops[b.dataset.t]; if(!t) return;
+  const antes=statEd(e), mAntes=statMat(m), tAntes=!!t.feito, y=b.getBoundingClientRect().top;
+  const sel='#pg-edital [data-ed="'+b.dataset.ed+'"][data-t="'+t.id+'"]'+(b.dataset.i!==undefined?'[data-i="'+b.dataset.i+'"]':'');
+  let parte=null;
+  if(b.dataset.ed==='ck'){ t.feito=t.feito?'':hoje(); if(!t.feito) t.pf={}; }
+  else{
+    const ps=partes(t), x=ps[+b.dataset.i]; if(x===undefined) return; t.pf=t.pf||{};
+    if(parteFeita(t,x)){ if(t.feito){ ps.forEach(y=>{ if(!t.pf[y]) t.pf[y]=hoje(); }); t.feito=''; } delete t.pf[x]; }
+    else{ t.pf[x]=hoje(); parte=x; if(ps.every(y=>t.pf[y])) t.feito=hoje(); }
+  }
+  salvar();
+  const depois=statEd(e), mDep=statMat(m);
+  reEdital();
+  const naSug=!!b.closest('.ed-sug');  // nos Próximos passos o tópico sai da lista: fica onde está
+  const nb=naSug?($('#pg-edital .ed-sug [data-ed="ck"]')||$('#ed-t-sug')):$(sel);
+  if(nb&&!naSug) window.scrollBy(0,nb.getBoundingClientRect().top-y);
+  if(nb&&nb.focus) nb.focus({preventScroll:true});
+  if(depois.pts<=antes.pts) return;
+  const pc=proxConq(depois), falta=pc?'Falta'+(faltamPara(depois,pc[0])===1?' ':'m ')+faltamPara(depois,pc[0])+' para "'+pc[1]+'".':'Edital quase fechado.';
+  const conq=CONQ.find(([p])=>!alcancou(antes,p)&&alcancou(depois,p));
+  if(conq){ aviso('<b>Conquista desbloqueada: '+conq[1]+'!</b><span>Você passou de '+conq[0]+'% do edital.</span>',true); confete(nb,70); }
+  else if(mDep.p===100&&mAntes.p<100){ aviso('<b>Matéria concluída!</b><span>'+esc(m.titulo)+'</span>',true); confete(nb,50); }
+  else if(t.feito&&!tAntes){ aviso('<b>'+(parte?'Tópico completo! ':'')+FRASES[depois.feitos%FRASES.length]+'</b><span>'+falta+'</span>'); confete(nb,parte?26:18); }
+  else if(parte){ const ps=partes(t), r=ps.filter(y=>!parteFeita(t,y)).length; aviso('<b>Parte riscada: '+esc(parte)+'</b><span>'+(r===1?'Falta 1 parte':'Faltam '+r+' partes')+' neste tópico.</span>'); confete(nb,8); }
+}
+function deTeddy(d){
+  return (d.editais||[]).map(x=>{ const ed={id:'e'+x.id,titulo:x.title||'Edital',prova:'',o:0,mats:{}};
+    (x.subjects||[]).forEach((m,mo)=>{ const mat={id:'m'+m.id,titulo:m.title||'Matéria',o:mo,tops:{}};
+      (m.topics||[]).forEach((t,to)=>{ mat.tops['t'+t.id]={id:'t'+t.id,txt:t.text||'',o:to,feito:t.done?'antes':''}; }); ed.mats[mat.id]=mat; });
+    return ed; });
+}
+function importar(lst){
+  const d=ED(); let novos=0, marcados=0;
+  lst.forEach(x=>{
+    const ex=d.editais[x.id];
+    if(!ex||ex.del){ x.o=vivos(d.editais).length; d.editais[x.id]=x; novos++; return; }
+    vivos(x.mats).forEach(m=>{ let mm=ex.mats[m.id]; if(!mm||mm.del){ m.o=vivos(ex.mats).length; ex.mats[m.id]=m; return; }
+      vivos(m.tops).forEach(t=>{ const tt=mm.tops[t.id]; if(!tt||tt.del){ t.o=vivos(mm.tops).length; mm.tops[t.id]=t; } else if(t.feito&&!tt.feito){ tt.feito=t.feito; marcados++; } }); });
+  });
+  salvar();
+  return (novos?novos+(novos===1?' edital novo':' editais novos'):'Nenhum edital novo')+(marcados?' · '+marcados+(marcados===1?' tópico marcado':' tópicos marcados'):'')+'.';
+}
+function deLista(titulo,txt){
+  const ed={id:novoId('e'),titulo:titulo||'Novo edital',prova:'',o:vivos(ED().editais).length,mats:{}}; let mat=null;
+  const novaMat=nm=>{ mat={id:novoId('m'),titulo:nm,o:Object.keys(ed.mats).length,tops:{}}; ed.mats[mat.id]=mat; };
+  txt.split(/\r?\n/).forEach(l=>{ const s=l.trim(); if(!s) return;
+    if(/^#/.test(s)||/:$/.test(s)){ novaMat(s.replace(/^#+\s*/,'').replace(/:$/,'').trim()); return; }
+    if(!mat) novaMat('Conteúdo');
+    s.split(/;\s*/).forEach(p=>{ const tx=p.replace(/^([-•*·–]|\d+(\.\d+)*[.)\-]?)\s+/,'').replace(/[.;]$/,'').trim(); if(!tx) return; const id=novoId('t'); mat.tops[id]={id,txt:tx,o:Object.keys(mat.tops).length,feito:''}; });
+  });
+  return ed;
+}
+const pgEd=$('#pg-edital');
+pgEd.addEventListener('click',ev=>{
+  const b=ev.target.closest('[data-ed]'); if(!b||b.tagName==='INPUT'||b.tagName==='SELECT'||b.tagName==='TEXTAREA') return;
+  const a=b.dataset.ed, e=edAtual(), m=b.dataset.m&&acharMat(b.dataset.m), t=m&&b.dataset.t&&m.tops[b.dataset.t];
+  if(a==='ck'||a==='parte') return marcar(b);
+  if(a==='ir'){ ev.preventDefault(); abertas()[b.dataset.m]=1; salvar(); edUI.filtro='todos'; reEdital(); const s=$('#ed-'+b.dataset.m); if(s){ s.scrollIntoView({behavior:'smooth',block:'start'}); const bt=$('.ed-abre',s); if(bt) bt.focus({preventScroll:true}); } return; }
+  if(a==='abre'){ const ab=abertas(); ab[b.dataset.m]=b.getAttribute('aria-expanded')==='true'?0:1; salvar(); $('#ed-lista').innerHTML=lista(e); const nb=$('#ed-lista [data-ed="abre"][data-m="'+b.dataset.m+'"]'); if(nb) nb.focus(); return; }
+  if(a==='filtro'){ edUI.filtro=b.dataset.v; $$('[data-ed="filtro"]',pgEd).forEach(x=>x.setAttribute('aria-pressed',x===b)); $('#ed-lista').innerHTML=lista(e); return; }
+  if(a==='editar'){ edUI.editar=!edUI.editar; edUI.ligando=null; return reEdital('[data-ed="editar"]'); }
+  if(a==='liga'){ edUI.ligando=b.dataset.t; $('#ed-lista').innerHTML=lista(e); const s=$('[data-ed="liga-sel"]',pgEd); if(s) s.focus(); return; }
+  if(a==='desliga'&&t){ t.ln=(t.ln||[]).filter(l=>l!==b.dataset.l); salvar(); $('#ed-lista').innerHTML=lista(e); return; }
+  if(a==='sobe-m'||a==='desce-m'){ moverO(vivos(e.mats),m,a==='sobe-m'?-1:1); salvar(); return reEdital('[data-ed="'+a+'"][data-m="'+m.id+'"]'); }
+  if(a==='sobe-t'||a==='desce-t'){ moverO(vivos(m.tops),t,a==='sobe-t'?-1:1); salvar(); return reEdital('[data-ed="'+a+'"][data-t="'+t.id+'"]'); }
+  if(a==='apaga-t'&&t){ if(!confirmar(b,'Apagar?')) return; t.del=1; salvar(); return reEdital(); }
+  if(a==='apaga-m'&&m){ if(!confirmar(b,'Apagar matéria e tópicos?')) return; m.del=1; salvar(); return reEdital(); }
+  if(a==='apaga-e'&&e){ if(!confirmar(b,'Apagar mesmo? Não dá para desfazer')) return; e.del=1; edUI.msg='Edital apagado.'; salvar(); return reEdital(); }
+  if(a==='criar-lista'){ const tit=$('#ed-nl-tit').value.trim(), tx=$('#ed-nl-txt').value; if(!tx.trim()){ edUI.msg='Cole a lista de conteúdos antes de criar.'; return reEdital(); }
+    const ed=deLista(tit,tx); ED().editais[ed.id]=ed; ED().atual=ed.id; edUI.msg='Edital criado: '+esc(ed.titulo)+'.'; salvar(); location.hash='#/edital/'+ed.id; return; }
+});
+pgEd.addEventListener('change',ev=>{
+  const el=ev.target, a=el.dataset.ed, e=edAtual(); if(!a) return;
+  const m=el.dataset.m&&acharMat(el.dataset.m), t=m&&el.dataset.t&&m.tops[el.dataset.t], v=(el.value||'').trim();
+  if(a==='prova'){ e.prova=el.value||''; salvar(); return reEdital('[data-ed="prova"]'); }
+  if(a==='nome-e'&&v){ e.titulo=v; salvar(); return reEdital(); }
+  if(a==='nome-m'&&m&&v){ m.titulo=v; salvar(); return; }
+  if(a==='nome-t'&&t&&v){ t.txt=v; salvar(); return; }
+  if(a==='partes-t'&&t){ const l=v?v.split(';').map(x=>x.trim()).filter(Boolean):[]; if(l.join(';')===partesAuto(t.txt).join(';')) delete t.partes; else t.partes=l.length>1?l:[]; salvar(); return; }
+  if(a==='liga-sel'&&t&&v){ t.ln=[...new Set([...(t.ln||[]),v])]; edUI.ligando=null; salvar(); $('#ed-lista').innerHTML=lista(e); return; }
+  if(a==='trocar'){ location.hash='#/edital/'+el.value; return; }
+  if(a==='arquivo'&&el.files&&el.files[0]){ const fr=new FileReader(); fr.onload=()=>{ try{ const d=JSON.parse(fr.result), l=deTeddy(d); edUI.msg=l.length?importar(l):'Esse arquivo não tem editais.'; }catch(x){ edUI.msg='Não consegui ler esse arquivo. Confira se é o backup .json.'; } reEdital(); }; fr.readAsText(el.files[0]); }
+});
+pgEd.addEventListener('keydown',ev=>{
+  const el=ev.target; if(ev.key!=='Enter'||!el.dataset||!/^novo-[mt]$/.test(el.dataset.ed||'')) return;
+  ev.preventDefault(); const v=el.value.trim(), e=edAtual(); if(!v) return;
+  if(el.dataset.ed==='novo-t'){ const m=acharMat(el.dataset.m), id=novoId('t'); m.tops[id]={id,txt:v,o:vivos(m.tops).length,feito:''}; salvar(); $('#ed-lista').innerHTML=lista(e); const n=$('[data-ed="novo-t"][data-m="'+m.id+'"]',pgEd); if(n) n.focus(); }
+  else{ const id=novoId('m'); e.mats[id]={id,titulo:v,o:vivos(e.mats).length,tops:{}}; salvar(); $('#ed-lista').innerHTML=lista(e); const n=$('[data-ed="novo-t"][data-m="'+id+'"]',pgEd); if(n) n.focus(); }
+});
+pgEd.addEventListener('input',ev=>{ if(ev.target.dataset.ed==='busca'){ edUI.busca=ev.target.value; $('#ed-lista').innerHTML=lista(edAtual()); } });
+
+/* cartão do edital na página Hoje */
+function edCartaoHoje(){
+  const e=edAtual(); if(!e) return '';
+  const s=statEd(e), pc=proxConq(s), x=proximos(e,1)[0], dias=e.prova?difDias(hoje(),e.prova):null;
+  return '<h2 class="sec-h">Seu edital</h2><a class="card ed-hoje" href="#/edital">'+
+    '<span class="ed-anel mini">'+anel(s.p,84,9)+'<b>'+s.p+'%</b></span>'+
+    '<span class="tx"><b>'+esc(e.titulo)+'</b><small>'+s.feitos+' de '+s.total+' tópicos'+(dias>0?' · prova em '+diasTxt(dias):'')+(pc?' · falta'+(faltamPara(s,pc[0])===1?' ':'m ')+faltamPara(s,pc[0])+' para "'+pc[1]+'"':'')+'</small>'+
+    (x?'<small class="prox">Próximo: <b>'+esc(x.t.txt)+'</b></small>':'')+'</span><span class="cont">Abrir →</span></a>';
+}
+
+
+/* =========================================================
    Contadores, cliques gerais e rotas
    ========================================================= */
 function atualizarContadores(){
@@ -12976,6 +13460,7 @@ function rota(semRolar){
   else if(p==='revisao'){ mostrarPagina('revisao'); renderRevisao(); }
   else if(p==='estatisticas'){ mostrarPagina('estatisticas'); renderEstat(); }
   else if(p==='salvas'){ mostrarPagina('salvas'); renderSalvas(); }
+  else if(p==='edital'){ mostrarPagina('edital'); renderEdital(partes[1]); }
   else { mostrarPagina('hoje'); renderHoje(); }
   if(!semRolar&&p!=='aula') window.scrollTo(0,0);
   if(!semRolar){ const h=$('#pg-'+(p==='aula'?'aula':PAGINAS.includes(p)?p:'hoje')+' h1'); if(h&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.side,.nav-baixo')){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); } }
