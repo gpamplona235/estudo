@@ -17458,11 +17458,12 @@ function sair(k,porque){ if(rev()[k]){ delete rev()[k]; evento({k,tipo:'saiu',mo
 if(!est.revV){
   const h=hoje();
   (est.salvas||[]).forEach(k=>{ if(valida(k)) entrar(k,'s','sistema',h); });
-  Object.keys(DADOS).forEach(id=>{const st=est['q:'+id]||{};Object.keys(st).forEach(n=>{const q=DADOS[id].questoes[n]; if(q&&st[n]!==q.gab) entrar(id+'|'+n,'e','sistema',h);});});
   est.revV=1; salvar();
 }
 const salvas=()=>est.salvas=est.salvas||[];
-const itens=()=>Object.entries(rev()).filter(([k])=>valida(k));
+// a revisão mostra só as questões SALVAS (pedido do usuário, 2026-10-09); as que entraram antes só por erro
+// continuam guardadas, mas não aparecem nem contam
+const itens=()=>Object.entries(rev()).filter(([k,it])=>valida(k)&&it&&it.s);
 function devidas(set){const h=hoje();return itens().filter(([k,it])=>(!set||noSet(set,k))&&it.prox<=h).sort((a,b)=>a[1].prox.localeCompare(b[1].prox)||a[1].cx-b[1].cx).map(([k])=>k);}
 function motivoTxt(it){const m=[];if(it.s)m.push('salva');if(it.e)m.push('errou');if(it.c)m.push('chute');return m.join(' + ')||'—';}
 function descEvento(e){
@@ -17554,7 +17555,9 @@ function questao(caixa,id,n,depois,fresca,opts){
         st[n]=letra; delete risc[n];
         const onde=opts.onde||'aula', it=rev()[k];
         evento({k,tipo:'resp',onde,ok:ok?1:0,ch:ch?1:0,cxA:it?it.cx:null});
-        if(!ok) entrar(k,'e',onde); else if(ch) entrar(k,'c',onde);
+        // a revisão tem só as questões SALVAS (pedido do usuário, 2026-10-09): errar ou chutar não coloca
+        // a questão lá; se ela já é salva e você errou, volta para a caixa 1
+        if(rev()[k]&&rev()[k].s){ if(!ok) entrar(k,'e',onde); else if(ch) entrar(k,'c',onde); }
         salvar(); irmas().forEach(o=>o._mostrar&&o._mostrar(letra)); atualizarContadores();
       }
     }
@@ -17603,7 +17606,7 @@ function statCap(id){
   const st=est['q:'+id]||{}, qs=DADOS[id].questoes, ns=Object.keys(qs), lim=Date.now()-14*864e5, h=hoje();
   const resp=ns.filter(n=>st[n]), certas=resp.filter(n=>st[n]===qs[n].gab).length;
   const rec=LOG().filter(e=>e.tipo==='resp'&&e.t>=lim&&e.k.startsWith(id+'|'));
-  const naRev=Object.entries(rev()).filter(([k])=>k.startsWith(id+'|'));
+  const naRev=Object.entries(rev()).filter(([k,it])=>k.startsWith(id+'|')&&it&&it.s);
   return {id,total:ns.length,resp:resp.length,certas,erradasAgora:resp.length-certas,
     errosRec:rec.filter(e=>!e.ok).length,chutesRec:rec.filter(e=>e.ok&&e.ch).length,
     naRev:naRev.length,atras:naRev.filter(([,it])=>it.prox<h).length};
@@ -17881,15 +17884,15 @@ function paginador(total,por,pag,attr){const n=Math.ceil(total/por); if(n<=1) re
 function conferencia(set){
   const its=itens().filter(([k])=>noSet(set,k)), h=hoje(), removidas=new Set(LOG().filter(e=>e.tipo==='saiu').map(e=>e.k));
   const errFora=[]; Object.keys(DADOS).filter(id=>set.has(id)).forEach(id=>{const st=est['q:'+id]||{};Object.keys(st).forEach(n=>{const q=DADOS[id].questoes[n],k=id+'|'+n;if(q&&st[n]!==q.gab&&!rev()[k]&&!removidas.has(k)) errFora.push(k);});});
-  const salFora=salvas().filter(k=>valida(k)&&noSet(set,k)&&!rev()[k]), semData=its.filter(([,it])=>!it.prox||!it.cx);
+  const salFora=salvas().filter(k=>valida(k)&&noSet(set,k)&&!(rev()[k]&&rev()[k].s)), semData=its.filter(([,it])=>!it.prox||!it.cx);
   return {its,errFora,salFora,semData,removidas:[...removidas].filter(k=>noSet(set,k)).length,
     atras:its.filter(([,it])=>it.prox<h).length,deHoje:its.filter(([,it])=>it.prox===h).length,fut:its.filter(([,it])=>it.prox>h).length,
-    problemas:(errFora.length?1:0)+(salFora.length?1:0)+(semData.length?1:0)};
+    problemas:(salFora.length?1:0)+(semData.length?1:0)};
 }
 function abas(lista,atual,attr){return '<div class="abas" role="tablist">'+lista.map(([k,t,c,al])=>'<button role="tab" '+attr+'="'+k+'" aria-selected="'+(atual===k)+'"'+(al?' class="al"':'')+'>'+t+(c!==null&&c!==undefined?'<span class="cnt">'+c+'</span>':'')+'</button>').join('')+'</div>';}
 function renderRevisao(){
   const pg=$('#pg-revisao'), h=hoje(), set=capsDoEscopo(escRev), cf=conferencia(set), its=cf.its, dev=devidas(set);
-  let html='<header class="pg-cab peq"><h1>Revisão espaçada</h1><p class="sub">Erradas, chutadas e salvas voltam no dia certo, uma por vez. Tudo fica registrado.</p></header>';
+  let html='<header class="pg-cab peq"><h1>Revisão espaçada</h1><p class="sub">As questões que você salvou voltam no dia certo, uma por vez. Tudo fica registrado.</p></header>';
   if(sessao&&sessao.ativa) html+='<div class="aviso">'+ic('i-rev')+'<span>Você tem uma sessão em andamento: questão '+(sessao.i+1)+' de '+sessao.fila.length+'.</span><button class="btn pri" data-acao="retomar">Continuar sessão</button></div>';
   html+='<div class="barra-esc"><label class="esc">Mostrar <select id="rev-esc">'+opcoesEscopo(escRev)+'</select></label></div>'+
     abas([['hoje','Hoje',dev.length],['fila','Fila',its.length],['hist','Histórico',null],['conf','Conferência',cf.problemas?'⚠ '+cf.problemas:'✓',cf.problemas]],abaRev,'data-abarev')+'<div class="aba-corpo" role="tabpanel">';
@@ -17920,7 +17923,6 @@ function renderRevisao(){
     const lin=(ok,txt)=>'<li class="'+(ok?'ok':'al')+'">'+ic(ok?'i-ok':'i-alerta')+'<span>'+txt+'</span></li>';
     html+='<p class="mut">Verificações automáticas para garantir que nenhuma questão está escondida ou esquecida.</p><ul class="conf">'+
       lin(true,'Total na revisão: <b>'+its.length+'</b> = '+cf.atras+' atrasadas + '+cf.deHoje+' de hoje + '+cf.fut+' futuras.')+
-      lin(!cf.errFora.length,'Erradas nas aulas fora da revisão: <b>'+cf.errFora.length+'</b>'+(cf.errFora.length?' <button class="btn out mini" data-acao="incluir-err">Incluir agora</button>':''))+
       lin(!cf.salFora.length,'Salvas fora da revisão: <b>'+cf.salFora.length+'</b>'+(cf.salFora.length?' <button class="btn out mini" data-acao="incluir-sal">Incluir agora</button>':''))+
       lin(!cf.semData.length,'Questões sem caixa ou sem data: <b>'+cf.semData.length+'</b>')+
       lin(true,'Eventos no histórico: <b>'+LOG().filter(e=>noSet(set,e.k)).length+'</b> · tiradas da revisão por você: <b>'+cf.removidas+'</b> (registradas no Histórico)')+'</ul>';
@@ -18460,7 +18462,7 @@ document.addEventListener('click',e=>{
   else if(a==='retomar'||a==='voltar-rev') retomarFoco();
   else if(a==='adiantar'){ const h=hoje(),set=capsDoEscopo(escRev); abrirFoco(itens().filter(([k,it])=>noSet(set,k)&&it.prox>h).sort((x,y)=>x[1].prox.localeCompare(y[1].prox)).slice(0,10).map(([k])=>k),'rev'); }
   else if(a==='incluir-err'){ const removidas=new Set(LOG().filter(x=>x.tipo==='saiu').map(x=>x.k)); Object.keys(DADOS).forEach(id=>{const st=est['q:'+id]||{};Object.keys(st).forEach(n=>{const q=DADOS[id].questoes[n],k=id+'|'+n;if(q&&st[n]!==q.gab&&!rev()[k]&&!removidas.has(k)) entrar(k,'e','sistema',hoje());});}); salvar(); renderRevisao(); atualizarContadores(); }
-  else if(a==='incluir-sal'){ salvas().filter(k=>valida(k)&&!rev()[k]).forEach(k=>entrar(k,'s','sistema',hoje())); salvar(); renderRevisao(); atualizarContadores(); }
+  else if(a==='incluir-sal'){ salvas().filter(k=>valida(k)&&!(rev()[k]&&rev()[k].s)).forEach(k=>entrar(k,'s','sistema',hoje())); salvar(); renderRevisao(); atualizarContadores(); }
   else if(a==='refazer-todas') abrirFoco(salvas().filter(k=>valida(k)&&noSet(capsDoEscopo(escSal),k)),'livre');
   else if(b.dataset.abarev){ abaRev=b.dataset.abarev; renderRevisao(); focarAba('data-abarev',abaRev); }
   else if(b.dataset.fila){ filtroFila=b.dataset.fila; pagFila=0; renderRevisao(); }
@@ -18472,7 +18474,7 @@ document.addEventListener('click',e=>{
   else if(b.dataset.aba){ abaEst=b.dataset.aba; est.estAba=abaEst; salvar(); renderEstat(); focarAba('data-aba',abaEst); }
   else if(b.dataset.per){ est.estPer=b.dataset.per; salvar(); renderEstat(); }
   else if(b.dataset.esc!==undefined&&b.closest('#pg-estatisticas')){ escEst=b.dataset.esc; est.estEsc=escEst; salvar(); renderEstat(); }
-  else if(b.dataset.revk){ const k=b.dataset.revk; if(!rev()[k]) entrar(k,'e','aula'); abrirFoco([k],'rev'); }
+  else if(b.dataset.revk){ const k=b.dataset.revk; abrirFoco([k],rev()[k]&&rev()[k].s?'rev':'livre'); }
   else if(b.dataset.refazer){ abrirFoco([b.dataset.refazer],'livre'); }
 });
 function focarAba(attr,v){ const t=$('['+attr+'="'+v+'"][role="tab"]'); if(t) t.focus(); }
