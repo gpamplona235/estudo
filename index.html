@@ -17064,7 +17064,7 @@ let tSelo=null;
 selo.addEventListener('click',e=>{ if(e.target.closest('.nv-sair')){ firebase.auth().signOut().then(()=>location.reload()); return; }
   if(e.target.closest('.nv-nuvem')){ selo.classList.toggle('aberto'); clearTimeout(tSelo); if(selo.classList.contains('aberto')) tSelo=setTimeout(()=>selo.classList.remove('aberto'),6000); } });
 const mostrarSelo=t=>{ const alerta=/não|sem internet/i.test(t);
-  selo.innerHTML='<button type="button" class="nv-nuvem" title="Situação do salvamento" aria-label="Situação do salvamento">☁</button><span class="nv-info"><span>'+t+'</span>'+(usuario?' <button type="button" class="nv-sair">Sair</button>':'')+'</span>';
+  selo.innerHTML='<button type="button" class="nv-nuvem" title="Situação do salvamento" aria-label="Situação do salvamento">☁</button><span class="nv-info"><span>'+t+'</span>'+(usuario?' <button type="button" class="nv-copias">Cópias</button> <button type="button" class="nv-sair">Sair</button>':'')+'</span>';
   selo.hidden=false; selo.classList.toggle('alerta',alerta);
   const jaAberto=selo.classList.contains('aberto'); selo.classList.add('aberto'); clearTimeout(tSelo);
   if(!/Salvando|Sincronizando/.test(t)||jaAberto) tSelo=setTimeout(()=>selo.classList.remove('aberto'),alerta?8000:3000); };
@@ -17104,8 +17104,10 @@ let ouvinte=null, recarregar=false, primeira=true;
    da nuvem (foi assim que as estatísticas e a revisão se perderam). Agora:
    - nada é enviado antes da primeira resposta do SERVIDOR (não do cache);
    - toda parte criada ou mudada antes disso é JUNTADA com a da nuvem, nunca a substitui. */
-let sincronizado=false;
+let sincronizado=false, copiaFeita=false, restaurando=false;
 const antes=new Set();
+const TRAVADAS=['log','rev'], ultimoRemoto={};
+const tamanho=v=>Array.isArray(v)?v.length:(v&&typeof v==='object'?Object.keys(v).length:0);
 
 const colecao=()=>db.collection('usuarios').doc(usuario.uid).collection('estado');
 const idDe=k=>encodeURIComponent(k).replace(/\./g,'%2E');
@@ -17121,6 +17123,7 @@ function escutar(){
     // até o servidor responder, não decide nada: o cache de um navegador novo vem vazio
     if(!sincronizado&&snap.metadata.fromCache){ mostrarSelo(navigator.onLine?'Sincronizando…':'Sem internet: salvo neste aparelho'); return; }
     const local=ler(CHAVE), remoto=montar(snap);
+    TRAVADAS.forEach(k=>{ if(remoto[k]&&remoto[k].v!=null){ try{ ultimoRemoto[k]=JSON.parse(remoto[k].v); }catch(e){} } });
     let mudouLocal=false;
     Object.entries(remoto).forEach(([k,x])=>{
       if((tempos[k]===1||(!sincronizado&&antes.has(k)))&&k in local&&x.v!=null){
@@ -17142,6 +17145,7 @@ function escutar(){
     });
     if(primeira) Object.keys(local).forEach(k=>{ if(!remoto[k]||(tempos[k]||0)>(remoto[k].t||0)) pendentes.add(k); });
     primeira=false; sincronizado=true; antes.clear();
+    if(!copiaFeita){ copiaFeita=true; setTimeout(copiaDoDia,4000); }
     if(mudouLocal){
       setOrig.call(localStorage,CHAVE,JSON.stringify(local)); gravar(CHAVE_T,tempos);
       Object.entries(local).forEach(([k,v])=>foto[k]=JSON.stringify(v));
@@ -17203,13 +17207,29 @@ function gravarParte(k,local){
 function enviar(){
   clearTimeout(timer);
   if(!usuario||!sincronizado||!pendentes.size) return Promise.resolve();
-  const local=ler(CHAVE), lista=[...pendentes]; pendentes.clear();
+  const local=ler(CHAVE); let lista=[...pendentes]; pendentes.clear();
+  // TRAVA: o histórico e a revisão nunca podem encolher de uma vez na nuvem. Se a versão deste
+  // aparelho ficou com menos da metade do que a nuvem tem, ela é JUNTADA com a da nuvem antes de ir.
+  let juntou=false;
+  if(!restaurando){
+    TRAVADAS.forEach(k=>{
+      const r=ultimoRemoto[k]; if(!lista.includes(k)||r==null) return;
+      const tr=tamanho(r), tl=k in local?tamanho(local[k]):0;
+      if(tr>=20&&tl<tr*0.5){ local[k]=juntar(k in local?local[k]:(Array.isArray(r)?[]:{}),r); juntou=true; }
+    });
+    if(juntou){
+      setOrig.call(localStorage,CHAVE,JSON.stringify(local));
+      Object.entries(local).forEach(([k,v])=>foto[k]=JSON.stringify(v));
+    }
+  }
   mostrarSelo(navigator.onLine?'Salvando…':'Sem internet: envio quando a conexão voltar');
   // cada parte vai separada: se uma falhar, as outras chegam
   return Promise.all(lista.map(k=>gravarParte(k,local).then(()=>null,x=>{ pendentes.add(k); return (x&&x.code)||'erro'; }))).then(erros=>{
     const e=erros.filter(Boolean);
-    if(!e.length) mostrarSelo('Progresso salvo na nuvem');
+    if(!e.length) mostrarSelo(juntou?'Protegi seu progresso: uma versão menor quase apagou a da nuvem; juntei as duas':'Progresso salvo na nuvem');
     else{ mostrarSelo('Não salvou '+e.length+' parte(s) ('+e[0]+'): tentarei de novo'); clearTimeout(timer); timer=setTimeout(enviar,15000); }
+    // o app guarda o progresso na memória: recarrega para ele ver a versão juntada
+    if(juntou){ if(document.hidden) recarregar=true; else setTimeout(()=>location.reload(),2500); }
   });
 }
 
@@ -17226,6 +17246,113 @@ Storage.prototype.setItem=function(k,v){
   gravar(CHAVE_T,tempos);
   clearTimeout(timer); timer=setTimeout(enviar,800);
 };
+
+/* =========================================================
+   CÓPIAS DE SEGURANÇA (2026-10-09)
+   - Uma cópia completa do progresso por dia na nuvem: usuarios/{uid}/copias/{dia}~{pedaço},
+     com índice em copias/_indice. Ficam as 30 mais recentes.
+   - Baixar uma cópia em arquivo (.json) e restaurar de um arquivo ou de uma cópia da nuvem.
+   - Antes de restaurar, o estado atual vira mais uma cópia (nada se perde ao restaurar).
+   ========================================================= */
+const MANTER=30;
+const diaHoje=()=>{const d=new Date(),p=x=>String(x).padStart(2,'0');return d.getFullYear()+'-'+p(d.getMonth()+1)+'-'+p(d.getDate());};
+const horaAgora=()=>{const d=new Date(),p=x=>String(x).padStart(2,'0');return p(d.getHours())+p(d.getMinutes())+p(d.getSeconds());};
+const copias=()=>db.collection('usuarios').doc(usuario.uid).collection('copias');
+function gravarCopia(rotulo,dados){
+  const s=JSON.stringify(dados), n=Math.max(1,Math.ceil(s.length/PEDACO)), t=Date.now(), ps=[];
+  for(let i=0;i<n;i++) ps.push(copias().doc(rotulo+'~'+i).set({c:rotulo,t,i,n,v:s.slice(i*PEDACO,(i+1)*PEDACO)}));
+  return Promise.all(ps).then(()=>copias().doc('_indice').get()).then(d=>{
+    const lista=(d.exists&&d.data().lista)||{}; lista[rotulo]={n,t,tam:s.length};
+    const ids=Object.keys(lista).sort(), apagar=ids.slice(0,Math.max(0,ids.length-MANTER)), ps2=[];
+    apagar.forEach(r=>{ for(let i=0;i<(lista[r].n||1);i++) ps2.push(copias().doc(r+'~'+i).delete()); delete lista[r]; });
+    return Promise.all(ps2).then(()=>copias().doc('_indice').set({lista}));
+  });
+}
+function copiaDoDia(){
+  if(!usuario||!sincronizado) return;
+  const marca=usuario.uid+'|'+diaHoje();
+  try{ if(localStorage.getItem(CHAVE+'-copia')===marca) return; }catch(e){}
+  const dados=ler(CHAVE); if(!Object.keys(dados).length) return;
+  gravarCopia(diaHoje(),dados).then(()=>{ try{setOrig.call(localStorage,CHAVE+'-copia',marca)}catch(e){} }).catch(()=>{});
+}
+function lerCopia(r,n){
+  const ps=[]; for(let i=0;i<n;i++) ps.push(copias().doc(r+'~'+i).get());
+  return Promise.all(ps).then(ds=>{ if(ds.some(d=>!d.exists)) throw new Error('cópia incompleta');
+    return JSON.parse(ds.map(d=>d.data()).sort((a,b)=>a.i-b.i).map(x=>x.v).join('')); });
+}
+function restaurar(dados){
+  if(dados&&dados.estado&&typeof dados.estado==='object') dados=dados.estado;
+  if(!dados||typeof dados!=='object'||Array.isArray(dados)) return Promise.reject(new Error('Esse arquivo não é uma cópia do Caderno.'));
+  const atual=ler(CHAVE);
+  try{ setOrig.call(localStorage,CHAVE+'-antes-de-restaurar',JSON.stringify(atual)); }catch(e){}
+  const guardar=usuario&&sincronizado&&Object.keys(atual).length?gravarCopia(diaHoje()+'-r'+horaAgora(),atual).catch(()=>{}):Promise.resolve();
+  return guardar.then(()=>{ restaurando=true; localStorage.setItem(CHAVE,JSON.stringify(dados)); return enviar(); }).then(()=>location.reload());
+}
+function baixarCopia(){
+  const b=new Blob([JSON.stringify({app:'caderno-de-estudos',versao:1,data:new Date().toISOString(),estado:ler(CHAVE)})],{type:'application/json'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(b); a.download='caderno-copia-'+diaHoje()+'.json';
+  document.body.appendChild(a); a.click(); setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},1500);
+}
+
+/* ---------- painel "Cópias de segurança" (abre pelo selo ☁ → Cópias, ou window.cadernoCopias()) ---------- */
+const cssC=document.createElement('style');
+cssC.textContent=`
+#nv-copias{position:fixed;inset:0;z-index:9998;display:grid;place-items:center;padding:16px;background:rgba(10,20,20,.45)}
+#nv-copias[hidden]{display:none}
+#nv-copias .cx{width:min(460px,100%);max-height:calc(100% - 32px);overflow:auto;display:grid;gap:12px;padding:22px 20px;border:1px solid var(--lin-forte,#ccc);border-radius:16px;background:var(--card,#fff);color:var(--tx,#111);font:400 15.5px/1.5 var(--f-ui,system-ui)}
+#nv-copias h2{margin:0;font:600 21px/1.2 var(--f-tit,system-ui)}
+#nv-copias h3{margin:4px 0 0;font:600 16px var(--f-ui,system-ui)}
+#nv-copias p{margin:0;color:var(--tx2,#444)}
+#nv-copias .ac{display:flex;flex-wrap:wrap;gap:8px}
+#nv-copias button,#nv-copias .arq{font:600 15px var(--f-ui,system-ui);padding:10px 14px;border-radius:10px;border:1.5px solid var(--pri,#0f766e);background:var(--card,#fff);color:var(--pri-forte,#0b5d57);cursor:pointer;min-height:44px;display:inline-flex;align-items:center}
+#nv-copias .pri{background:var(--pri,#0f766e);color:var(--pri-tx,#fff)}
+#nv-copias ul{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+#nv-copias li{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border:1px solid var(--lin,#ddd);border-radius:10px}
+#nv-copias li small{color:var(--mut,#666)}
+#nv-copias li button{min-height:38px;padding:6px 12px;font-size:14px}
+#nv-copias li button.confirma{background:var(--err,#d9264f);border-color:var(--err,#d9264f);color:#fff}
+#nv-copias .msg{min-height:1.3em;font-weight:600;color:var(--pri-forte,#0b5d57)}
+#nv-copias .msg.erro{color:var(--err,#d9264f)}
+`;
+document.head.appendChild(cssC);
+const painel=document.createElement('div'); painel.id='nv-copias'; painel.hidden=true;
+painel.setAttribute('role','dialog'); painel.setAttribute('aria-modal','true'); painel.setAttribute('aria-labelledby','nv-c-t');
+painel.innerHTML='<div class="cx"><h2 id="nv-c-t">Cópias de segurança</h2>'+
+  '<p>Todo dia o site guarda uma cópia completa do seu progresso na nuvem (as últimas 30). Você também pode baixar uma cópia para o seu aparelho e guardá-la onde quiser.</p>'+
+  '<div class="ac"><button type="button" class="pri" data-c="baixar">Baixar cópia agora</button><label class="arq">Restaurar de um arquivo<input type="file" accept=".json,application/json" hidden></label></div>'+
+  '<h3>Cópias na nuvem</h3><ul class="lista"></ul><p class="msg" role="status"></p>'+
+  '<div class="ac"><button type="button" data-c="fechar">Fechar</button></div></div>';
+pronto(()=>document.body.appendChild(painel));
+const msgC=(t,erro)=>{const m=painel.querySelector('.msg'); m.textContent=t; m.classList.toggle('erro',!!erro);};
+const fdia=r=>{const m=/^(\d{4})-(\d\d)-(\d\d)(?:-r(\d\d)(\d\d))?/.exec(r); return m?m[3]+'/'+m[2]+'/'+m[1]+(m[4]?' · antes de restaurar, '+m[4]+':'+m[5]:''):r;};
+function abrirCopias(){
+  painel.hidden=false; msgC(''); const ul=painel.querySelector('.lista');
+  if(!usuario||!db){ ul.innerHTML='<li><small>Entre na sua conta para ver as cópias da nuvem.</small></li>'; return; }
+  ul.innerHTML='<li><small>Carregando…</small></li>';
+  copias().doc('_indice').get().then(d=>{
+    const lista=(d.exists&&d.data().lista)||{}, ids=Object.keys(lista).sort().reverse();
+    ul.innerHTML=ids.length?ids.map(r=>'<li><span>'+fdia(r)+' <small>('+Math.max(1,Math.round(lista[r].tam/1024))+' KB)</small></span><button type="button" data-r="'+r+'" data-n="'+lista[r].n+'">Restaurar</button></li>').join(''):'<li><small>A primeira cópia é feita hoje, alguns segundos depois de você entrar.</small></li>';
+  }).catch(x=>{ ul.innerHTML='<li><small>Não consegui ler as cópias ('+(x&&x.code||'erro')+').</small></li>'; });
+}
+window.cadernoCopias=abrirCopias;
+painel.addEventListener('click',e=>{
+  const b=e.target.closest('button'); if(!b){ if(e.target===painel) painel.hidden=true; return; }
+  if(b.dataset.c==='fechar'){ painel.hidden=true; return; }
+  if(b.dataset.c==='baixar'){ baixarCopia(); msgC('Cópia baixada. Guarde o arquivo (por exemplo, no Google Drive ou no seu e-mail).'); return; }
+  if(b.dataset.r){
+    if(!b.classList.contains('confirma')){ painel.querySelectorAll('button.confirma').forEach(x=>{x.classList.remove('confirma');x.textContent='Restaurar';}); b.classList.add('confirma'); b.textContent='Toque de novo para confirmar'; return; }
+    b.disabled=true; msgC('Restaurando… (o estado atual vira mais uma cópia antes)');
+    lerCopia(b.dataset.r,+b.dataset.n).then(restaurar).catch(x=>{ b.disabled=false; msgC('Não consegui restaurar: '+(x&&x.message||x),true); });
+  }
+});
+painel.querySelector('input[type=file]').addEventListener('change',e=>{
+  const f=e.target.files&&e.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{ let d; try{ d=JSON.parse(r.result); }catch(x){ msgC('Esse arquivo não é uma cópia do Caderno.',true); return; }
+    msgC('Restaurando… (o estado atual vira mais uma cópia antes)'); restaurar(d).catch(x=>msgC(x.message||String(x),true)); };
+  r.readAsText(f); e.target.value='';
+});
+selo.addEventListener('click',e=>{ if(e.target.closest('.nv-copias')) abrirCopias(); });
 })();
 
 </script>
@@ -17825,8 +17952,8 @@ function renderEstat(){
 /* ---------- Salvas ---------- */
 let escSal='';
 function renderSalvas(){
-  const pg=$('#pg-salvas'), set=capsDoEscopo(escSal), l=salvas().filter(k=>valida(k)&&noSet(set,k));
-  let html='<header class="pg-cab peq"><h1>Questões salvas</h1><p class="sub">'+l.length+(l.length===1?' questão salva':' questões salvas')+'. Elas também estão na revisão espaçada; aqui você refaz quando quiser, sem mexer nas caixas.</p></header>'+
+  const pg=$('#pg-salvas'), set=capsDoEscopo(escSal), l=salvas().filter(k=>valida(k)&&noSet(set,k)).reverse(); // a lista guarda na ordem em que foram salvas: mostra as mais recentes primeiro
+  let html='<header class="pg-cab peq"><h1>Questões salvas</h1><p class="sub">'+l.length+(l.length===1?' questão salva':' questões salvas')+', das mais recentes para as mais antigas. Elas também estão na revisão espaçada; aqui você refaz quando quiser, sem mexer nas caixas.</p></header>'+
     '<div class="barra-esc"><label class="esc">Mostrar <select id="sal-esc">'+opcoesEscopo(escSal)+'</select></label>'+(l.length?'<button class="btn pri" data-acao="refazer-todas">'+ic('i-rev')+'Refazer em modo foco ('+l.length+')</button>':'')+'</div>';
   if(!l.length) html+='<div class="vazio">'+ic('i-sal')+'<b>Nenhuma questão salva aqui.</b><span>Toque em "Salvar" no canto de qualquer questão.</span></div>';
   else html+='<div class="tab-wrap"><table class="tab"><thead><tr><th>Questão</th><th>De onde</th><th>Sua resposta</th><th>Na revisão</th><th><span class="sr">Ações</span></th></tr></thead><tbody>'+l.map(k=>{const [i,n]=k.split('|'),t=rotuloCap(i),st=(est['q:'+i]||{})[n],q=DADOS[i].questoes[n],it=rev()[k];
