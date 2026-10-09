@@ -17098,6 +17098,14 @@ function iniciar(){
   addEventListener('pagehide',()=>enviar());
 }
 let ouvinte=null, recarregar=false, primeira=true;
+/* PROTEÇÃO (2026-10-09): ao abrir o site num navegador sem dados (aparelho novo, dados do site
+   apagados, outro endereço), o app cria estruturas vazias (revisão, histórico) ANTES de a nuvem
+   responder. Antes desta correção essas partes vazias ficavam "mais novas" e apagavam a versão
+   da nuvem (foi assim que as estatísticas e a revisão se perderam). Agora:
+   - nada é enviado antes da primeira resposta do SERVIDOR (não do cache);
+   - toda parte criada ou mudada antes disso é JUNTADA com a da nuvem, nunca a substitui. */
+let sincronizado=false;
+const antes=new Set();
 
 const colecao=()=>db.collection('usuarios').doc(usuario.uid).collection('estado');
 const idDe=k=>encodeURIComponent(k).replace(/\./g,'%2E');
@@ -17110,22 +17118,30 @@ function escutar(){
   // includeMetadataChanges: avisa também quando o servidor confirma (sem isso, o aviso
   // ficaria preso no "cache" da primeira leitura, mesmo com internet)
   ouvinte=colecao().onSnapshot({includeMetadataChanges:true},snap=>{
+    // até o servidor responder, não decide nada: o cache de um navegador novo vem vazio
+    if(!sincronizado&&snap.metadata.fromCache){ mostrarSelo(navigator.onLine?'Sincronizando…':'Sem internet: salvo neste aparelho'); return; }
     const local=ler(CHAVE), remoto=montar(snap);
     let mudouLocal=false;
     Object.entries(remoto).forEach(([k,x])=>{
-      if(tempos[k]===1&&k in local&&x.v!=null){
+      if((tempos[k]===1||(!sincronizado&&antes.has(k)))&&k in local&&x.v!=null){
         // parte que este aparelho nunca sincronizou: junta as duas versões em vez de escolher uma
         const junto=juntar(local[k],JSON.parse(x.v));
         tempos[k]=Date.now(); pendentes.add(k);
         if(JSON.stringify(junto)!==JSON.stringify(local[k])){ local[k]=junto; mudouLocal=true; }
       }
       else if((x.t||0)>(tempos[k]||0)){
+        // o histórico de respostas (log) só cresce: junta as duas versões em vez de trocar,
+        // para nenhum aparelho apagar o histórico de outro (e um aparelho antigo devolve o que tinha)
+        if(k==='log'&&x.v!=null&&Array.isArray(local[k])){
+          const junto=juntar(JSON.parse(x.v),local[k]);
+          if(junto.length>JSON.parse(x.v).length){ local[k]=junto; tempos[k]=Date.now(); pendentes.add(k); mudouLocal=true; return; }
+        }
         if(x.v==null) delete local[k]; else local[k]=JSON.parse(x.v);
         tempos[k]=x.t; mudouLocal=true;
       }
     });
     if(primeira) Object.keys(local).forEach(k=>{ if(!remoto[k]||(tempos[k]||0)>(remoto[k].t||0)) pendentes.add(k); });
-    primeira=false;
+    primeira=false; sincronizado=true; antes.clear();
     if(mudouLocal){
       setOrig.call(localStorage,CHAVE,JSON.stringify(local)); gravar(CHAVE_T,tempos);
       Object.entries(local).forEach(([k,v])=>foto[k]=JSON.stringify(v));
@@ -17186,7 +17202,7 @@ function gravarParte(k,local){
 }
 function enviar(){
   clearTimeout(timer);
-  if(!usuario||!pendentes.size) return Promise.resolve();
+  if(!usuario||!sincronizado||!pendentes.size) return Promise.resolve();
   const local=ler(CHAVE), lista=[...pendentes]; pendentes.clear();
   mostrarSelo(navigator.onLine?'Salvando…':'Sem internet: envio quando a conexão voltar');
   // cada parte vai separada: se uma falhar, as outras chegam
@@ -17205,7 +17221,7 @@ Storage.prototype.setItem=function(k,v){
   const agora=Date.now();
   new Set([...Object.keys(novo),...Object.keys(foto)]).forEach(p=>{
     const s=p in novo?JSON.stringify(novo[p]):undefined;
-    if(s!==foto[p]){ if(s===undefined) delete foto[p]; else foto[p]=s; tempos[p]=agora; pendentes.add(p); }
+    if(s!==foto[p]){ if(s===undefined) delete foto[p]; else foto[p]=s; tempos[p]=agora; pendentes.add(p); if(!sincronizado) antes.add(p); }
   });
   gravar(CHAVE_T,tempos);
   clearTimeout(timer); timer=setTimeout(enviar,800);
