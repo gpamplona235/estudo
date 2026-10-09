@@ -17122,7 +17122,8 @@ function escutar(){
   ouvinte=colecao().onSnapshot({includeMetadataChanges:true},snap=>{
     // até o servidor responder, não decide nada: o cache de um navegador novo vem vazio
     if(!sincronizado&&snap.metadata.fromCache){ mostrarSelo(navigator.onLine?'Sincronizando…':'Sem internet: salvo neste aparelho'); return; }
-    const local=ler(CHAVE), remoto=montar(snap);
+    const original=localStorage.getItem(CHAVE)||'{}', local=ler(CHAVE), remoto=montar(snap);
+    let recuperou=false;
     TRAVADAS.forEach(k=>{ if(remoto[k]&&remoto[k].v!=null){ try{ ultimoRemoto[k]=JSON.parse(remoto[k].v); }catch(e){} } });
     let mudouLocal=false;
     Object.entries(remoto).forEach(([k,x])=>{
@@ -17135,23 +17136,34 @@ function escutar(){
       else if((x.t||0)>(tempos[k]||0)){
         // o histórico de respostas (log) só cresce: junta as duas versões em vez de trocar,
         // para nenhum aparelho apagar o histórico de outro (e um aparelho antigo devolve o que tinha)
-        if(k==='log'&&x.v!=null&&Array.isArray(local[k])){
-          const junto=juntar(JSON.parse(x.v),local[k]);
-          if(junto.length>JSON.parse(x.v).length){ local[k]=junto; tempos[k]=Date.now(); pendentes.add(k); mudouLocal=true; return; }
+        // RECUPERAÇÃO: se este aparelho tem itens que a nuvem não tem (aparelho antigo, que ficou
+        // fechado enquanto a nuvem perdeu dados), junta em vez de trocar: histórico, revisão,
+        // salvas, respostas, edital… Nada que este aparelho guarda some ao sincronizar.
+        if(x.v!=null&&k in local){
+          const r=JSON.parse(x.v), junto=recuperar(k,local[k],r);
+          if(junto!==null){ local[k]=junto; tempos[k]=Date.now(); pendentes.add(k); mudouLocal=true; recuperou=true; return; }
         }
         if(x.v==null) delete local[k]; else local[k]=JSON.parse(x.v);
         tempos[k]=x.t; mudouLocal=true;
       }
     });
     if(primeira) Object.keys(local).forEach(k=>{ if(!remoto[k]||(tempos[k]||0)>(remoto[k].t||0)) pendentes.add(k); });
-    primeira=false; sincronizado=true; antes.clear();
+    const eraPrimeira=primeira; primeira=false; sincronizado=true; antes.clear();
     if(!copiaFeita){ copiaFeita=true; setTimeout(copiaDoDia,4000); }
     if(mudouLocal){
       setOrig.call(localStorage,CHAVE,JSON.stringify(local)); gravar(CHAVE_T,tempos);
       Object.entries(local).forEach(([k,v])=>foto[k]=JSON.stringify(v));
       Object.keys(foto).forEach(k=>{ if(!(k in local)) delete foto[k]; });
-      // só recarrega depois que o envio terminar (senão a gravação é cortada no meio)
-      enviar().then(()=>{ if(document.hidden) recarregar=true; else location.reload(); });
+      // antes de qualquer troca na primeira sincronização, o que este aparelho tinha vira uma
+      // cópia na nuvem ("deste aparelho, antes de sincronizar") e uma cópia local
+      let copiaAntes=Promise.resolve();
+      if(eraPrimeira&&original.length>2){
+        try{ setOrig.call(localStorage,CHAVE+'-antes-da-nuvem',original); }catch(e){}
+        copiaAntes=gravarCopia(diaHoje()+'-a'+horaAgora(),JSON.parse(original)).catch(()=>{});
+      }
+      if(recuperou) mostrarSelo('Recuperei dados que estavam só neste aparelho');
+      // só recarrega depois que o envio e a cópia terminarem (senão a gravação é cortada no meio)
+      Promise.all([copiaAntes,enviar()]).then(()=>{ if(document.hidden) recarregar=true; else setTimeout(()=>location.reload(),recuperou?2500:0); });
       return;
     }
     if(pendentes.size) enviar();
@@ -17173,6 +17185,25 @@ function montar(snap){
     if(ps.length===x.n) r[k]={k,t:x.t,v:ps.map(p=>p.v).join('')};
   });
   return r;
+}
+
+/* Recuperação de um aparelho antigo: devolve a versão juntada quando o aparelho tem itens que a
+   nuvem não tem; senão null (aí vale a nuvem, como sempre). Na revisão, para a mesma questão,
+   fica a caixa mais alta (a nuvem pode ter uma versão reconstruída, que recomeça na caixa 1). */
+function recuperar(k,loc,rem){
+  if(Array.isArray(loc)&&Array.isArray(rem)){
+    const tem=new Set(rem.map(x=>JSON.stringify(x)));
+    if(!loc.some(x=>!tem.has(JSON.stringify(x)))) return null;
+    return k==='salvas'?juntar(loc,rem):juntar(rem,loc);
+  }
+  if(loc&&rem&&typeof loc==='object'&&typeof rem==='object'&&!Array.isArray(loc)&&!Array.isArray(rem)){
+    const faltam=Object.keys(loc).filter(c=>!(c in rem));
+    const melhorRev=k==='rev'?Object.keys(loc).filter(c=>c in rem&&loc[c]&&rem[c]&&(loc[c].cx||0)>(rem[c].cx||0)):[];
+    if(!faltam.length&&!melhorRev.length) return null;
+    const r=Object.assign({},rem); faltam.forEach(c=>r[c]=loc[c]); melhorRev.forEach(c=>r[c]=loc[c]);
+    return r;
+  }
+  return null;
 }
 
 /* Junta duas versões de uma parte do progresso (só na primeira sincronização de um aparelho):
@@ -17324,7 +17355,7 @@ painel.innerHTML='<div class="cx"><h2 id="nv-c-t">Cópias de segurança</h2>'+
   '<div class="ac"><button type="button" data-c="fechar">Fechar</button></div></div>';
 pronto(()=>document.body.appendChild(painel));
 const msgC=(t,erro)=>{const m=painel.querySelector('.msg'); m.textContent=t; m.classList.toggle('erro',!!erro);};
-const fdia=r=>{const m=/^(\d{4})-(\d\d)-(\d\d)(?:-r(\d\d)(\d\d))?/.exec(r); return m?m[3]+'/'+m[2]+'/'+m[1]+(m[4]?' · antes de restaurar, '+m[4]+':'+m[5]:''):r;};
+const fdia=r=>{const m=/^(\d{4})-(\d\d)-(\d\d)(?:-([ra])(\d\d)(\d\d))?/.exec(r); return m?m[3]+'/'+m[2]+'/'+m[1]+(m[4]?(m[4]==='r'?' · antes de restaurar, ':' · deste aparelho antes de sincronizar, ')+m[5]+':'+m[6]:''):r;};
 function abrirCopias(){
   painel.hidden=false; msgC(''); const ul=painel.querySelector('.lista');
   if(!usuario||!db){ ul.innerHTML='<li><small>Entre na sua conta para ver as cópias da nuvem.</small></li>'; return; }
