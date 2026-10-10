@@ -834,6 +834,7 @@ details.tente>.resp{padding:2px 16px 14px;border-top:1px dashed var(--roxo)}
 .ip .ipx b{font-size:16px;min-width:0}
 /* endereços longos sem espaço (IPv6, links) quebram a linha em vez de alargar a página */
 .capitulo p,.capitulo li,.capitulo figcaption,.questao{overflow-wrap:anywhere}
+.alt-img-tx{display:block;margin:6px 0}
 
 
 /* ---------- casca: barra lateral + topo ---------- */
@@ -19918,6 +19919,11 @@ const chaveQ=(id,n)=>id+'|'+n;
 /* Destaques vindos do caderno: ⟦b⟧ negrito, ⟦u⟧ sublinhado, ⟦m⟧ fundo amarelo, ⟦i⟧ itálico (aplicado ao texto já escapado) */
 const TAGM={b:'strong',u:'u',m:'mark',i:'em'};
 const comMarcas=h=>h.replace(/⟦(\/?)([bumi])⟧/g,(_,f,t)=>'<'+f+TAGM[t]+(t==='m'&&!f?' class="dest"':'')+'>');
+// alternativa com figura: mostra a figura e o texto que a acompanha ("anel e [figura]" ou "[figura] e RJ-45");
+// texto terminado em " e"/" ou" vem antes da figura, o resto depois
+function imgAlt(q,a){ const t=(a[1]||'').trim(), img='<img class="alt-img" src="'+q.altimg[a[0]]+'" alt="Alternativa '+a[0].toUpperCase()+'">';
+  if(!t) return img; const tx='<span class="alt-img-tx">'+comMarcas(esc(t))+'</span>';
+  return /(^|\s)(e|ou)$/i.test(t)?tx+img:img+tx; }
 const semMarcas=s=>String(s).replace(/⟦\/?[bumi]⟧/g,'');
 function realcar(h,marcas){ (marcas||[]).forEach(m=>{ const e=esc(m), i=h.indexOf(e); if(i>=0) h=h.slice(0,i)+'<mark class="dest">'+e+'</mark>'+h.slice(i+e.length); }); return h; }
 /* Texto-base: textos longos compartilhados por várias questões (Curso IBGP) */
@@ -19959,7 +19965,7 @@ function questao(caixa,id,n,depois,fresca,opts){
   caixa.innerHTML='<div class="q-cab"><span class="q-id">Questão '+esc(n)+'</span>'+(alvo?'<span class="selo-alvo" title="Questão da banca da sua prova"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg>IBGP · sua banca</span>':'')+'<span class="q-fonte">'+esc(fonte(q.fonte))+'</span><span class="sit" role="status"></span>'+
     '<button type="button" class="salvar-q" aria-pressed="false" title="Salvar para revisar">'+ic('i-sal')+'<span>Salvar</span></button></div>'+
     '<div class="q-texto">'+txHtml+'<div class="enun" data-orig="'+esc(q.enun)+'">'+fmtEnun(q.enun)+'</div>'+(q.img||[]).map(s=>'<img class="q-img" src="'+s+'" alt="Figura da questão">').join('')+'</div>'+
-    '<div class="q-resp"><div class="alts">'+q.alts.map(a=>'<button class="alt" type="button" data-l="'+esc(a[0])+'"><span class="l'+(ce?' ce':'')+'">'+esc(ce?a[0]:a[0].toUpperCase())+'</span><span class="corpo-alt"><span class="tx">'+(ce?'':(q.altimg&&q.altimg[a[0]]?'<img class="alt-img" src="'+q.altimg[a[0]]+'" alt="Alternativa '+a[0].toUpperCase()+'">':comMarcas(esc(a[1]))))+'</span><span class="por" hidden></span></span></button>').join('')+'</div>'+
+    '<div class="q-resp"><div class="alts">'+q.alts.map(a=>'<button class="alt" type="button" data-l="'+esc(a[0])+'"><span class="l'+(ce?' ce':'')+'">'+esc(ce?a[0]:a[0].toUpperCase())+'</span><span class="corpo-alt"><span class="tx">'+(ce?'':(q.altimg&&q.altimg[a[0]]?imgAlt(q,a):comMarcas(esc(a[1]))))+'</span><span class="por" hidden></span></span></button>').join('')+'</div>'+
     '<div class="q-acoes"><button class="btn pri confirmar" type="button" disabled>Confirmar resposta</button><button class="btn chu chute" type="button" aria-pressed="false" title="Toque antes de confirmar se não tiver certeza">'+ic('i-chute')+'Marcar chute</button><span class="dica-marcar">'+DICA+'</span></div>'+
     '<div class="coment"></div><button class="btn fant mini refazer" type="button">↺ Refazer</button></div>';
   const bChute=$('.chute',caixa), conf=$('.confirmar',caixa);
