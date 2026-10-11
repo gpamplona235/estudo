@@ -20242,6 +20242,8 @@ function entrar(k,motivo,onde,prox){
   if(novo||motivo==='e'||motivo==='c') evento({k,tipo:'entrou',motivo,onde,cxA,cxD:it.cx,proxA,prox:it.prox});
 }
 function sair(k,porque){ if(rev()[k]){ delete rev()[k]; evento({k,tipo:'saiu',motivo:porque}); } }
+// tirar da revisão também desmarca "Salva": a revisão é feita só das salvas
+function tirarRev(k,porque){ sair(k,porque); const l=salvas(), i=l.indexOf(k); if(i>=0) l.splice(i,1); $$('.questao').forEach(o=>{ if(o.dataset.k!==k) return; const x=$('.salvar-q',o); if(x){ x.setAttribute('aria-pressed','false'); $('span',x).textContent='Salvar'; } }); }
 if(!est.revV){
   const h=hoje();
   (est.salvas||[]).forEach(k=>{ if(valida(k)) entrar(k,'s','sistema',h); });
@@ -20806,7 +20808,7 @@ function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
   const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], tot=sessao.fila.length, feitas=Object.keys(sessao.res).length, revModo=sessao.modo==='rev';
   const cx=res&&res.cxA?res.cxA:it.cx;
-  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':'Refazer salvas')+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+'<button class="btn out" data-f="hist" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
+  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':'Refazer salvas')+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>'+'<button class="btn out" data-f="hist" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
     '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig"><span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+' · '+esc(r.nome)+'</span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula ↗</a></div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
     '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
@@ -20863,6 +20865,9 @@ foco.addEventListener('click',e=>{
   if(f==='sair'){ e.preventDefault(); fecharFoco(); }
   else if(f==='hist'){ sessao.hist=!sessao.hist; const box=$('#f-box .questao',foco), marc=box&&$('.alt.marcada',box); renderFoco(); if(marc){const a=$('#f-box .alt[data-l="'+marc.dataset.l+'"]',foco); if(a) a.click();} $('[data-f="hist"]',foco).focus(); }
   else if(f==='aula'){ foco.hidden=true; document.body.classList.remove('em-foco'); }
+  else if(f==='tirar'){ if(!b.classList.contains('confirma')){ b.classList.add('confirma'); $('.tir-tx',b).textContent='Tirar mesmo?'; const lb=$('.lab',b); if(lb) lb.textContent=''; return; }
+    const k=sessao.fila[sessao.i]; tirarRev(k,sessao.modo==='rev'?'você tirou durante a revisão':'você tirou ao refazer as salvas'); delete sessao.res[k]; sessao.fila.splice(sessao.i,1);
+    salvar(); atualizarContadores(); if(!sessao.fila.length){ fecharFoco(); return; } renderFoco(); foco.scrollTop=0; }
   else if(f==='ant'){ if(sessao.i>0){ sessao.i--; renderFoco(); } }
   else if(f==='pular'){ const k=sessao.fila.splice(sessao.i,1)[0]; sessao.fila.push(k); renderFoco(); }
   else if(f==='chute'){ const c=$('#f-box .chute',foco); if(c) c.click(); }
@@ -21262,7 +21267,7 @@ document.addEventListener('click',e=>{
   else if(b.dataset.paghist!==undefined){ pagHist=+b.dataset.paghist; renderRevisao(); }
   else if(b.dataset.hist){ const k=b.dataset.hist; abertoHist=abertoHist===k?null:k; renderRevisao(); const nb=$('[data-hist="'+CSS.escape(k)+'"]'); if(nb) nb.focus(); }
   else if(b.dataset.unica){ abrirFoco([b.dataset.unica],'rev'); }
-  else if(b.dataset.tirar){ if(!b.classList.contains('confirma')){b.classList.add('confirma');$('span',b).textContent='Tirar mesmo?';return;} sair(b.dataset.tirar,'você tirou pela fila'); salvar(); renderRevisao(); atualizarContadores(); }
+  else if(b.dataset.tirar){ if(!b.classList.contains('confirma')){b.classList.add('confirma');$('span',b).textContent='Tirar mesmo?';return;} tirarRev(b.dataset.tirar,'você tirou pela fila'); salvar(); renderRevisao(); atualizarContadores(); }
   else if(b.dataset.aba){ abaEst=b.dataset.aba; est.estAba=abaEst; salvar(); renderEstat(); focarAba('data-aba',abaEst); }
   else if(b.dataset.per){ est.estPer=b.dataset.per; salvar(); renderEstat(); }
   else if(b.dataset.esc!==undefined&&b.closest('#pg-estatisticas')){ escEst=b.dataset.esc; est.estEsc=escEst; salvar(); renderEstat(); }
@@ -21330,7 +21335,7 @@ if(fala&&window.SpeechSynthesisUtterance){
 
   /* ---------- trechos: texto do parágrafo + onde cada letra está na página ---------- */
   const CELULAS='td,th,.t,.d,.c,.cab,.corpo,.pro,.rot,.ficha > span,.esc-rot > b,.esc-rot > span,.cmd > code,.cmd > span,.tres > div > strong,.tres > div > span,.carimbo > b';
-  const IGNORAR='.le-btn,.n,script,style';
+  const IGNORAR='.le-btn,.n,script,style,.ico,.esc-rot > i'; // .ico e .esc-rot > i = ícones (emoji) dos desenhos: não se leem
   // monta {texto, pos:[[nó,offset] ou null]} a partir dos nós de texto (de raiz, ou só do range)
   function trecho(raiz,range){
     let texto='', pos=[], celAnt, quebra=false;
@@ -21343,7 +21348,7 @@ if(fala&&window.SpeechSynthesisUtterance){
       const cel=n.parentElement.closest(CELULAS);
       if(quebra||(celAnt!==undefined&&cel!==celAnt)) sep('. '); else if(texto&&!/\s$/.test(texto)&&/^\s/.test(n.data.slice(a))) sep(' ');
       quebra=false; celAnt=cel;
-      for(let k=a;k<b;k++){ const c=n.data[k];
+      for(let k=a;k<b;k++){ const c=n.data[k]; if(/[\uD800-\uDFFF\uFE0F\u200D]/.test(c)) continue; // emoji solto no texto: pula
         if(/\s/.test(c)){ if(texto&&!/\s$/.test(texto)){ texto+=' '; pos.push([n,k]); } }
         else{ texto+=c; pos.push([n,k]); } }
     }
