@@ -1246,6 +1246,50 @@ a.aula:hover{background:var(--campo)}
 .leg .l1t::before,.leg .l2t::before{content:"";width:10px;height:10px;border-radius:50%}
 .leg .l1t::before{background:var(--pri)}.leg .l2t::before{border:2.5px solid var(--grafite)}
 
+/* ---------- Estatísticas: painel de números (.nums-est; .faixa já é das aulas), equilíbrio (rosca), gráficos técnicos ---------- */
+.nums-est{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--lin);border-radius:var(--r2);background:var(--card);margin:0 0 18px;overflow:hidden;box-shadow:var(--som)}
+.fk{padding:11px 14px;box-shadow:inset -1px 0 var(--lin),inset 0 -1px var(--lin);display:flex;flex-direction:column;gap:3px;min-width:0}
+.fk-r{font:500 11px/1.3 var(--f-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--mut)}
+.fk b{font:600 22px/1.15 var(--f-mono);font-variant-numeric:tabular-nums;letter-spacing:-.01em}
+.fk-s{font-size:12.5px;color:var(--mut)}
+.nums-est em{font-style:normal;font-family:var(--f-mono);font-weight:600}
+.nums-est em.up{color:var(--ok)}.nums-est em.dn{color:var(--err)}.nums-est em.dz{color:var(--mut);font-weight:500}
+.eq{margin:0 0 18px}
+.eq-cab{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:8px 14px;margin-bottom:12px}
+.eq-cab .ct{margin:0}
+.seg.mini{margin:0}.seg.mini button{padding:4px 12px;min-height:30px;font-size:13px}
+.eq-corpo{display:grid;grid-template-columns:minmax(150px,210px) minmax(0,1fr);gap:18px 30px;align-items:center}
+.rosca{width:100%;max-width:210px;display:block;margin:0 auto}
+.rosca .rc-n{font:600 32px var(--f-mono);fill:var(--tx)}
+.rosca .rc-s{font:500 10.5px var(--f-mono);fill:var(--mut);letter-spacing:.1em;text-transform:uppercase}
+.eq-lista{display:grid;gap:11px;min-width:0}
+.eq-lin{display:grid;grid-template-columns:12px minmax(0,1fr) 46px;gap:10px;align-items:center}
+.eq-dot{width:11px;height:11px;border-radius:3px}
+.eq-nome{min-width:0}
+.eq-nome b{font-weight:600;font-size:14.5px}
+.eq-nome small{display:block;font-size:12px;color:var(--mut)}
+.eq-trilho{display:block;position:relative;height:7px;border-radius:4px;background:var(--trilho);margin-top:5px}
+.eq-trilho i{position:absolute;left:0;top:0;bottom:0;border-radius:4px}
+.eq-trilho em{position:absolute;top:-4px;bottom:-4px;width:2px;margin-left:-1px;background:var(--tx);border-radius:1px}
+.eq-p{text-align:right;font-weight:600}
+.eq-nota{font-size:12.5px;margin:2px 0 0}
+.eq-acao{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px 16px;margin-top:16px;padding:11px 14px;border-radius:var(--r);background:var(--chu-suave);font-size:14.5px}
+.eq-acao.ok{background:var(--ok-suave)}
+@media (max-width:640px){.eq-corpo{grid-template-columns:1fr}}
+.recs{margin:18px 2px 0}
+#pg-estatisticas .aten .n{width:22px;height:22px;border-width:1.5px;font-size:12px}
+.graf .hit{fill:transparent}
+.graf .hit:hover{fill:var(--tx);fill-opacity:.05}
+.graf .lok{fill:none;stroke:var(--ok);stroke-width:2.2;stroke-linejoin:round}
+.graf .lerr{fill:none;stroke:var(--err);stroke-width:2.2;stroke-linejoin:round}
+.graf .lch{fill:none;stroke:var(--chu);stroke-width:1.8;stroke-dasharray:5 4;stroke-linejoin:round}
+.graf .lok-p{fill:var(--ok)}.graf .lerr-p{fill:var(--err)}.graf .lch-p{fill:var(--chu)}
+.leg .lm{display:inline-block;width:11px;height:11px;border-radius:3px}
+.leg .lokt::before,.leg .lerrt::before,.leg .lcht::before{content:"";width:16px;height:0;border-top:2.5px solid var(--ok)}
+.leg .lerrt::before{border-top-color:var(--err)}.leg .lcht::before{border-top:2px dashed var(--chu)}
+.tab-num td,.tab-num th{white-space:nowrap}
+
+@media (max-width:600px){.barra-esc .esc{width:100%;min-width:0}.barra-esc .esc select{flex:1 1 auto;min-width:0;width:100%}}
 /* ---------- Texto-base (textos longos compartilhados) ---------- */
 .texto-base{margin:16px 0 18px;border:1px solid var(--lin-forte);border-radius:12px;background:var(--card);overflow:hidden}
 .texto-base figcaption{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px;padding:10px 18px;background:var(--campo);border-bottom:1px solid var(--lin)}
@@ -20728,6 +20772,115 @@ function renderRevisao(){
 
 /* ---------- Estatísticas ---------- */
 let abaEst=est.estAba||'geral', escEst=est.estEsc||'';
+/* ---------- equilíbrio entre matérias (rosca) ---------- */
+// cor fixa de cada matéria, pela ordem do MAPA: a mesma em todos os gráficos
+const COR_MAT=['#d8613a','#1d9e75','#7c6fd6','#c08417','#3a86d4','#c2457a','#5f7f2a'];
+const corMi=mi=>COR_MAT[mi%COR_MAT.length];
+const PER_EQ={'7':['7 dias',7],'30':['30 dias',30],'tudo':['Tudo',0]};
+const temAula=ap=>ap.aulas.some(a=>a.pronta&&DADOS[a.cap]);
+// conta as questões respondidas por matéria (ou por apostila, quando o escopo é uma matéria) no período
+function equilibrio(set,per){
+  const dias=PER_EQ[per][1], lim=dias?Date.now()-dias*864e5:0, porAp=escEst.startsWith('m:');
+  const gs=porAp?APS.filter(ap=>ap.materia===escEst.slice(2)&&temAula(ap)).map((ap,i)=>({id:ap.id,nome:ap.nome,cor:COR_MAT[i%COR_MAT.length]}))
+               :MAPA.map((m,mi)=>({id:m.nome,nome:m.nome,mi,cor:corMi(mi)})).filter(g=>APS.some(ap=>ap.mi===g.mi&&temAula(ap)));
+  const idx={}; gs.forEach(g=>{g.n=0;g.ult=0;idx[g.id]=g;});
+  LOG().forEach(e=>{ if(e.tipo!=='resp'||!noSet(set,e.k)) return; const r=rotuloCap(e.k.split('|')[0]), g=idx[porAp?r.apId:r.materia]; if(!g) return;
+    if(e.t>g.ult) g.ult=e.t; if(e.t>=lim) g.n++; });
+  const tot=gs.reduce((a,g)=>a+g.n,0), meta=gs.length?1/gs.length:0;
+  gs.forEach(g=>g.p=tot?g.n/tot:0);
+  // nota 100 = partes iguais; 0 = tudo numa matéria só
+  const nota=tot&&gs.length>1?Math.max(0,Math.round(100*(1-gs.reduce((a,g)=>a+Math.abs(g.p-meta),0)/(2*(1-meta))))):null;
+  return {gs,tot,meta,nota,porAp};
+}
+function svgRosca(gs,tot,centro,sub){
+  const R=60,C=2*Math.PI*R; let off=0;
+  let s='<svg class="rosca" viewBox="0 0 160 160" role="img" aria-label="Proporção de questões de cada matéria"><circle cx="80" cy="80" r="'+R+'" fill="none" stroke="var(--trilho)" stroke-width="22"/><g transform="rotate(-90 80 80)">';
+  gs.filter(g=>g.n).forEach(g=>{const l=C*g.n/tot, vis=Math.max(.5,l-(gs.filter(x=>x.n).length>1?1.5:0));
+    s+='<circle cx="80" cy="80" r="'+R+'" fill="none" stroke="'+g.cor+'" stroke-width="22" stroke-dasharray="'+vis.toFixed(2)+' '+C.toFixed(2)+'" stroke-dashoffset="'+(-off).toFixed(2)+'"><title>'+esc(g.nome)+': '+g.n+' questões ('+Math.round(g.p*100)+'%)</title></circle>'; off+=l;});
+  return s+'</g><text x="80" y="82" text-anchor="middle" class="rc-n">'+centro+'</text><text x="80" y="101" text-anchor="middle" class="rc-s">'+sub+'</text></svg>';
+}
+// a aula para estudar uma matéria: a última aberta dela, senão a primeira aula pronta
+function aulaParaMateria(mi){
+  const aps=APS.filter(ap=>ap.mi===mi&&temAula(ap));
+  for(const ap of aps){ const u=est['ult:'+ap.id]; if(u&&DADOS[u]) return u; }
+  for(const ap of aps){ const a=ap.aulas.find(x=>x.pronta&&DADOS[x.cap]); if(a) return a.cap; }
+  return '';
+}
+function htmlEquilibrio(set){
+  if(escEst.startsWith('ap:')) return '';
+  const per=PER_EQ[est.eqPer]?est.eqPer:'7', q=equilibrio(set,per), gs=q.gs;
+  if(gs.length<2) return '';
+  const seg='<div class="seg mini" role="group" aria-label="Período">'+Object.entries(PER_EQ).map(([k,[t]])=>'<button data-eqp="'+k+'" aria-pressed="'+(per===k)+'">'+t+'</button>').join('')+'</div>';
+  let h='<section class="card eq"><div class="eq-cab"><h2 class="ct">'+(q.porAp?'Distribuição entre as apostilas':'Equilíbrio entre as matérias')+'</h2>'+seg+'</div>';
+  if(!q.tot) return h+'<p class="mut">Nenhuma questão respondida neste período.</p></section>';
+  const mx=Math.max(q.porAp?0:q.meta*1.6,...gs.map(g=>g.p));
+  h+='<div class="eq-corpo">'+svgRosca(gs,q.tot,q.porAp?q.tot:(q.nota===null?'—':q.nota),q.porAp?'questões':'equilíbrio')+'<div class="eq-lista">';
+  gs.forEach(g=>{const d=g.ult?Math.floor((Date.now()-g.ult)/864e5):null;
+    h+='<div class="eq-lin"><span class="eq-dot" style="background:'+g.cor+'"></span><div class="eq-nome"><b>'+esc(g.nome)+'</b><small>'+g.n+(g.n===1?' questão':' questões')+' · '+(d===null?'ainda não estudada':d===0?'estudada hoje':'última há '+d+(d===1?' dia':' dias'))+'</small>'+
+      '<span class="eq-trilho"><i style="width:'+(100*g.p/mx).toFixed(1)+'%;background:'+g.cor+'"></i>'+(q.porAp?'':'<em style="left:'+(100*q.meta/mx).toFixed(1)+'%" title="meta: '+Math.round(q.meta*100)+'%"></em>')+'</span></div><span class="eq-p mono">'+Math.round(g.p*100)+'%</span></div>';});
+  h+='<p class="mut eq-nota">'+(q.porAp?'Parte de cada apostila nas questões do período.':'Traço escuro: meta de '+Math.round(q.meta*100)+'% para cada matéria (partes iguais). Nota 100 = tudo igual; 0 = tudo numa matéria só.')+'</p></div></div>';
+  if(!q.porAp){
+    const media=q.tot/gs.length, atras=gs.filter(g=>g.n<media-.5).sort((a,b)=>a.n-b.n);
+    if(atras.length){ const alvo=atras[0], link=aulaParaMateria(alvo.mi);
+      h+='<div class="eq-acao"><span>Para chegar à média do período (<b>'+Math.round(media)+'</b> por matéria), faltam '+atras.slice(0,3).map(g=>'<b>'+Math.ceil(media-g.n)+'</b> de '+esc(g.nome)).join(', ')+'.</span>'+(link?'<a class="btn pri mini" href="#/aula/'+link+'">Estudar '+esc(alvo.nome)+' →</a>':'')+'</div>'; }
+    else h+='<div class="eq-acao ok"><span>Tudo equilibrado neste período.</span></div>';
+  }
+  return h+'</section>';
+}
+/* ---------- faixa de números (visão geral) ---------- */
+function faixaKpis(set){
+  const ev=evResp(set), ag=Date.now(), s7=ev.filter(e=>e.t>=ag-7*864e5), s14=ev.filter(e=>e.t>=ag-14*864e5&&e.t<ag-7*864e5);
+  const cont=l=>({n:l.length,ok:l.filter(e=>e.ok&&!e.ch).length,ch:l.filter(e=>e.ok&&e.ch).length,err:l.filter(e=>!e.ok).length});
+  const a=cont(s7), b=cont(s14), acc=x=>x.n?Math.round(100*(x.ok+x.ch)/x.n):null;
+  const dif=(x,y,un)=>{ const v=x-y; if(!v) return '<em class="dz">= 7 dias antes</em>'; return '<em class="'+(v>0?'up':'dn')+'">'+(v>0?'+':'−')+Math.abs(v)+(un||'')+'</em> vs 7 dias antes'; };
+  const its=itens().filter(([k])=>noSet(set,k)), atras=its.filter(([,it])=>it.prox<hoje()).length, ds=diasEstudo(), rc=recordes(set);
+  const evR=ev.filter(e=>e.onde==='revisao'), ret=pct(evR.filter(e=>e.ok&&!e.ch).length,evR.length);
+  const cel=(rot,val,sub)=>'<div class="fk"><span class="fk-r">'+rot+'</span><b>'+val+'</b><span class="fk-s">'+sub+'</span></div>';
+  return '<div class="nums-est">'+
+    cel('Questões · 7 dias',a.n,b.n||a.n?dif(a.n,b.n):'—')+
+    cel('Acerto · 7 dias',acc(a)===null?'—':acc(a)+'%',acc(a)!==null&&acc(b)!==null?dif(acc(a),acc(b),' p.p.'):'meta: 75%')+
+    cel('Acertos · erros',a.n?(a.ok+a.ch)+' · '+a.err:'—',a.n?a.ch+' acerto'+(a.ch===1?'':'s')+' no chute':'nos últimos 7 dias')+
+    cel('Certeza na revisão',ret===null?'—':ret+'%',evR.length+(evR.length===1?' resposta':' respostas'))+
+    cel('Na revisão',its.length,atras?'<em class="dn">'+atras+' atrasada'+(atras===1?'':'s')+'</em>':'nenhuma atrasada')+
+    cel('Dias seguidos',ds.seq,'recorde: '+rc.maiorSeq)+'</div>';
+}
+/* ---------- evolução: por matéria, acertos e erros, tabela ---------- */
+function agregarMat(tipo,set){
+  const ps=periodos(tipo).map(p=>Object.assign(p,{n:0,ok:0,err:0,ch:0,mat:{}}));
+  evResp(set).forEach(e=>{const d=dstr(new Date(e.t)), p=ps.find(x=>d>=x.de&&d<=x.ate); if(!p) return;
+    p.n++; if(!e.ok) p.err++; else if(e.ch) p.ch++; else p.ok++;
+    const mi=rotuloCap(e.k.split('|')[0]).mi; p.mat[mi]=(p.mat[mi]||0)+1;});
+  return ps;
+}
+// escala do eixo com degraus redondos (1, 2, 5, 10, 20, 50...): até 5 faixas
+const escala=v=>{ v=Math.max(v,1); const r=v/5, e=Math.pow(10,Math.floor(Math.log10(r))); const st=Math.max(1,[1,2,5,10].map(m=>m*e).find(x=>x>=r)); return {mx:Math.ceil(v/st)*st,st}; };
+const gradeY=sc=>{ let s=''; for(let t=0;t<=sc.mx+1e-9;t+=sc.st){ const f=t/sc.mx; s+='<line class="grade" x1="'+GL+'" x2="'+(GW-4)+'" y1="'+gy(f)+'" y2="'+gy(f)+'"/><text class="eixo" x="'+(GL-6)+'" y="'+(gy(f)+4)+'" text-anchor="end">'+Math.round(t)+'</text>'; } return s; };
+const matsDe=ps=>[...new Set(ps.flatMap(p=>Object.keys(p.mat).map(Number)))].sort((a,b)=>a-b);
+function svgPorMateria(ps){
+  const bw=(GW-GL-6)/ps.length, sc=escala(Math.max(...ps.map(p=>p.n))), mx=sc.mx, mis=matsDe(ps);
+  let s='<svg class="graf" viewBox="0 0 '+GW+' '+GH+'" role="img" aria-label="Questões respondidas de cada matéria por período">'+gradeY(sc);
+  ps.forEach((p,i)=>{ const x=GL+i*bw+bw*.16, w=bw*.68; let y=GH-GB;
+    mis.forEach(mi=>{const v=p.mat[mi]||0; if(!v) return; const hh=(GH-GB-GT)*v/mx; y-=hh;
+      s+='<rect x="'+x.toFixed(1)+'" y="'+y.toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+hh.toFixed(1)+'" style="fill:'+corMi(mi)+'"/>';});
+    if(p.n) s+='<text class="val" x="'+(x+w/2).toFixed(1)+'" y="'+(y-4).toFixed(1)+'" text-anchor="middle">'+p.n+'</text>';
+    s+='<rect class="hit" x="'+(GL+i*bw).toFixed(1)+'" y="'+GT+'" width="'+bw.toFixed(1)+'" height="'+(GH-GB-GT)+'"><title>'+p.rot+' · '+p.n+(p.n===1?' questão':' questões')+mis.filter(mi=>p.mat[mi]).map(mi=>'\n'+MAPA[mi].nome+': '+p.mat[mi]).join('')+'</title></rect>';});
+  return s+eixoX(ps,bw)+'</svg>';
+}
+function svgAcertosErros(ps){
+  const bw=(GW-GL-6)/ps.length, sc=escala(Math.max(...ps.map(p=>Math.max(p.ok+p.ch,p.err)))), mx=sc.mx;
+  const ser=[{v:p=>p.ok+p.ch,cl:'lok'},{v:p=>p.err,cl:'lerr'},{v:p=>p.ch,cl:'lch'}];
+  let s='<svg class="graf" viewBox="0 0 '+GW+' '+GH+'" role="img" aria-label="Quantidade de acertos e erros por período">'+gradeY(sc);
+  ser.forEach(se=>{ const pts=ps.map((p,i)=>[GL+i*bw+bw/2,gy(se.v(p)/mx)]);
+    s+='<polyline class="'+se.cl+'" points="'+pts.map(q=>q[0].toFixed(1)+','+q[1].toFixed(1)).join(' ')+'"/>';
+    pts.forEach((q,i)=>{ if(ps[i].n) s+='<circle class="'+se.cl+'-p" cx="'+q[0].toFixed(1)+'" cy="'+q[1].toFixed(1)+'" r="3"/>'; }); });
+  ps.forEach((p,i)=>{ s+='<rect class="hit" x="'+(GL+i*bw).toFixed(1)+'" y="'+GT+'" width="'+bw.toFixed(1)+'" height="'+(GH-GB-GT)+'"><title>'+p.rot+(p.n?'\nacertos: '+(p.ok+p.ch)+' ('+p.ch+' no chute)\nerros: '+p.err+'\nacerto: '+pct(p.ok+p.ch,p.n)+'%':'\nsem questões')+'</title></rect>'; });
+  return s+eixoX(ps,bw)+'</svg>';
+}
+function tabelaPeriodos(ps){
+  const l=ps.filter(p=>p.n).reverse(); if(!l.length) return '';
+  return '<section class="card graf-c"><h2 class="ct">Dados de cada período</h2><div class="tab-wrap"><table class="tab tab-num"><thead><tr><th>Período</th><th>Respondidas</th><th>Acertos</th><th>Erros</th><th>No chute</th><th>Acerto</th></tr></thead><tbody>'+
+    l.map(p=>'<tr><td class="mono">'+p.rot+'</td><td class="mono">'+p.n+'</td><td class="mono">'+(p.ok+p.ch)+'</td><td class="mono">'+p.err+'</td><td class="mono">'+p.ch+'</td><td>'+barraAcc(pct(p.ok+p.ch,p.n))+'</td></tr>').join('')+'</tbody></table></div></section>';
+}
 function renderEstat(){
   const pg=$('#pg-estatisticas');
   if(escEst&&!capsDoEscopo(escEst).size) escEst='';
@@ -20735,20 +20888,18 @@ function renderEstat(){
   let html='<header class="pg-cab peq"><h1>Estatísticas</h1><p class="sub">Seu desempenho, onde melhorar e o que fazer a seguir.</p></header><div class="barra-esc"><label class="esc">Mostrar <select id="est-esc">'+opcoesEscopo(escEst)+'</select></label></div>'+
     abas([['geral','Visão geral'],['evolucao','Evolução'],['fracos','Pontos fracos'],['aulas','Por aula']],abaEst,'data-aba')+'<div class="aba-corpo" role="tabpanel">';
   if(abaEst==='geral'){
-    const ss=[...set].map(statCap), resp=ss.reduce((a,s)=>a+s.resp,0), certas=ss.reduce((a,s)=>a+s.certas,0), evR=evResp(set).filter(e=>e.onde==='revisao'), ret=pct(evR.filter(e=>e.ok&&!e.ch).length,evR.length);
-    const ps=agregar('semana',set), at=ps[11], an=ps[10], ds=diasEstudo(), rc=recordes(set), naRev=itens().filter(([k])=>noSet(set,k)), atras=naRev.filter(([,it])=>it.prox<hoje()).length;
-    const comp=(a,b)=>!b?'':(a>=b?' <span class="sobe">▲ '+(a-b)+'</span>':' <span class="desce">▼ '+(b-a)+'</span>');
-    const accS=pct(at.aOk+at.rOk,at.a+at.r);
-    html+='<div class="kpis"><div class="kpi destaque"><b>'+(at.a+at.r)+'</b><span>questões nesta semana'+comp(at.a+at.r,an.a+an.r)+'</span></div><div class="kpi"><b>'+(accS===null?'—':accS+'%')+'</b><span>acerto nesta semana</span></div><div class="kpi"><b>'+resp+'</b><span>respondidas · '+(resp?pct(certas,resp)+'% certas':'—')+'</span></div><div class="kpi"><b>'+(ret===null?'—':ret+'%')+'</b><span>certeza na revisão ('+evR.length+')</span></div><div class="kpi'+(atras?' al':'')+'"><b>'+naRev.length+'</b><span>na revisão · '+atras+' atrasadas</span></div><div class="kpi"><b>'+ds.seq+'</b><span>dias seguidos · recorde '+rc.maiorSeq+'</span></div></div>'+
+    const rc=recordes(set);
+    html+=faixaKpis(set)+htmlEquilibrio(set)+
       '<div class="dupla"><section class="card"><h2 class="ct">Sugestões</h2><ul class="sugs">'+sugestoes(set).map(s=>'<li><span>'+s.t+'</span>'+(s.b?(s.b[1].startsWith('aba:')?'<button class="btn out mini" data-aba="'+s.b[1].slice(4)+'">'+s.b[0]+'</button>':'<a class="btn out mini" href="'+s.b[1]+'">'+s.b[0]+'</a>'):'')+'</li>').join('')+'</ul></section>'+
       '<section class="card"><h2 class="ct">Revise isto</h2>'+(recomendar().filter(r=>set.has(r.id)).slice(0,5).map((r,i)=>{const t=rotuloCap(r.id);return '<a class="aten" href="#/aula/'+r.id+'"><span class="n">'+(i+1)+'</span><span class="tx"><b>'+esc(t.ap)+' · Aula '+t.num+'</b><small>'+r.mot.map(esc).join(' · ')+'</small></span></a>';}).join('')||'<p class="mut">Sem sinais ainda.</p>')+'</section></div>'+
-      '<h2 class="sec-h">Recordes</h2><div class="kpis"><div class="kpi"><b>'+(rc.qDia||'—')+'</b><span>no melhor dia'+(rc.melhorDia?' ('+fdata(rc.melhorDia)+')':'')+'</span></div><div class="kpi"><b>'+(rc.melhorSem&&rc.melhorSem.a+rc.melhorSem.r?rc.melhorSem.a+rc.melhorSem.r:'—')+'</b><span>na melhor semana</span></div><div class="kpi"><b>'+rc.maiorSeq+'</b><span>maior sequência de dias</span></div></div>';
+      '<p class="mut peq recs"><b>Recordes</b> · melhor dia: '+(rc.qDia?rc.qDia+' questões ('+fdata(rc.melhorDia)+')':'—')+' · melhor semana: '+(rc.melhorSem&&rc.melhorSem.a+rc.melhorSem.r?(rc.melhorSem.a+rc.melhorSem.r)+' questões':'—')+' · maior sequência: '+rc.maiorSeq+(rc.maiorSeq===1?' dia':' dias')+'</p>';
   }else if(abaEst==='evolucao'){
-    const per=est.estPer||'dia', ps=agregar(per,set);
+    const per=est.estPer||'dia', ps=agregar(per,set), pm=agregarMat(per,set);
     html+='<div class="seg" role="group" aria-label="Período">'+[['dia','Dias'],['semana','Semanas'],['mes','Meses']].map(([k,t])=>'<button data-per="'+k+'" aria-pressed="'+(per===k)+'">'+t+'</button>').join('')+'</div>'+
-      '<section class="card graf-c"><h2 class="ct">Questões respondidas</h2><p class="leg"><span class="la">aulas e salvas</span><span class="lr">revisão</span></p><div class="graf-w">'+svgBarras(ps)+'</div></section>'+
+      '<section class="card graf-c"><h2 class="ct">Questões respondidas por matéria</h2><p class="leg">'+matsDe(pm).map(mi=>'<span><i class="lm" style="background:'+corMi(mi)+'"></i>'+esc(MAPA[mi].nome)+'</span>').join('')+'<span class="mut">passe o mouse para ver os números</span></p><div class="graf-w">'+svgPorMateria(pm)+'</div></section>'+
+      '<section class="card graf-c"><h2 class="ct">Acertos e erros (quantidade)</h2><p class="leg"><span class="lokt">acertos</span><span class="lerrt">erros</span><span class="lcht">acertos no chute</span></p><div class="graf-w">'+svgAcertosErros(pm)+'</div></section>'+
       '<section class="card graf-c"><h2 class="ct">Taxa de acerto</h2><p class="leg"><span class="l1t">aulas</span><span class="l2t">revisão, com certeza</span><span class="mut">tracejado: meta de 75%</span></p><div class="graf-w">'+svgLinhas(ps,[{v:p=>pct(p.aOk,p.a),cl:'l1',nome:'nas aulas'},{v:p=>pct(p.rOk,p.r),cl:'l2',nome:'na revisão'}])+'</div></section>'+
-      '<section class="card graf-c"><h2 class="ct">Total acumulado</h2><div class="graf-w">'+svgAcum(ps,set)+'</div></section>';
+      tabelaPeriodos(pm);
   }else if(abaEst==='fracos'){
     const fracas=[...set].map(statCap).filter(s=>s.resp>=3).sort((a,b)=>a.certas/a.resp-b.certas/b.resp).slice(0,6);
     const maisErr=errosPorQuestao(set).filter(x=>x.err>=1).sort((a,b)=>b.err-a.err||a.ok-b.ok).slice(0,10), rcx=retencaoPorCaixa(set);
@@ -21269,6 +21420,7 @@ document.addEventListener('click',e=>{
   else if(b.dataset.unica){ abrirFoco([b.dataset.unica],'rev'); }
   else if(b.dataset.tirar){ if(!b.classList.contains('confirma')){b.classList.add('confirma');$('span',b).textContent='Tirar mesmo?';return;} tirarRev(b.dataset.tirar,'você tirou pela fila'); salvar(); renderRevisao(); atualizarContadores(); }
   else if(b.dataset.aba){ abaEst=b.dataset.aba; est.estAba=abaEst; salvar(); renderEstat(); focarAba('data-aba',abaEst); }
+  else if(b.dataset.eqp){ est.eqPer=b.dataset.eqp; salvar(); renderEstat(); }
   else if(b.dataset.per){ est.estPer=b.dataset.per; salvar(); renderEstat(); }
   else if(b.dataset.esc!==undefined&&b.closest('#pg-estatisticas')){ escEst=b.dataset.esc; est.estEsc=escEst; salvar(); renderEstat(); }
   else if(b.dataset.revk){ const k=b.dataset.revk; abrirFoco([k],rev()[k]&&rev()[k].s?'rev':'livre'); }
