@@ -20808,17 +20808,17 @@ function aulaParaMateria(mi){
 }
 function htmlEquilibrio(set){
   if(escEst.startsWith('ap:')) return '';
-  const per=PER_EQ[est.eqPer]?est.eqPer:'7', q=equilibrio(set,per), gs=q.gs;
+  const per=PER_EQ[est.eqPer]?est.eqPer:'7', q=equilibrio(set,per), gs=q.gs.slice().sort((a,b)=>b.n-a.n);
   if(gs.length<2) return '';
   const seg='<div class="seg mini" role="group" aria-label="Período">'+Object.entries(PER_EQ).map(([k,[t]])=>'<button data-eqp="'+k+'" aria-pressed="'+(per===k)+'">'+t+'</button>').join('')+'</div>';
   let h='<section class="card eq"><div class="eq-cab"><h2 class="ct">'+(q.porAp?'Distribuição entre as apostilas':'Equilíbrio entre as matérias')+'</h2>'+seg+'</div>';
   if(!q.tot) return h+'<p class="mut">Nenhuma questão respondida neste período.</p></section>';
-  const mx=Math.max(q.porAp?0:q.meta*1.6,...gs.map(g=>g.p));
+  const mx=1; // a barra inteira = 100% das questões do período
   h+='<div class="eq-corpo">'+svgRosca(gs,q.tot,q.porAp?q.tot:(q.nota===null?'—':q.nota),q.porAp?'questões':'equilíbrio')+'<div class="eq-lista">';
   gs.forEach(g=>{const d=g.ult?Math.floor((Date.now()-g.ult)/864e5):null;
     h+='<div class="eq-lin"><span class="eq-dot" style="background:'+g.cor+'"></span><div class="eq-nome"><b>'+esc(g.nome)+'</b><small>'+g.n+(g.n===1?' questão':' questões')+' · '+(d===null?'ainda não estudada':d===0?'estudada hoje':'última há '+d+(d===1?' dia':' dias'))+'</small>'+
       '<span class="eq-trilho"><i style="width:'+(100*g.p/mx).toFixed(1)+'%;background:'+g.cor+'"></i>'+(q.porAp?'':'<em style="left:'+(100*q.meta/mx).toFixed(1)+'%" title="meta: '+Math.round(q.meta*100)+'%"></em>')+'</span></div><span class="eq-p mono">'+Math.round(g.p*100)+'%</span></div>';});
-  h+='<p class="mut eq-nota">'+(q.porAp?'Parte de cada apostila nas questões do período.':'Traço escuro: meta de '+Math.round(q.meta*100)+'% para cada matéria (partes iguais). Nota 100 = tudo igual; 0 = tudo numa matéria só.')+'</p></div></div>';
+  h+='<p class="mut eq-nota">'+(q.porAp?'Cada barra inteira representa 100% das questões do período; a parte pintada é a fatia de cada apostila.':'Cada barra inteira representa 100% das questões do período; a parte pintada é a fatia da matéria. O traço escuro marca '+Math.round(q.meta*100)+'%: a fatia de cada matéria se o estudo fosse igual. A lista vai da mais estudada para a menos estudada. Nota 100 = tudo igual; 0 = tudo numa matéria só.')+'</p></div></div>';
   if(!q.porAp){
     const media=q.tot/gs.length, atras=gs.filter(g=>g.n<media-.5).sort((a,b)=>a.n-b.n);
     if(atras.length){ const alvo=atras[0], link=aulaParaMateria(alvo.mi);
