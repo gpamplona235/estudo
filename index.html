@@ -981,17 +981,108 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .cfgs small{display:block;font-weight:400;font-size:12px;color:var(--tinta-2)}
 .cfgs>span>span{min-width:0;overflow-wrap:anywhere;hyphens:auto}
 @container aula (max-width:420px){.cfgs{grid-template-columns:repeat(2,minmax(0,1fr))}.cfgs>span:not(.cf-tit){font-size:13px;gap:5px;padding:6px}}
-/* Equivalências: cartão de quebra (a frase como promessa) */
+/* ===== Equivalências (lógica): desenhos feitos para ouvir e olhar ao mesmo tempo =====
+   .ler = cada pedaço que o leitor lê como um parágrafo (o contorno do leitor anda por ele); .cel = parte com pausa; .ico = seta ou sinal que não se lê */
+/* triagem: dois cestos de frases (entram na lógica x ficam de fora) */
+.triagem{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px;margin:8px 0 18px}
+.cesto{border-radius:14px;padding:12px;display:grid;gap:8px;align-content:start;min-width:0}
+.cesto.sim{background:var(--certo-fundo);border:2px solid var(--certo)}
+.cesto.nao{background:var(--codigo);border:2px dashed var(--tinta-3)}
+.cesto-cab{font:800 14px var(--texto);letter-spacing:.07em;text-transform:uppercase;padding:0 2px}
+.cesto.sim .cesto-cab{color:var(--certo)}
+.cesto.nao .cesto-cab{color:var(--tinta-2)}
+.tri{background:var(--folha);border-radius:10px;padding:8px 12px;line-height:1.4;min-width:0}
+.tri>b{display:block;font-size:19px}
+.tri>small{display:block;color:var(--tinta-2);font-size:15.5px}
+/* virar o valor: frase verdadeira, o que muda, frase falsa */
+.vira{display:flex;flex-direction:column;align-items:stretch;gap:6px;margin:8px 0 18px;max-width:520px}
+.vira .lado{border:2px solid var(--certo);background:var(--certo-fundo);border-radius:12px;padding:10px 14px;min-width:0}
+.vira .lado.f{border-color:var(--vermelho);background:var(--vermelho-fundo)}
+.vira .lado>b{display:block;font-size:20px;line-height:1.3}
+.vira .val{display:inline-block;margin-top:4px;font:800 13px var(--texto);letter-spacing:.07em;text-transform:uppercase;color:var(--certo)}
+.vira .lado.f .val{color:var(--vermelho)}
+.vira .gira{font:700 16px var(--texto);color:var(--roxo);padding:0 14px}
+.vira .gira .ico{font-size:20px;margin-left:4px}
+/* régua: o que a negação cobre (não bonita = mais ou menos + feia) */
+.regua{margin:8px 0 18px;display:grid;gap:8px}
+.regua-barra,.regua-chaves{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4px}
+.regua-barra>span{padding:12px 4px;text-align:center;font-weight:800;font-size:17px;background:var(--codigo);border:1.5px solid var(--linha)}
+.regua-barra>span:first-child{background:var(--certo-fundo);border-color:var(--certo);border-radius:10px 0 0 10px}
+.regua-barra>span:last-child{background:var(--coral-fundo);border-color:var(--coral);border-radius:0 10px 10px 0}
+.alcance{border-top:5px solid var(--certo);padding:6px 6px 0;font-size:16px;line-height:1.35;min-width:0}
+.alcance>b{display:block;font-size:16.5px}
+.alcance.c1{grid-column:1}
+.alcance.c23{grid-column:2/4;border-color:var(--marinho)}
+.alcance.c3{grid-column:3;border-color:var(--vermelho);border-top-style:dashed}
+.alcance.c3>b{color:var(--vermelho)}
+/* montagem: duas frases + a peça que liga */
+.monta{display:grid;gap:10px;margin:8px 0 18px}
+.monta-l{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:10px 12px;border:1.5px solid var(--linha);border-radius:12px;background:var(--folha)}
+.peca{padding:5px 11px;border-radius:8px;background:var(--codigo);border:1.5px solid var(--linha);font-weight:600;font-size:17.5px}
+.liga{padding:4px 13px;border-radius:999px;background:var(--marinho);color:var(--folha);font-weight:800;font-size:17px}
+.monta-l>small{flex-basis:100%;color:var(--tinta-2);font-size:16px}
+/* tradutor de disfarces: a palavra que a banca usa -> a ligação que ela é */
+.tradutor{display:grid;gap:10px;margin:8px 0 18px}
+.trd{display:flex;flex-wrap:wrap;align-items:center;gap:8px 18px;padding:10px 12px;border-radius:12px;background:var(--codigo)}
+.trd-l{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;min-width:0}
+.trd-l>small{color:var(--tinta-2);font-size:15px}
+.trd .disf{padding:4px 11px;border-radius:8px;border:2px dashed var(--coral);background:var(--coral-fundo);font-weight:700}
+.trd .liga{font-size:16px}
+.trd .trd-ex{flex-basis:100%;font-size:16.5px;line-height:1.4}
+/* sinais: símbolo grande + como se lê */
+.sinais{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px;margin:8px 0 18px}
+.sinal{border:1.5px solid var(--linha);border-radius:12px;padding:10px 12px;background:var(--folha);min-width:0}
+.sinal .ico{display:block;font:700 30px/1.2 var(--mono,monospace);color:var(--marinho);margin-bottom:4px}
+.sinal .cel{display:block;font-size:16px;line-height:1.4}
+.sinal b.cel{font-weight:800;font-size:17px}
+/* cartão de quebra (a frase como promessa) */
 .promessas{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:12px;margin:8px 0 18px}
 .promessa{border:2px solid var(--tinta);border-radius:14px;overflow:hidden;background:var(--folha);min-width:0}
 .promessa .qb-lig{display:inline-block;margin:10px 12px 0;padding:2px 10px;border-radius:999px;background:var(--marinho);color:var(--folha);font:800 13px var(--texto);letter-spacing:.06em;text-transform:uppercase}
-.promessa .qb-frase{padding:6px 12px 10px;font:600 18px/1.4 var(--texto)}
-.promessa .qb-q,.promessa .qb-v{padding:8px 12px;font-size:16px;line-height:1.45;border-top:1.5px dashed var(--linha)}
+.promessa .qb-frase{display:block;padding:6px 12px 10px;font:600 18px/1.4 var(--texto)}
+.promessa .qb-q,.promessa .qb-v{display:block;padding:8px 12px;font-size:16px;line-height:1.45;border-top:1.5px dashed var(--linha)}
 .promessa .qb-q{background:var(--vermelho-fundo)}
 .promessa .qb-v{background:var(--certo-fundo)}
 .promessa .qb-q b,.promessa .qb-v b{display:block;font:800 12px var(--texto);letter-spacing:.08em;text-transform:uppercase;margin-bottom:2px}
 .promessa .qb-q b{color:var(--vermelho)}
 .promessa .qb-v b{color:var(--certo)}
+/* os quatro finais de uma promessa com "se" */
+.finais{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:8px 0 18px}
+.final{border:2px solid var(--certo);background:var(--certo-fundo);border-radius:12px;padding:10px 12px;font-size:16px;line-height:1.4;min-width:0}
+.final.mentiu{border-color:var(--vermelho);background:var(--vermelho-fundo);border-width:3px}
+.final>b{display:block;font-size:17px}
+.final .veredito{display:block;margin-top:6px;font:800 13px var(--texto);letter-spacing:.06em;text-transform:uppercase;color:var(--certo)}
+.final.mentiu .veredito{color:var(--vermelho)}
+/* dois tipos de pergunta */
+.perguntas{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px;margin:8px 0 18px}
+.pergunta-t{border-left:6px solid var(--roxo);background:var(--roxo-fundo);border-radius:0 12px 12px 0;padding:10px 14px;line-height:1.45;min-width:0}
+.pergunta-t>b{display:block;font-size:18px;margin-bottom:4px}
+/* ninho: frase dentro de frase (a ligação de fora abraça as de dentro) */
+.ninho{border:3px solid var(--marinho);border-radius:16px;padding:10px;margin:8px 0 12px;background:var(--marinho-fundo)}
+.ninho-cab{padding:2px 4px 10px;line-height:1.4}
+.ninho-cab>b{display:block;font:800 14px var(--texto);letter-spacing:.07em;text-transform:uppercase;color:var(--marinho)}
+.ninho .partes{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px}
+.parte{border:2px solid var(--coral);background:var(--folha);border-radius:12px;padding:10px 12px;line-height:1.4;min-width:0}
+.parte.p2{border-color:var(--roxo)}
+.parte>b{display:block;font:800 13px var(--texto);letter-spacing:.07em;text-transform:uppercase;color:var(--coral)}
+.parte.p2>b{color:var(--roxo)}
+.parte .frs{display:block;font-weight:600;font-size:17px;margin:4px 0}
+.parte .res{display:block;margin-top:8px;padding:6px 10px;border-radius:8px;font-weight:700;font-size:15.5px}
+.parte .res.sim{background:var(--certo-fundo);color:var(--certo)}
+.parte .res.nao{background:var(--vermelho-fundo);color:var(--vermelho)}
+/* fatos tirados da frase */
+.fatos{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 18px;padding:10px 12px;border:2px solid var(--tinta);border-radius:12px}
+.fatos>b{flex-basis:100%;font:800 13px var(--texto);letter-spacing:.07em;text-transform:uppercase}
+.fatos .cel{padding:4px 10px;border-radius:999px;background:var(--codigo);border:1.5px solid var(--linha);font-weight:600}
+/* o "se" é mão única */
+.unica{display:grid;gap:10px;margin:8px 0 18px}
+.via{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;padding:10px 12px;border-radius:12px;border:2px solid var(--certo);background:var(--certo-fundo)}
+.via.contra{border-color:var(--vermelho);background:var(--vermelho-fundo);border-style:dashed}
+.via>small{color:var(--tinta-2);font-size:15px}
+.via .pt{background:var(--folha);border-radius:8px;padding:4px 10px;font-weight:700}
+.via .ico{font:800 22px var(--texto);color:var(--certo)}
+.via.contra .ico{color:var(--vermelho)}
+.via .ok{flex-basis:100%;font-size:16px;line-height:1.4}
 
 
 /* ---------- casca: barra lateral + topo ---------- */
@@ -22179,7 +22270,8 @@ Documentos  Fotos  notas.txt
 <header class="aula-cab">
   <span class="tag">AULA 01</span>
   <h1>A frase como promessa: quando vale e quando quebra</h1>
-  <p>Esta apostila usa uma ideia só, do começo ao fim: <b>toda frase é uma promessa</b>. Uma promessa pode ser cumprida ou quebrada, e quase toda questão de lógica pergunta, no fundo, uma coisa: em que caso esta promessa quebra? Nesta aula, você vai ver o que é uma frase para a lógica, as três ligações principais (e, ou, se... então) e o jeito de cada uma quebrar.</p>
+  <p>Esta apostila usa uma ideia só, do começo ao fim: toda frase é uma promessa. Uma promessa pode ser cumprida ou quebrada. E quase toda questão de lógica pergunta, no fundo, a mesma coisa: em que caso esta promessa quebra?</p>
+  <p>Nesta aula, você vai ver que frase interessa à lógica, as três ligações principais, e o jeito de cada uma quebrar.</p>
   <div class="meta"><span>13 questões do caderno nesta aula</span><span>9 no meio da explicação, 4 no treino</span></div>
 </header>
 <nav class="sumario" aria-label="Nesta aula">
@@ -22194,28 +22286,57 @@ Documentos  Fotos  notas.txt
 <section class="sec" id="e1-frase">
   <div class="sec-main">
     <h2><span class="n">1.</span><span class="t">A frase da lógica</span></h2>
-    <p>Para a lógica, só interessa a frase que pode ser <b>verdadeira</b> ou <b>falsa</b>: uma afirmação. Ela se chama <b>proposição</b>. Cada proposição tem um <b>valor</b>: verdadeiro (V) ou falso (F). Nunca os dois, nunca nenhum.</p>
-    <ul class="ex-lista">
-      <li><span class="ex-c">Certo</span> "Ana é médica." É afirmação: pode ser V ou F.</li>
-      <li><span class="ex-e">Errado</span> "Ana é médica?" Pergunta não é verdadeira nem falsa.</li>
-      <li><span class="ex-e">Errado</span> "Feche a porta!" Ordem também não.</li>
-      <li><span class="ex-e">Errado</span> "Ele é médico." Quem é "ele"? Sem saber, não dá para dizer se é V ou F.</li>
-    </ul>
+    <p>Para a lógica, só interessa a frase que pode ser verdadeira ou falsa. Ela se chama <b>proposição</b>.</p>
+    <p>Imagine dois cestos. No primeiro, entram as frases que afirmam alguma coisa. No segundo, ficam as que não afirmam nada.</p>
+    <div class="triagem">
+      <div class="cesto sim">
+        <div class="cesto-cab ler">No primeiro cesto: entram na lógica</div>
+        <div class="tri ler"><b class="cel">Ana é médica.</b> <small class="cel">Afirmação: pode ser verdadeira ou falsa.</small></div>
+        <div class="tri ler"><b class="cel">Brasília é a capital do Brasil.</b> <small class="cel">Afirmação verdadeira.</small></div>
+        <div class="tri ler"><b class="cel">Dois mais dois é cinco.</b> <small class="cel">Afirmação falsa. Mesmo errada, entra: tem valor.</small></div>
+      </div>
+      <div class="cesto nao">
+        <div class="cesto-cab ler">No segundo cesto: ficam de fora</div>
+        <div class="tri ler"><b class="cel">Ana é médica?</b> <small class="cel">Pergunta: não é verdadeira nem falsa.</small></div>
+        <div class="tri ler"><b class="cel">Feche a porta!</b> <small class="cel">Ordem: também não.</small></div>
+        <div class="tri ler"><b class="cel">Que dia lindo!</b> <small class="cel">Exclamação: é um sentimento, não uma afirmação.</small></div>
+        <div class="tri ler"><b class="cel">Ele é médico.</b> <small class="cel">Quem é ele? Sem saber, não dá para dizer se é verdadeira ou falsa.</small></div>
+      </div>
+    </div>
+    <p>Repare no "dois mais dois é cinco": é falsa, mas entra no primeiro cesto. Para entrar, não precisa ser verdade. Precisa só ter um valor: verdadeiro ou falso.</p>
     <h3>Negar é virar o valor</h3>
-    <p>A <b>negação</b> de uma frase é outra frase com o valor contrário: se uma é V, a outra é F. O jeito mais simples de negar é pôr ou tirar um <b>"não"</b>.</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Exemplo</span> "Fui ao cinema." Negação: "Não fui ao cinema."</li>
-      <li><span class="ex-t">Exemplo</span> "Não direi não." Negação: tire o primeiro "não": "Direi não."</li>
-      <li><span class="ex-t">Exemplo</span> "Não é verdade que choveu." É o mesmo que "Não choveu."</li>
-      <li><span class="ex-e">Errado</span> Negação de "Maria é bonita" = "Maria é feia".<br><span class="ex-c">Certo</span> Negação = "Maria não é bonita". Negar não é dizer o oposto; é dizer que a frase não vale.</li>
-    </ul>
-    <details class="tente"><summary><span class="q">Qual é a negação de "Não é verdade que Pedro não estudou"?</span></summary><div class="resp"><p>A frase já tem dois "não": quer dizer "Pedro estudou". A negação é "Pedro não estudou".</p></div></details>
+    <p>A <b>negação</b> é uma frase com o valor contrário. Se uma é verdadeira, a outra é falsa. O jeito mais simples de negar é pôr um "não":</p>
+    <div class="vira ler">
+      <div class="lado"><b class="cel">Fui ao cinema.</b> <span class="val cel">Esta é verdadeira.</span></div>
+      <div class="gira cel">Pondo um "não": <span class="ico">↓</span></div>
+      <div class="lado f"><b class="cel">Não fui ao cinema.</b> <span class="val cel">Esta é falsa.</span></div>
+    </div>
+    <p>Se a frase já tem "não", negar é tirar o "não". A frase "Não direi não" tem dois. Tire o primeiro:</p>
+    <div class="vira ler">
+      <div class="lado"><b class="cel">Não direi não.</b> <span class="val cel">Esta é verdadeira.</span></div>
+      <div class="gira cel">Tirando o primeiro "não": <span class="ico">↓</span></div>
+      <div class="lado f"><b class="cel">Direi não.</b> <span class="val cel">Esta é falsa.</span></div>
+    </div>
+    <h3>Negar não é dizer o oposto</h3>
+    <p>Aqui está a primeira armadilha. Qual é a negação de "Maria é bonita"? Muita gente responde "Maria é feia". Está errado. Veja na régua da beleza, que tem três pedaços: bonita, mais ou menos, e feia.</p>
+    <div class="regua">
+      <div class="regua-barra ler"><span class="cel">bonita</span> <span class="cel">mais ou menos</span> <span class="cel">feia</span></div>
+      <div class="regua-chaves">
+        <div class="alcance c1 ler"><b>"É bonita"</b> <span>fica só no primeiro pedaço.</span></div>
+        <div class="alcance c23 ler"><b>"Não é bonita"</b> <span>fica em todo o resto: o mais ou menos e o feio. Esta é a negação.</span></div>
+      </div>
+      <div class="regua-chaves">
+        <div class="alcance c3 ler"><b>"É feia"</b> <span>fica só na ponta.</span></div>
+      </div>
+    </div>
+    <p>"Feia" pega só a ponta da régua, e deixa de fora o mais ou menos. Por isso não serve como negação. A negação certa é "Maria não é bonita", que cobre todo o resto.</p>
+    <details class="tente"><summary><span class="q">Qual é a negação de "Não é verdade que Pedro não estudou"?</span></summary><div class="resp"><p>A frase tem dois "não": quer dizer, simplesmente, "Pedro estudou". Então a negação é "Pedro não estudou".</p></div></details>
     <div data-questao="218"></div>
-    <p class="ponte">Frases simples ligadas viram frases maiores. As ligações é que fazem a lógica ficar interessante.</p>
+    <p class="ponte">Frases simples podem ser ligadas, e virar frases maiores. É aí que a lógica fica interessante.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">Proposição = afirmação: V ou F.</div>
-    <div class="mao aten">Negar ≠ dizer o contrário.</div>
+    <div class="mao">Proposição: tem valor, verdadeiro ou falso.</div>
+    <div class="mao aten">Negar não é dizer o oposto.</div>
   </aside>
 </section>
 
@@ -22223,33 +22344,32 @@ Documentos  Fotos  notas.txt
 <section class="sec" id="e1-ligacoes">
   <div class="sec-main">
     <h2><span class="n">2.</span><span class="t">As três ligações</span></h2>
-    <p>Duas frases simples podem virar uma só, ligadas por uma palavra. As três ligações que mais caem:</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Exemplo</span> <b>e</b>: "Trago pão <b>e</b> trago leite." As duas coisas juntas.</li>
-      <li><span class="ex-t">Exemplo</span> <b>ou</b>: "Trago pão <b>ou</b> trago leite." Pelo menos uma das duas.</li>
-      <li><span class="ex-t">Exemplo</span> <b>se... então</b>: "<b>Se</b> chover, <b>então</b> levo o guarda-chuva." Uma coisa depende da outra.</li>
-    </ul>
+    <p>Pense em peças de montar. Cada frase simples é uma peça cinza, e a ligação é a peça verde que junta duas delas. As três ligações que mais caem:</p>
+    <div class="monta">
+      <div class="monta-l ler"><span class="peca">Trago pão</span> <span class="liga">e</span> <span class="peca">trago leite.</span> <small class="cel">As duas coisas juntas.</small></div>
+      <div class="monta-l ler"><span class="peca">Trago pão</span> <span class="liga">ou</span> <span class="peca">trago leite.</span> <small class="cel">Pelo menos uma das duas.</small></div>
+      <div class="monta-l ler"><span class="liga">Se</span> <span class="peca">chover,</span> <span class="liga">então</span> <span class="peca">levo o guarda-chuva.</span> <small class="cel">Uma coisa depende da outra.</small></div>
+    </div>
     <h3>Os disfarces</h3>
-    <p>A banca nem sempre escreve "e", "ou" e "se". Fique atento:</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Exemplo</span> "<b>mas</b>", "<b>embora</b>", "<b>porém</b>" funcionam como <b>e</b>: "Estudei, mas não passei" = "Estudei e não passei".</li>
-      <li><span class="ex-t">Exemplo</span> "<b>nem</b>" é "<b>e não</b>": "Não bebo café nem chá" = "Não bebo café e não bebo chá".</li>
-      <li><span class="ex-t">Exemplo</span> "<b>quando</b>", "<b>sempre que</b>", "<b>caso</b>" funcionam como <b>se</b>: "Quando chove, a rua molha" = "Se chove, a rua molha". O "então" pode vir escondido, até numa vírgula.</li>
-    </ul>
-    <h3>Os símbolos</h3>
-    <p>Muitas questões trocam as frases por letras (p, q) e as ligações por símbolos. Você só precisa saber ler:</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Exemplo</span> <b>~p</b> ou <b>¬p</b>: lê-se "não p".</li>
-      <li><span class="ex-t">Exemplo</span> <b>p ∧ q</b>: "p e q" (o ∧ parece um "A" sem traço: de "e").</li>
-      <li><span class="ex-t">Exemplo</span> <b>p ∨ q</b>: "p ou q" (o ∨ é o "A" de cabeça para baixo).</li>
-      <li><span class="ex-t">Exemplo</span> <b>p → q</b>: "se p, então q" (a seta mostra que p leva a q).</li>
-    </ul>
-    <p class="ponte">Agora, a ideia central: cada ligação é uma promessa diferente, e cada uma quebra de um jeito.</p>
+    <p>A banca nem sempre escreve "e", "ou" e "se". Ela usa outras palavras, que funcionam do mesmo jeito. Em cada faixa abaixo: a palavra disfarçada, a ligação que ela é, e um exemplo.</p>
+    <div class="tradutor">
+      <div class="trd ler"><span class="trd-l"><small>Quando aparecer</small> <span class="disf">mas, embora, porém,</span></span> <span class="trd-l"><small>leia como</small> <span class="liga">e.</span></span> <span class="trd-ex cel">Exemplo: "Estudei, mas não passei" é o mesmo que "Estudei e não passei".</span></div>
+      <div class="trd ler"><span class="trd-l"><small>Quando aparecer</small> <span class="disf">nem,</span></span> <span class="trd-l"><small>leia como</small> <span class="liga">e não.</span></span> <span class="trd-ex cel">Exemplo: "Não bebo café nem chá" é o mesmo que "Não bebo café e não bebo chá".</span></div>
+      <div class="trd ler"><span class="trd-l"><small>Quando aparecer</small> <span class="disf">quando, sempre que, caso,</span></span> <span class="trd-l"><small>leia como</small> <span class="liga">se.</span></span> <span class="trd-ex cel">Exemplo: "Quando chove, a rua molha" é o mesmo que "Se chove, então a rua molha". O então pode vir escondido, até numa vírgula.</span></div>
+    </div>
+    <h3>Os sinais</h3>
+    <p>Muitas questões trocam as frases por letras, como p e q, e as ligações por sinais. Você não precisa escrever nada com eles: só saber ler.</p>
+    <div class="sinais">
+      <div class="sinal ler"><span class="ico">~p</span><b class="cel">O tracinho ondulado lê-se "não".</b> <span class="cel">Às vezes vem outro sinal, um traço com a ponta dobrada para baixo. Também é "não".</span></div>
+      <div class="sinal ler"><span class="ico">p ∧ q</span><b class="cel">O sinal de chapéu lê-se "e".</b> <span class="cel">Parece um A sem o tracinho: A de "e".</span></div>
+      <div class="sinal ler"><span class="ico">p ∨ q</span><b class="cel">O sinal de V lê-se "ou".</b> <span class="cel">É o chapéu de cabeça para baixo.</span></div>
+      <div class="sinal ler"><span class="ico">p → q</span><b class="cel">A seta lê-se "se, então".</b> <span class="cel">A primeira parte leva à segunda.</span></div>
+    </div>
+    <p class="ponte">Agora, a ideia central da apostila: cada ligação é uma promessa diferente, e cada uma quebra de um jeito.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">mas = e · nem = e não</div>
-    <div class="mao">quando = se</div>
-    <div class="mao">∧ e · ∨ ou · → se</div>
+    <div class="mao">mas é "e". nem é "e não".</div>
+    <div class="mao">quando é "se".</div>
   </aside>
 </section>
 
@@ -22257,20 +22377,26 @@ Documentos  Fotos  notas.txt
 <section class="sec" id="e1-cartao">
   <div class="sec-main">
     <h2><span class="n">3.</span><span class="t">O cartão de quebra</span></h2>
-    <p>Trate cada frase como uma promessa que alguém fez. A frase é <b>verdadeira</b> quando a promessa foi cumprida e <b>falsa</b> quando foi quebrada. Para cada ligação, guarde o seu cartão:</p>
-    <div class="promessas" role="img" aria-label="Três cartões de promessa: o e quebra quando falta pelo menos uma parte; o ou quebra quando faltam as duas; o se então quebra só quando a primeira parte acontece e a segunda não">
-      <div class="promessa"><span class="qb-lig">e</span><div class="qb-frase">Trago pão <b>e</b> leite.</div><div class="qb-q"><b>Quebra quando</b>falta pelo menos um: sem pão, sem leite, ou sem os dois.</div><div class="qb-v"><b>Vale quando</b>só quando trago os dois.</div></div>
-      <div class="promessa"><span class="qb-lig">ou</span><div class="qb-frase">Trago pão <b>ou</b> leite.</div><div class="qb-q"><b>Quebra quando</b>não trago nenhum dos dois.</div><div class="qb-v"><b>Vale quando</b>quando trago pelo menos um.</div></div>
-      <div class="promessa"><span class="qb-lig">se... então</span><div class="qb-frase"><b>Se</b> chover, <b>então</b> levo o guarda-chuva.</div><div class="qb-q"><b>Quebra quando</b>só num caso: chove e eu não levo.</div><div class="qb-v"><b>Vale quando</b>em todos os outros casos.</div></div>
+    <p>Trate cada frase como uma promessa que alguém fez. A frase é verdadeira quando a promessa foi cumprida, e falsa quando foi quebrada.</p>
+    <p>Cada ligação tem o seu cartão. Em cada um: a frase, depois, no vermelho, quando a promessa quebra, e no verde, quando ela vale.</p>
+    <div class="promessas">
+      <div class="promessa ler"><span class="qb-lig cel">Cartão do e</span> <span class="qb-frase cel">Trago pão <b>e</b> leite.</span> <span class="qb-q cel"><b>Quebra quando</b> falta pelo menos um: sem pão, sem leite, ou sem os dois.</span> <span class="qb-v cel"><b>Vale quando</b> trago os dois.</span></div>
+      <div class="promessa ler"><span class="qb-lig cel">Cartão do ou</span> <span class="qb-frase cel">Trago pão <b>ou</b> leite.</span> <span class="qb-q cel"><b>Quebra quando</b> não trago nenhum dos dois.</span> <span class="qb-v cel"><b>Vale quando</b> trago pelo menos um.</span></div>
+      <div class="promessa ler"><span class="qb-lig cel">Cartão do se</span> <span class="qb-frase cel"><b>Se</b> chover, <b>então</b> levo o guarda-chuva.</span> <span class="qb-q cel"><b>Quebra quando</b> chove e eu não levo. Só nesse caso.</span> <span class="qb-v cel"><b>Vale quando</b> não chove, ou quando chove e eu levo.</span></div>
     </div>
-    <p>Leia cada cartão de cima para baixo: a ligação, a frase de exemplo, em vermelho quando a promessa quebra e em verde quando ela vale.</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Exemplo</span> O <b>e</b> é a promessa exigente: prometi os dois. Basta faltar um para eu ter mentido.</li>
-      <li><span class="ex-t">Exemplo</span> O <b>ou</b> é a promessa fácil: prometi pelo menos um. Só menti se não trouxe nenhum.</li>
-      <li><span class="ex-t">Exemplo</span> O <b>se... então</b> é a promessa com condição. Pense no pai: "Se você passar de ano, ganha uma bicicleta". Ele só mentiu se o filho passou e não ganhou. Se o filho não passou, o pai não prometeu nada para esse caso: ganhando ou não a bicicleta, ninguém mentiu.</li>
-    </ul>
-    <details class="tente"><summary><span class="q">"Se fizer sol, vou à praia." Choveu e mesmo assim fui à praia. A frase é falsa?</span></summary><div class="resp"><p>Não. A promessa só falava do dia de sol. Como não fez sol, ela não foi testada, e continua verdadeira. O "se" só quebra quando faz sol e eu não vou.</p></div></details>
-    <p>A tabela abaixo é o resumo dos cartões. Ela vai crescer a cada aula, com uma linha nova:</p>
+    <p>O "e" é a promessa exigente: prometi as duas coisas, e basta faltar uma para eu ter mentido. O "ou" é a promessa fácil: prometi pelo menos uma, e só menti se não cumpri nenhuma.</p>
+    <h3>O "se", na história do pai</h3>
+    <p>O "se" é o cartão que mais derruba gente. Pense num pai que diz ao filho: "Se você passar de ano, ganha uma bicicleta". A história pode terminar de quatro jeitos:</p>
+    <div class="finais">
+      <div class="final ler"><b class="cel">Passou e ganhou.</b> <span class="cel">O pai fez o que disse.</span> <span class="veredito cel">Promessa cumprida.</span></div>
+      <div class="final mentiu ler"><b class="cel">Passou e não ganhou.</b> <span class="cel">O filho fez a parte dele, e o pai não.</span> <span class="veredito cel">Promessa quebrada.</span></div>
+      <div class="final ler"><b class="cel">Não passou e ganhou.</b> <span class="cel">Presente extra. O pai não prometeu nada para esse caso.</span> <span class="veredito cel">Não mentiu.</span></div>
+      <div class="final ler"><b class="cel">Não passou e não ganhou.</b> <span class="cel">A condição não aconteceu.</span> <span class="veredito cel">Não mentiu.</span></div>
+    </div>
+    <p>Só um final, o de borda vermelha, é mentira. Quando o filho não passa, a promessa nem chega a ser testada. Por isso, ganhando ou não a bicicleta, o pai continua sendo um homem de palavra.</p>
+    <details class="tente"><summary><span class="q">"Se fizer sol, vou à praia." Choveu, e mesmo assim fui à praia. A frase é falsa?</span></summary><div class="resp"><p>Não. A promessa só falava do dia de sol. Como choveu, ela nem foi testada, e continua verdadeira. Esse "se" só quebra num caso: faz sol e eu não vou.</p></div></details>
+    <h3>A tabela da quebra</h3>
+    <p>A tabela abaixo é o resumo dos três cartões. Ela vai crescer a cada aula, com uma linha nova.</p>
     <div class="tabela-rolagem"><table class="instancias compacta">
       <thead><tr><th>Ligação</th><th>A promessa quebra quando…</th></tr></thead>
       <tbody>
@@ -22280,21 +22406,22 @@ Documentos  Fotos  notas.txt
       </tbody>
     </table></div>
     <h3>Os dois tipos de pergunta</h3>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Exemplo</span> <b>"A frase é falsa. O que é verdade?"</b> Descreva a quebra. Um "se" falso, por exemplo, só pode ser: a primeira parte aconteceu e a segunda não.</li>
-      <li><span class="ex-t">Exemplo</span> <b>"A frase é verdadeira. Qual alternativa é falsa?"</b> Anote os fatos que a frase garante e teste cada alternativa: ela está no caso de quebra dela?</li>
-    </ul>
+    <p>Com os cartões, você já responde os dois tipos de pergunta que mais caem:</p>
+    <div class="perguntas">
+      <div class="pergunta-t ler"><b class="cel">Pergunta 1: a frase é falsa. O que é verdade?</b> <span class="cel">Descreva a quebra. Um "se" falso, por exemplo, só tem um jeito: a primeira parte aconteceu e a segunda não.</span></div>
+      <div class="pergunta-t ler"><b class="cel">Pergunta 2: a frase é verdadeira. Qual alternativa é falsa?</b> <span class="cel">Anote os fatos que a frase garante. Depois, pegue cada alternativa e veja se os fatos caem no caso de quebra dela.</span></div>
+    </div>
     <div data-questao="98"></div>
     <div data-questao="141"></div>
     <div data-questao="144"></div>
     <div data-questao="171"></div>
     <div data-questao="121"></div>
-    <p class="ponte">E quando uma parte da frase já é outra frase com ligação? Use o cartão duas vezes.</p>
+    <p class="ponte">E quando uma parte da frase já é outra frase, com a sua própria ligação? Aí você usa o cartão duas vezes.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">e: falta um, quebrou.</div>
-    <div class="mao">ou: faltam os dois, quebrou.</div>
-    <div class="mao aten">se: aconteceu A e não B.</div>
+    <div class="mao">"e": falta um, quebrou.</div>
+    <div class="mao">"ou": faltam os dois, quebrou.</div>
+    <div class="mao aten">"se": aconteceu a primeira e não a segunda.</div>
   </aside>
 </section>
 
@@ -22302,24 +22429,32 @@ Documentos  Fotos  notas.txt
 <section class="sec" id="e1-dentro">
   <div class="sec-main">
     <h2><span class="n">4.</span><span class="t">Frases dentro de frases</span></h2>
-    <p>"<b>Se</b> a Câmara aprovou <b>e</b> a escola não foi tombada, <b>então</b> os vereadores foram assertivos <b>ou</b> a proposta era falha." Parece complicado, mas é um "se" com duas partes, e cada parte tem a sua ligação. Sabendo que a frase toda é falsa, vá de fora para dentro:</p>
-    <ol class="passos">
-      <li><b>A ligação de fora</b> é o "se". Ele quebrou: a primeira parte aconteceu e a segunda não.</li>
-      <li><b>A primeira parte aconteceu</b>: é um "e", então as duas coisas são verdadeiras (a Câmara aprovou; a escola não foi tombada).</li>
-      <li><b>A segunda parte falhou</b>: é um "ou"; o "ou" só falha quando as duas falham (os vereadores não foram assertivos; a proposta não era falha).</li>
-      <li><b>Junte os fatos</b> e procure a alternativa que os repete.</li>
-    </ol>
-    <details class="tente"><summary><span class="q">"Se Ana viaja, então Bia fica ou Caio fica." A frase é falsa. Bia ficou?</span></summary><div class="resp"><p>Não. O "se" quebrou: Ana viajou e a segunda parte falhou. A segunda é um "ou", que só falha se as duas falharem: Bia não ficou e Caio não ficou.</p></div></details>
-    <h3>O "se" só promete num sentido</h3>
-    <p>"Se chove, a rua molha" é verdade. Mas não dá para virar a frase: "se a rua molha, choveu" não é garantido, porque alguém pode ter lavado a calçada. O "se" só diz o que acontece quando a primeira parte acontece; ele não diz nada sobre o outro caso.</p>
+    <p>Veja esta frase, que caiu em prova: "Se a Câmara aprovou e a escola não foi tombada, então os vereadores foram assertivos ou a proposta era falha". A questão diz que ela é falsa.</p>
+    <p>Parece complicada, mas é uma caixa dentro de outra. A caixa de fora é um "se". Dentro dela, há duas partes, cada uma com a sua ligação. Vá sempre de fora para dentro:</p>
+    <div class="ninho">
+      <div class="ninho-cab ler"><b class="cel">A ligação de fora: se, então.</b> <span class="cel">A frase toda é falsa. Um "se" falso quer dizer: a primeira parte aconteceu, e a segunda falhou.</span></div>
+      <div class="partes">
+        <div class="parte ler"><b class="cel">Primeira parte, ligada por "e"</b> <span class="frs cel">A Câmara aprovou e a escola não foi tombada.</span> <span class="res sim cel">Aconteceu. Um "e" que acontece tem as duas verdadeiras.</span></div>
+        <div class="parte p2 ler"><b class="cel">Segunda parte, ligada por "ou"</b> <span class="frs cel">Os vereadores foram assertivos ou a proposta era falha.</span> <span class="res nao cel">Falhou. Um "ou" só falha quando as duas falham.</span></div>
+      </div>
+    </div>
+    <div class="fatos ler"><b class="cel">Os fatos:</b> <span class="cel">a Câmara aprovou;</span> <span class="cel">a escola não foi tombada;</span> <span class="cel">os vereadores não foram assertivos;</span> <span class="cel">a proposta não era falha.</span></div>
+    <p>Pronto: agora é só procurar a alternativa que repete esses fatos.</p>
+    <details class="tente"><summary><span class="q">"Se Ana viaja, então Bia fica ou Caio fica." A frase é falsa. Bia ficou?</span></summary><div class="resp"><p>Não. O "se" quebrou: Ana viajou, e a segunda parte falhou. A segunda parte é um "ou", e um "ou" só falha quando as duas falham. Então Bia não ficou, e Caio também não.</p></div></details>
+    <h3>O "se" é rua de mão única</h3>
+    <p>Mais uma armadilha. O "se" só promete num sentido. Na primeira faixa, o sentido certo; na segunda, a frase virada ao contrário:</p>
+    <div class="unica">
+      <div class="via ler"><small>Se</small> <span class="pt">chove,</span> <span class="ico">⟶</span> <small>então</small> <span class="pt">a rua molha.</span> <span class="ok cel">Garantido: é o que a frase promete.</span></div>
+      <div class="via contra ler"><small>Se</small> <span class="pt">a rua molha,</span> <span class="ico">⇢</span> <small>então</small> <span class="pt">choveu?</span> <span class="ok cel">Não é garantido: alguém pode ter lavado a calçada. Virar o "se" muda a promessa.</span></div>
+    </div>
     <div data-questao="28"></div>
     <div data-questao="40"></div>
     <div data-questao="303"></div>
-    <p class="ponte">Agora, o treino, com as quatro ligações de frase misturadas.</p>
+    <p class="ponte">Agora, o treino, com as ligações misturadas.</p>
   </div>
   <aside class="sec-lado">
     <div class="mao">De fora para dentro.</div>
-    <div class="mao aten">Virar o "se" não vale.</div>
+    <div class="mao aten">Virar o "se" muda a promessa.</div>
   </aside>
 </section>
 
@@ -25607,7 +25742,7 @@ if(fala&&window.SpeechSynthesisUtterance){
   }
 
   /* ---------- trechos: texto do parágrafo + onde cada letra está na página ---------- */
-  const CELULAS='td,th,.t,.d,.c,.cab,.corpo,.pro,.rot,.ficha > span,.esc-rot > b,.esc-rot > span,.cmd > code,.cmd > span,.tres > div > strong,.tres > div > span,.carimbo > b,.ex-lista li > span';
+  const CELULAS='.cel,td,th,.t,.d,.c,.cab,.corpo,.pro,.rot,.ficha > span,.esc-rot > b,.esc-rot > span,.cmd > code,.cmd > span,.tres > div > strong,.tres > div > span,.carimbo > b,.ex-lista li > span';
   const IGNORAR='.le-btn,.n,script,style,.ico,.esc-rot > i'; // .ico e .esc-rot > i = ícones (emoji) dos desenhos: não se leem
   // monta {texto, pos:[[nó,offset] ou null]} a partir dos nós de texto (de raiz, ou só do range)
   function trecho(raiz,range){
@@ -25760,8 +25895,9 @@ if(fala&&window.SpeechSynthesisUtterance){
     else if(acao==='ant') tocar(blocoAtual()-1); else if(acao==='rep') tocar(blocoAtual()); else if(acao==='prox') tocar(blocoAtual()+1); });
 
   /* ---------- o que ler: todos os parágrafos da aula ---------- */
+  // .ler = bloco de um desenho lido como um parágrafo (o destaque anda pelo desenho); .cel = parte do desenho, com pausa entre uma e outra
   // figcaption = legenda dos desenhos e fotos; .tente > summary = a pergunta do "tente antes" (a resposta só é lida com ele aberto)
-  const BLOCOS='h1, h2, h3, p, li, figcaption, .cmd, .definicao, .cilada, .tente > summary, .ficha, .esc-rot, .esc-cx > .ex, .envelopes .rot-e, .envelopes .e7, tr, .elo, .forma, .tres > div, .mao, .carimbo';
+  const BLOCOS='h1, h2, h3, p, li, figcaption, .cmd, .definicao, .cilada, .tente > summary, .ficha, .esc-rot, .esc-cx > .ex, .envelopes .rot-e, .envelopes .e7, tr, .elo, .forma, .tres > div, .mao, .carimbo, .ler';
   const FORA='.questao, .le-btn, .sumario, .treino-barra, .meta, .texto-base.colapsado .tb-corpo, details.tente:not([open]) .resp';
   function blocosDaAula(cap){
     const els=$$('.aula-cab, .sec-main',cap).flatMap(r=>$$(BLOCOS,r)).filter(el=>!el.closest(FORA));
