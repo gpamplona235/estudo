@@ -1200,6 +1200,21 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .modelo li small{display:block;font-size:15px;color:var(--tinta-2);margin-top:2px}
 .modelo li.certa{box-shadow:inset 4px 0 0 var(--certo)}
 .modelo p:last-child{margin-bottom:0}
+/* desafio rápido: uma caixa por seção, frases com botões de resposta (app.js mostra acerto/erro e a explicação) */
+.desafio{border:2px solid var(--chu);border-radius:12px;padding:12px 16px 4px;margin:10px 0 18px;background:var(--chu-suave);min-width:0}
+.desafio .rot{margin:0 0 2px;font:800 12px/1.3 var(--texto);letter-spacing:.06em;text-transform:uppercase;color:var(--chu)}
+.desafio .dq{padding:10px 0 12px;border-top:1px dashed var(--chu)}
+.desafio .rot + .dq{border-top:0}
+.desafio .dq-frase{margin:0 0 8px;font-weight:600}
+.desafio .dq-op{display:flex;flex-wrap:wrap;gap:8px}
+.desafio .dq-op button{font:600 15px/1.25 var(--texto);padding:8px 14px;border-radius:999px;border:1.5px solid var(--lin-forte, var(--linha));background:var(--folha);color:var(--tinta);cursor:pointer;text-align:left}
+.desafio .dq-op button:hover:not(:disabled){border-color:var(--chu)}
+.desafio .dq-op button:disabled{cursor:default;opacity:.6}
+.desafio .dq-op button.certa{background:var(--certo-fundo);border-color:var(--certo);opacity:1}
+.desafio .dq-op button.errada{background:var(--vermelho-fundo);border-color:var(--vermelho);opacity:1}
+.desafio .dq-exp{margin:10px 0 0;font-size:16px}
+.desafio .dq-exp b{color:var(--certo)}
+.desafio .dq-exp.erro b{color:var(--vermelho)}
 
 
 /* ---------- casca: barra lateral + topo ---------- */
@@ -24088,7 +24103,7 @@ Documentos  Fotos  notas.txt
   <span class="tag">AULA 05</span>
   <h1>Complemento nominal e agente da passiva</h1>
   <p>Na Aula 4, você viu os complementos do verbo, os objetos. Faltam os outros dois termos integrantes. O agente da passiva aparece quando a frase está na voz passiva e diz quem pratica a ação. O complemento nominal completa um nome (um substantivo, um adjetivo ou um advérbio), e não um verbo. Como as alternativas dessas questões misturam muitos nomes, esta aula também apresenta o adjunto adnominal e o aposto, o bastante para você saber eliminá-los, e os nomes que a banca dá às orações que fazem papel de complemento.</p>
-  <p>Cada seção segue a mesma ordem: a explicação, exemplos resolvidos passo a passo, uma questão-modelo resolvida no formato da banca, exercícios rápidos para você tentar (clique para ver a resposta) e só então as questões do caderno.</p>
+  <p>Cada seção segue a mesma ordem: a explicação, o passo a passo do método, exemplos resolvidos, um desafio rápido (clique na resposta e veja na hora se acertou) e só então as questões do caderno.</p>
   <div class="meta"><span>46 questões do caderno nesta aula</span><span>27 no meio da explicação, 19 no treino</span><span>6 do IBGP</span></div>
 </header>
 <nav class="sumario" aria-label="Nesta aula">
@@ -24119,8 +24134,10 @@ Documentos  Fotos  notas.txt
     <p>Desses passos sai uma regra importante, que liga esta aula à anterior: só vai para a voz passiva o verbo que tem objeto direto, porque é o objeto direto que vira sujeito. "Maria gosta de lasanha" não tem voz passiva ("a lasanha é gostada" não existe), porque "gostar" pede objeto indireto.</p>
     <p>A passiva também aparece de outras formas. O auxiliar pode ser "estar" ou "ficar" no lugar de "ser": "A praça ficou cercada pela polícia". O particípio pode vir sozinho, sem o auxiliar, colado a um nome; isso é muito comum em notícia: "um estudo feito pela universidade" quer dizer "um estudo que foi feito pela universidade". E, como você viu na Aula 2, existe a passiva com "se": "Vendem-se casas" quer dizer "Casas são vendidas"; nessa forma, quem pratica a ação quase nunca aparece.</p>
     <p>Dois nomes que vão aparecer nas alternativas. <b>Locução verbal</b> é o par formado por um verbo auxiliar e o verbo principal: "foi inaugurada", "foram levados". E quando a frase tem dois ou mais verbos que não formam locução, ela tem duas ou mais orações; a apostila Frase, Oração e Período chama isso de <b>período composto</b>.</p>
-    <details class="tente"><summary><span class="q">Passe para a voz passiva: "Os alunos escreveram a redação."</span></summary><div class="resp"><p>Passo 1: o objeto direto, "a redação", vira sujeito. Passo 2: "escreveram" vira "foi escrita" (mesmo tempo, particípio concordando com "a redação"). Passo 3: "os alunos" vira agente: "pelos alunos". Resultado: "A redação foi escrita pelos alunos."</p></div></details>
-    <details class="tente"><summary><span class="q">Em "Os documentos foram assinados pelo diretor", quem é o sujeito e quem pratica a ação?</span></summary><div class="resp"><p>O sujeito é "Os documentos", que sofre a ação (sujeito paciente). Quem pratica a ação é "pelo diretor", o agente da passiva. Na ativa: "O diretor assinou os documentos."</p></div></details>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">"Os documentos foram assinados pelo diretor." Quem é o sujeito?</p><div class="dq-op"><button type="button">"pelo diretor"</button><button type="button" data-ok="1">"Os documentos"</button></div><p class="dq-exp" hidden>É o sujeito paciente: os documentos sofrem a ação. "Pelo diretor" é quem a pratica, o agente. Na ativa: O diretor assinou os documentos.</p></div>
+      <div class="dq"><p class="dq-frase">Qual destas frases pode ir para a voz passiva?</p><div class="dq-op"><button type="button" data-ok="1">Os alunos escreveram a redação.</button><button type="button">Maria gosta de lasanha.</button></div><p class="dq-exp" hidden>Só a primeira tem objeto direto ("a redação"), que vira sujeito: A redação foi escrita pelos alunos. "Gostar" pede objeto indireto e não tem passiva.</p></div>
+    </div>
     <div class="cilada"><span class="rot">O que a banca troca</span>Achar que o sujeito sempre pratica a ação: na voz passiva, ele a sofre. E tentar passar para a passiva um verbo sem objeto direto.</div>
     <div class="definicao"><span class="rot">Como usar na questão</span>Viu "ser" (ou "estar", "ficar") + particípio, ou um particípio colado a um nome? A frase está na voz passiva: o sujeito sofre a ação e, se alguém a pratica, esse alguém vem com "por".</div>
     <p class="ponte">Agora, como reconhecer o agente nas questões.</p>
@@ -24149,19 +24166,17 @@ Documentos  Fotos  notas.txt
     </ul>
     <p>Agora, a armadilha principal: <b>nem todo "por" é agente</b>. A preposição "por" (e pelo, pela) também indica lugar ("passou pela praça"), meio ("cresceu pela compra de empresas"), causa ("saiu por medo") ou troca ("pagou pelo produto"). Esses termos não praticam ação nenhuma: só acrescentam uma circunstância. Nas alternativas, uma circunstância aparece com o nome <b>adjunto adverbial</b> (você vai estudá-lo na Aula 6; por enquanto, basta saber que adjunto adverbial é o termo que indica lugar, tempo, modo, causa ou meio). O teste da ativa desmascara: "A praça passou..." não faz sentido, então "pela praça" não é agente.</p>
     <p>Outro cuidado: a frase pode estar na passiva sem ter agente. Em "Os feridos foram levados para o hospital", há voz passiva, mas ninguém disse quem levou; "para o hospital" diz para onde, e é circunstância de lugar. Agente só existe quando a frase diz quem praticou a ação.</p>
-    <div class="modelo"><p class="rot">Questão-modelo resolvida</p>
-      <p class="enun">No período "O contrato foi assinado pelo prefeito ontem", assinale a alternativa em que o agente da passiva está CORRETAMENTE identificado.</p>
-      <ul>
-      <li><b>a)</b> "O contrato" <small>Errada: é o sujeito paciente, que sofre a ação de ser assinado.</small></li>
-      <li><b>b)</b> "foi assinado" <small>Errada: é a locução verbal da passiva (ser + particípio).</small></li>
-      <li class="certa"><b>c)</b> "pelo prefeito" <small>Certa: assinado por quem? Pelo prefeito. Teste da ativa: "O prefeito assinou o contrato".</small></li>
-      <li><b>d)</b> "ontem" <small>Errada: diz quando; é circunstância de tempo.</small></li>
-      </ul>
-      <p>Repare no jeito de resolver: primeiro confirmar a passiva, depois perguntar "por quem?", e por fim testar a ativa. As alternativas erradas costumam destacar o sujeito paciente, o verbo ou uma circunstância.</p>
+    <p>As questões costumam destacar um pedaço da frase de cada vez e perguntar qual deles é o agente. Por isso, vale saber o nome de cada pedaço de uma frase na voz passiva. Em "O contrato foi assinado pelo prefeito ontem":</p>
+    <ul class="frases">
+      <li>"O contrato" <small>Sujeito paciente: sofre a ação de ser assinado.</small></li>
+      <li>"foi assinado" <small>Locução verbal da passiva (ser + particípio); "assinado", sozinho, é só o particípio.</small></li>
+      <li>"pelo prefeito" <small>Agente da passiva: assinado por quem? Pelo prefeito. Na ativa: O prefeito assinou o contrato.</small></li>
+      <li>"ontem" <small>Circunstância de tempo (adjunto adverbial).</small></li>
+    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">"A casa foi construída pelo meu avô": "pelo meu avô" é...</p><div class="dq-op"><button type="button" data-ok="1">agente da passiva</button><button type="button">circunstância (adjunto adverbial)</button></div><p class="dq-exp" hidden>A frase está na passiva, e construída por quem? Pelo meu avô. Na ativa: Meu avô construiu a casa.</p></div>
+      <div class="dq"><p class="dq-frase">"Os feridos foram levados para o hospital": "para o hospital" é...</p><div class="dq-op"><button type="button">agente da passiva</button><button type="button" data-ok="1">circunstância de lugar</button></div><p class="dq-exp" hidden>Há voz passiva, mas a frase não diz quem levou. "Para o hospital" diz para onde: é circunstância de lugar.</p></div>
     </div>
-    <details class="tente"><summary><span class="q">Em "A casa foi construída pelo meu avô", qual é o agente da passiva?</span></summary><div class="resp"><p>"Pelo meu avô". A frase está na passiva ("foi construída"); construída por quem? Pelo meu avô. Na ativa: "Meu avô construiu a casa".</p></div></details>
-    <details class="tente"><summary><span class="q">Em "O ladrão fugiu pela janela", "pela janela" é agente da passiva?</span></summary><div class="resp"><p>Não. "Fugiu" está na voz ativa (não há "ser" + particípio), e "pela janela" diz por onde ele fugiu: é circunstância de lugar (adjunto adverbial).</p></div></details>
-    <details class="tente"><summary><span class="q">Em "Os feridos foram levados para o hospital", há agente da passiva?</span></summary><div class="resp"><p>Não. A frase está na passiva ("foram levados"), mas não diz quem levou. "Para o hospital" diz para onde: é circunstância de lugar.</p></div></details>
     <div class="cilada"><span class="rot">O que a banca troca</span>Chamar de agente qualquer termo com "por" (lugar, meio, causa, troca) ou qualquer termo de uma frase na passiva ("para o hospital"); e confundir o agente com o sujeito paciente ou com a locução "foi + particípio".</div>
     <div class="definicao"><span class="rot">Como usar na questão</span>Voz passiva confirmada + "por quem?" + teste da ativa. Só é agente o termo que vira sujeito quando a frase volta para a ativa.</div>
     <div data-questao="6061"></div>
@@ -24208,19 +24223,11 @@ Documentos  Fotos  notas.txt
       <li><b>Veja se é um nome</b> (substantivo, adjetivo ou advérbio) <b>que ficaria incompleto sozinho.</b> "A procura" de quê? Fica incompleto.</li>
       <li><b>Se for substantivo, faça o teste do verbo.</b> "Procurar vagas": as vagas recebem a ação, então é complemento nominal. Se for adjetivo ou advérbio, nem precisa de teste: o termo que o completa é complemento nominal.</li>
     </ol>
-    <div class="modelo"><p class="rot">Questão-modelo resolvida</p>
-      <p class="enun">Em "A defesa da floresta une os moradores", o termo "da floresta" exerce a função de:</p>
-      <ul>
-      <li><b>a)</b> objeto direto <small>Errada: objeto direto completa verbo, e sem preposição.</small></li>
-      <li><b>b)</b> agente da passiva <small>Errada: a frase está na voz ativa ("une"), e a floresta não pratica ação.</small></li>
-      <li class="certa"><b>c)</b> complemento nominal <small>Certa: completa o substantivo "defesa"; defender a floresta, e a floresta recebe a ação.</small></li>
-      <li><b>d)</b> adjunto adverbial <small>Errada: não é lugar, tempo, modo nem causa.</small></li>
-      </ul>
-      <p>O caminho foi sempre o mesmo: achar a palavra antes da preposição ("defesa"), ver que é um substantivo incompleto, e transformá-lo em verbo para ver quem recebe a ação.</p>
+    <p>Mais um exemplo com o método completo. Em "A defesa da floresta une os moradores", a palavra antes da preposição é "defesa", um substantivo que fica incompleto sozinho (defesa de quê?). Virando verbo, fica "defender a floresta": a floresta recebe a ação. Então "da floresta" é complemento nominal. Não é objeto direto, porque o objeto completa verbo e não tem preposição; não é agente, porque a frase está na voz ativa e a floresta não pratica ação nenhuma; e não é adjunto adverbial, porque não indica lugar, tempo, modo nem causa.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">"O remédio é útil à saúde": "à saúde" completa...</p><div class="dq-op"><button type="button">o verbo "é"</button><button type="button" data-ok="1">o adjetivo "útil"</button></div><p class="dq-exp" hidden>Útil a quê? À saúde. O termo completa um adjetivo: complemento nominal.</p></div>
+      <div class="dq"><p class="dq-frase">"A redução dos juros animou o mercado": "dos juros" é...</p><div class="dq-op"><button type="button">agente da passiva</button><button type="button" data-ok="1">complemento nominal</button></div><p class="dq-exp" hidden>Redução de quê? Reduzir os juros: os juros recebem a ação. E não há voz passiva, então não pode ser agente.</p></div>
     </div>
-    <details class="tente"><summary><span class="q">Em "A necessidade de descanso é real", há complemento nominal? Qual?</span></summary><div class="resp"><p>Sim: "de descanso". Necessidade de quê? O termo completa o substantivo "necessidade" (necessitar de descanso).</p></div></details>
-    <details class="tente"><summary><span class="q">Em "O remédio é útil à saúde", qual palavra pede complemento, e qual é o complemento nominal?</span></summary><div class="resp"><p>"Útil" (adjetivo) pede complemento: útil a quê? "À saúde" é o complemento nominal.</p></div></details>
-    <details class="tente"><summary><span class="q">Em "A redução dos juros animou o mercado", qual é o complemento nominal?</span></summary><div class="resp"><p>"Dos juros". Redução de quê? Reduzir os juros: os juros recebem a ação. Completa o substantivo "redução".</p></div></details>
     <div class="cilada"><span class="rot">O que a banca troca</span>Esquecer que adjetivos e advérbios também pedem complemento ("atento aos detalhes", "diferentemente do irmão"); e achar que todo "por" é agente ("a procura por vagas", "responsável pela limpeza" são complementos nominais).</div>
     <div class="definicao"><span class="rot">Como usar na questão</span>Preposição depois de um nome que ficaria incompleto sozinho? É complemento nominal. Se o nome é substantivo, confirme virando-o em verbo: o termo recebe a ação.</div>
     <div data-questao="4668"></div>
@@ -24250,18 +24257,17 @@ Documentos  Fotos  notas.txt
     <p>O método é olhar para a esquerda da preposição. Encontrou um verbo de quem a preposição depende? Objeto indireto. Encontrou um substantivo, um adjetivo ou um advérbio? Complemento nominal. Uma consequência útil: <b>não existe "complemento nominal do verbo"</b>. Alternativa que diz isso está errada automaticamente. E "complemento verbal" é só outro nome para os objetos (direto e indireto).</p>
     <p>Às vezes há um substantivo no meio, e ele engana. Em "O juiz livrou o réu da culpa", "da culpa" vem logo depois de "réu", mas quem pede o "de" é o verbo: livrar alguém DE algo (como os verbos de dois complementos da Aula 4). "O réu da culpa" não é um tipo de réu. Então "da culpa" é objeto indireto. A pergunta é sempre: quem exige a preposição?</p>
     <p>E o "por" de novo, agora entre agente e complemento nominal. "A obra foi feita pela prefeitura" está na passiva, e a prefeitura fez a obra: agente. "A prefeitura é responsável pela obra" não tem passiva; "responsável" é adjetivo e pede "por": complemento nominal.</p>
-    <div class="modelo"><p class="rot">Questão-modelo resolvida</p>
-      <p class="enun">Assinale a alternativa que apresenta complemento nominal.</p>
-      <ul>
-      <li><b>a)</b> Confio no meu time. <small>Errada: "no meu time" completa o verbo "confio"; é objeto indireto.</small></li>
-      <li><b>b)</b> A vila era cercada de muralhas. <small>Errada: "cercada de muralhas" quer dizer "cercada por muralhas": voz passiva, é agente.</small></li>
-      <li class="certa"><b>c)</b> O povo tinha medo de enchentes. <small>Certa: "de enchentes" completa o substantivo "medo".</small></li>
-      <li><b>d)</b> Gosto de música. <small>Errada: "de música" completa o verbo "gosto"; é objeto indireto.</small></li>
-      </ul>
-      <p>Em cada alternativa, a pergunta foi a mesma: a preposição depende de quem? Só na C ela depende de um substantivo.</p>
+    <p>Quatro frases com "de" ou "em", cada uma com uma função. Em todas, a pergunta é a mesma: a preposição depende de quem?</p>
+    <ul class="frases">
+      <li><span class="s">Eu</span> <span class="v">confio</span> <span class="o"><span class="pr">no</span> meu time</span>. <small>A preposição vem do verbo "confio": objeto indireto.</small></li>
+      <li><span class="s">A vila</span> <span class="v">era cercada</span> <span class="o"><span class="pr">de</span> muralhas</span>. <small>Voz passiva: cercada por muralhas, que é o agente da passiva.</small></li>
+      <li><span class="s">O povo</span> <span class="v">tinha</span> <span class="nm">medo</span> <span class="o"><span class="pr">de</span> enchentes</span>. <small>A preposição vem do substantivo "medo": complemento nominal.</small></li>
+      <li><span class="s">Eu</span> <span class="v">gosto</span> <span class="o"><span class="pr">de</span> música</span>. <small>A preposição vem do verbo "gosto": objeto indireto.</small></li>
+    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">"Desisti do curso": "do curso" é...</p><div class="dq-op"><button type="button" data-ok="1">objeto indireto</button><button type="button">complemento nominal</button></div><p class="dq-exp" hidden>A preposição vem do verbo "desisti" (desistir de algo): objeto indireto.</p></div>
+      <div class="dq"><p class="dq-frase">"A desistência do curso foi rápida": e agora?</p><div class="dq-op"><button type="button">objeto indireto</button><button type="button" data-ok="1">complemento nominal</button></div><p class="dq-exp" hidden>Agora o termo completa o substantivo "desistência": complemento nominal.</p></div>
     </div>
-    <details class="tente"><summary><span class="q">Classifique o termo destacado: "Desisti do curso" e "A desistência do curso foi rápida".</span></summary><div class="resp"><p>No primeiro, "do curso" completa o verbo "desisti": objeto indireto. No segundo, completa o substantivo "desistência": complemento nominal.</p></div></details>
-    <details class="tente"><summary><span class="q">Em "Tenho medo de errar", "de errar" completa qual palavra?</span></summary><div class="resp"><p>O substantivo "medo" (medo de quê?). É complemento nominal, ainda que tenha um verbo dentro ("errar").</p></div></details>
     <div class="cilada"><span class="rot">O que a banca troca</span>Classificar pelo tipo de preposição, e não pela palavra completada; e aceitar a expressão "complemento nominal do verbo".</div>
     <div class="definicao"><span class="rot">Como usar na questão</span>Olhe a palavra antes da preposição, ou quem a exige: verbo, objeto indireto; nome, complemento nominal. "Complemento verbal" = objeto.</div>
     <div data-questao="2604"></div>
@@ -24299,19 +24305,17 @@ Documentos  Fotos  notas.txt
     </ul>
     <p>Existe um terceiro caso, mais difícil: quando o substantivo vem de um verbo, mas o termo seria quem PRATICA a ação, e não quem a recebe ("o crescimento da cidade": a cidade é que cresce). Aí as bancas divergem, e esse caso tem uma aula só para ele, a Aula 8. As questões desta aula não dependem dele.</p>
     <p>Mais duas coisas que aparecem nas alternativas. A primeira é a diferença entre <b>classe</b> e <b>função</b>. Classe gramatical é o que a palavra é (substantivo, adjetivo, pronome); função sintática é o papel que ela faz na frase (sujeito, objeto, adjunto adnominal). Em "os cidadãos mineiros", "mineiros" é da classe dos adjetivos e faz a função de adjunto adnominal. Expressões como "função morfológica de sujeito" misturam as duas coisas e estão erradas. A segunda é o <b>aposto</b>: o termo que explica ou repete outro com outras palavras, em geral separado por vírgulas, travessões ou dois-pontos: em "Rosa, a minha vizinha, chegou", "a minha vizinha" explica quem é Rosa. Você vai estudá-lo na Aula 7; por enquanto, basta saber que o aposto não completa nem caracteriza: ele renomeia.</p>
-    <div class="modelo"><p class="rot">Questão-modelo resolvida</p>
-      <p class="enun">Assinale a alternativa em que o termo destacado é complemento nominal.</p>
-      <ul>
-      <li><b>a)</b> a porta de vidro <small>Errada: diz o material da porta; adjunto adnominal.</small></li>
-      <li class="certa"><b>b)</b> a defesa da floresta <small>Certa: defender a floresta; a floresta recebe a ação.</small></li>
-      <li><b>c)</b> o carro do vizinho <small>Errada: diz de quem é o carro; adjunto adnominal.</small></li>
-      <li><b>d)</b> as praias do Nordeste <small>Errada: diz de onde são as praias; adjunto adnominal.</small></li>
-      </ul>
-      <p>Três substantivos concretos (porta, carro, praias) com termos de material, dono e lugar; um substantivo abstrato de ação (defesa) com quem recebe a ação.</p>
+    <p>Compare quatro expressões com "de". Nas três primeiras, o substantivo é concreto e o termo diz material, dono ou lugar; na última, o substantivo é de ação, e o termo recebe a ação.</p>
+    <ul class="frases">
+      <li>a porta de vidro <small>Material: adjunto adnominal.</small></li>
+      <li>o carro do vizinho <small>Dono: adjunto adnominal.</small></li>
+      <li>as praias do Nordeste <small>Lugar: adjunto adnominal.</small></li>
+      <li>a <span class="nm">fabricação</span> <span class="o"><span class="pr">de</span> remédios</span> <small>Fabricar remédios: os remédios recebem a ação. Complemento nominal.</small></li>
+    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">"O medo do escuro": "do escuro" é...</p><div class="dq-op"><button type="button" data-ok="1">complemento nominal</button><button type="button">adjunto adnominal</button></div><p class="dq-exp" hidden>"Medo" é sentimento e fica incompleto (medo de quê?); é como temer o escuro: complemento nominal.</p></div>
+      <div class="dq"><p class="dq-frase">"A mesa da cozinha": "da cozinha" é...</p><div class="dq-op"><button type="button">complemento nominal</button><button type="button" data-ok="1">adjunto adnominal</button></div><p class="dq-exp" hidden>"Mesa" é concreto e não vem de verbo; "da cozinha" diz de onde é a mesa: adjunto adnominal.</p></div>
     </div>
-    <details class="tente"><summary><span class="q">"O medo do escuro": "do escuro" é complemento nominal ou adjunto adnominal?</span></summary><div class="resp"><p>Complemento nominal. "Medo" é sentimento e fica incompleto (medo de quê?); é como temer o escuro.</p></div></details>
-    <details class="tente"><summary><span class="q">"A mesa da cozinha": e aqui?</span></summary><div class="resp"><p>Adjunto adnominal. "Mesa" é concreto e não vem de verbo; "da cozinha" diz de onde é a mesa.</p></div></details>
-    <details class="tente"><summary><span class="q">"A troca de pneus" e "um carro protegido da chuva": qual é a função dos termos com "de"?</span></summary><div class="resp"><p>Os dois são complementos nominais. "Trocar pneus": os pneus recebem a ação. E "protegido" é adjetivo, que só aceita complemento nominal.</p></div></details>
     <div class="cilada"><span class="rot">O que a banca troca</span>Chamar de complemento nominal todo "de" depois de substantivo ("casa de madeira", "escola de idiomas" são adjuntos), e chamar de adjunto adnominal o complemento de um adjetivo.</div>
     <div class="definicao"><span class="rot">Como usar na questão</span>Adjetivo ou advérbio: complemento nominal. Substantivo: vire verbo; se o termo recebe a ação, complemento nominal; se diz tipo, material, dono ou lugar, adjunto adnominal.</div>
     <div data-questao="3266"></div>
@@ -24348,18 +24352,17 @@ Documentos  Fotos  notas.txt
       </tbody>
     </table></div>
     <p>A confusão mais comum é entre objetiva indireta e completiva nominal, porque as duas costumam começar com "de que". A solução é a mesma da seção 4: olhe a palavra antes do "de que". Se for verbo, a oração é objetiva indireta; se for substantivo ou adjetivo, é completiva nominal.</p>
-    <div class="modelo"><p class="rot">Questão-modelo resolvida</p>
-      <p class="enun">Assinale a alternativa que apresenta oração completiva nominal.</p>
-      <ul>
-      <li><b>a)</b> Lembrei-me de que a prova era hoje. <small>Errada: "lembrar-se de" é verbo; a oração é objetiva indireta.</small></li>
-      <li class="certa"><b>b)</b> Tenho certeza de que você vai passar. <small>Certa: completa o substantivo "certeza" (certeza disso).</small></li>
-      <li><b>c)</b> É possível que chova. <small>Errada: "isso é possível"; a oração é o sujeito (subjetiva).</small></li>
-      <li><b>d)</b> A verdade é que ninguém sabia. <small>Errada: depois do verbo de ligação "é", a oração é predicativa.</small></li>
-      </ul>
-      <p>Primeiro troque cada oração por "isso" ou "disso" para ver a função; depois, nas que começam com "de que", olhe a palavra anterior.</p>
+    <p>Veja a regra aplicada a quatro frases. Troque cada oração por "isso" ou "disso" e olhe a palavra anterior.</p>
+    <ul class="frases">
+      <li>Lembrei-me de que a prova era hoje. <small>"Lembrar-se de" é verbo: a oração é objetiva indireta.</small></li>
+      <li>Tenho certeza de que você vai passar. <small>Completa o substantivo "certeza" (certeza disso): completiva nominal.</small></li>
+      <li>É possível que chova. <small>Isso é possível: a oração é o sujeito (subjetiva).</small></li>
+      <li>A verdade é que ninguém sabia. <small>Vem depois do verbo de ligação "é": predicativa.</small></li>
+    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">"Ele tem medo de que a ponte caia": a oração com "de que" é...</p><div class="dq-op"><button type="button">objetiva indireta</button><button type="button" data-ok="1">completiva nominal</button></div><p class="dq-exp" hidden>Ela completa o substantivo "medo" (medo disso): completiva nominal.</p></div>
+      <div class="dq"><p class="dq-frase">"Ele duvida de que a ponte caia": e agora?</p><div class="dq-op"><button type="button" data-ok="1">objetiva indireta</button><button type="button">completiva nominal</button></div><p class="dq-exp" hidden>Agora ela completa o verbo "duvida" (duvidar de algo): objetiva indireta.</p></div>
     </div>
-    <details class="tente"><summary><span class="q">"Ele tem medo de que a ponte caia": que tipo de oração é "de que a ponte caia"?</span></summary><div class="resp"><p>Completiva nominal: completa o substantivo "medo" (medo disso).</p></div></details>
-    <details class="tente"><summary><span class="q">"Ele duvida de que a ponte caia": e agora?</span></summary><div class="resp"><p>Objetiva indireta: completa o verbo "duvida" (duvidar de algo).</p></div></details>
     <div class="cilada"><span class="rot">O que a banca troca</span>Chamar de objetiva indireta a oração com "de que" que completa um substantivo ou adjetivo ("certeza de que", "confiante de que").</div>
     <div class="definicao"><span class="rot">Como usar na questão</span>Troque a oração por "disso". Olhe a palavra antes: substantivo ou adjetivo, completiva nominal; verbo, objetiva indireta. Os outros nomes seguem a função: subjetiva, objetiva direta, predicativa, apositiva.</div>
     <div data-questao="593"></div>
@@ -29022,6 +29025,14 @@ function rota(semRolar){
 window.addEventListener('hashchange',()=>{ if(!foco.hidden&&sessao&&sessao.ativa){ foco.hidden=true; document.body.classList.remove('em-foco'); } rota(false); });
 if(!location.hash||location.hash==='#') history.replaceState(null,'','#/hoje');
 rota(false);
+/* desafio rápido das aulas: clicar numa opção mostra na hora se acertou e a explicação (não grava nada) */
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.desafio .dq-op button'); if(!b) return;
+  const dq=b.closest('.dq'); if(dq.classList.contains('feito')) return; dq.classList.add('feito');
+  dq.querySelectorAll('.dq-op button').forEach(x=>{ x.disabled=true; if(x.dataset.ok) x.classList.add('certa'); });
+  const ok=!!b.dataset.ok; if(!ok) b.classList.add('errada');
+  const ex=dq.querySelector('.dq-exp'); if(ex){ ex.classList.toggle('erro',!ok); ex.insertAdjacentHTML('afterbegin','<b>'+(ok?'Acertou. ':'Não é essa. ')+'</b>'); ex.hidden=false; }
+});
 /* =========================================================
    Leitor em voz alta (síntese de voz do próprio navegador)
    - ▶ no título de uma seção lê dali até o fim da aula. Selecionando um trecho: "Só o trecho" ou
@@ -29063,7 +29074,7 @@ if(fala&&window.SpeechSynthesisUtterance){
   }
 
   /* ---------- trechos: texto do parágrafo + onde cada letra está na página ---------- */
-  const CELULAS='.cel,td,th,.t,.d,.c,.cab,.corpo,.pro,.rot,.ficha > span,.esc-rot > b,.esc-rot > span,.cmd > code,.cmd > span,.tres > div > strong,.tres > div > span,.carimbo > b,.ex-lista li > span';
+  const CELULAS='.cel,td,th,.t,.d,.c,.cab,.corpo,.pro,.rot,.ficha > span,.esc-rot > b,.esc-rot > span,.cmd > code,.cmd > span,.tres > div > strong,.tres > div > span,.carimbo > b,.ex-lista li > span,.dq-op > button';
   const IGNORAR='.le-btn,.n,script,style,.ico,.esc-rot > i,.cod'; // .ico e .esc-rot > i = ícones (emoji) dos desenhos; .cod = código mostrado ao lado da tradução (lê-se só a tradução)
   // monta {texto, pos:[[nó,offset] ou null]} a partir dos nós de texto (de raiz, ou só do range)
   function trecho(raiz,range){
@@ -29218,8 +29229,8 @@ if(fala&&window.SpeechSynthesisUtterance){
   /* ---------- o que ler: todos os parágrafos da aula ---------- */
   // .ler = bloco de um desenho lido como um parágrafo (o destaque anda pelo desenho); .cel = parte do desenho, com pausa entre uma e outra
   // figcaption = legenda dos desenhos e fotos; .tente > summary = a pergunta do "tente antes" (a resposta só é lida com ele aberto)
-  const BLOCOS='h1, h2, h3, p, li, figcaption, .cmd, .definicao, .cilada, .tente > summary, .ficha, .esc-rot, .esc-cx > .ex, .envelopes .rot-e, .envelopes .e7, tr, .elo, .forma, .tres > div, .mao, .carimbo, .ler';
-  const FORA='.questao, .le-btn, .sumario, .treino-barra, .meta, .texto-base.colapsado .tb-corpo, details.tente:not([open]) .resp';
+  const BLOCOS='h1, h2, h3, p, li, figcaption, .cmd, .definicao, .cilada, .tente > summary, .ficha, .esc-rot, .esc-cx > .ex, .envelopes .rot-e, .envelopes .e7, tr, .elo, .forma, .tres > div, .mao, .carimbo, .ler, .dq-op';
+  const FORA='.questao, .le-btn, .sumario, .treino-barra, .meta, .texto-base.colapsado .tb-corpo, details.tente:not([open]) .resp, .dq-exp[hidden]';
   function blocosDaAula(cap){
     const els=$$('.aula-cab, .sec-main',cap).flatMap(r=>$$(BLOCOS,r)).filter(el=>!el.closest(FORA));
     return els.filter(el=>!els.some(o=>o!==el&&o.contains(el))).map(el=>({tr:trecho(el.matches('h2,h3')&&$('.t',el)||el),el}));
