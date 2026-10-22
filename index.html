@@ -1393,6 +1393,7 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .seg button[aria-pressed="true"]{background:var(--pri);color:var(--pri-tx)}
 .paginas{display:flex;align-items:center;justify-content:center;gap:14px;margin:16px 0;font-size:14px;color:var(--mut)}
 .acao{display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin:20px 0 4px}
+.acao+.kpis{margin-top:20px}
 .ok-dia{display:inline-flex;align-items:center;gap:8px;color:var(--ok);font-weight:700;font-size:17px}
 /* simulado aleatório (página da apostila e aba Simulado da Revisão) */
 .sim{margin:4px 0 22px}
@@ -1982,6 +1983,55 @@ body.em-foco{overflow:hidden}
   .f-barra .atalhos,.f-barra .lab{display:none}
   .f-barra .btn{padding:8px 12px;min-height:48px}
   .f-barra [data-f="ok"]{flex:1;min-width:0}
+  /* foco no celular: topo numa linha só, barra de progresso fininha embaixo dele */
+  .f-top{flex-wrap:nowrap;position:relative;gap:2px;padding:4px 6px;padding-top:calc(4px + env(safe-area-inset-top,0px))}
+  .f-top .btn{min-height:44px;min-width:44px;padding:8px 10px}
+  .f-top .f-tit{margin:0 6px 0 2px}
+  .f-top .f-n{font-size:13.5px}
+  .f-top .pg-bar{position:absolute;left:0;right:0;bottom:-1px;height:3px;min-width:0;max-width:none;border-radius:0}
+  .f-top [data-f="tirar"]{margin-left:auto}
+  .f-top [data-f="tirar"]~[data-f="hist"]{margin-left:0}
+  .f-top [data-f="hist"]{padding:8px}
+  /* origem da questão: uma linha de texto, sem pílula */
+  .f-q{padding:6px 16px 24px}
+  .f-orig{flex-wrap:nowrap;gap:10px;margin-bottom:4px}
+  .f-orig .chip{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:0;padding:0;font:600 14.5px/1.3 var(--f-ui);letter-spacing:0;color:var(--tx2)}
+  .f-orig .f-nome,.f-orig .link .lab{display:none}
+  .f-orig .link{flex:none;min-height:44px;font-size:14.5px}
+  /* a questão é a própria tela: sem moldura dentro da moldura */
+  .foco .questao{border:0;border-radius:0;box-shadow:none;background:none;overflow:visible;margin:0}
+  .foco .q-cab{background:none;padding:0 0 8px;gap:4px 10px}
+  .foco .q-texto{padding:12px 0 2px}
+  .foco .q-resp{padding:2px 0 14px}
+  .foco .texto-base{margin:4px 0 14px}
+  .foco .texto-base figcaption{padding:8px 14px}
+  .foco .tb-corpo{padding:14px 16px 4px;font-size:17.5px}
+  .foco .tb-mais{margin:6px 14px 12px}
+  .foco .texto-base.fechado.colapsado .tb-mais{margin:0 14px 10px}
+  .foco .coment{padding:12px 14px}
+  /* cabeçalho da questão: número, selos e Salvar na 1ª linha; a fonte embaixo */
+  .q-cab .q-fonte{order:9;flex-basis:100%}
+  .salvar-q,.btn.tb-mais{min-height:44px}
+  /* aula no celular: a folha vira a própria página, sem cartão em volta */
+  #trilha{flex-wrap:nowrap;padding:6px 16px 0;font-size:14.5px}
+  #trilha > *{display:none}
+  #trilha > a:last-of-type{display:block;min-width:0;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;line-height:44px;font-weight:600;color:var(--pri)}
+  #trilha > a:last-of-type::before{content:"";display:inline-block;width:7px;height:7px;border-left:2px solid;border-bottom:2px solid;transform:rotate(45deg);margin:0 10px 1px 3px}
+  .pg:has(> .aula-g){padding-top:4px}
+  #toc{display:block;background:none;border:0;border-radius:0;padding:0}
+  #toc .toc-cab > .ct,#toc .toc-cab > b{display:none}
+  #toc-prog .bp{width:90px}
+  .aula-g{gap:10px}
+  .capitulo .folha{background:none;border:0;border-radius:0;box-shadow:none}
+  .capitulo .aula-cab{padding:8px 0 14px}
+  .capitulo .aula-cab h1{font-size:26px;margin:10px 0 8px}
+  .capitulo .aula-cab .meta{display:none}
+  .capitulo .sec{padding:22px 0 8px}
+  .aula-fim{padding:18px 0}
+  /* página da apostila: a lista de aulas logo depois do título */
+  .bib:has(.bib-main > .aulas) .bib-filtro{display:none}
+  .bib-main:has(> .aulas){display:flex;flex-direction:column}
+  .bib-main > .sim:has(~ .aulas){order:1;margin:22px 0 0}
 }
 @media (pointer:coarse){ .f-barra .atalhos{display:none} }
 </style>
@@ -34774,7 +34824,7 @@ function questao(caixa,id,n,depois,fresca,opts){
     const art=caixa.closest('.capitulo'), bloco=art&&$('[data-texto="'+q.tx+'"] .texto-base',art);
     txHtml=bloco?'<a class="tb-ref" href="#" data-bloco="'+bloco.id+'">↑ Questão sobre o texto “'+esc(T.titulo||'acima')+'”</a>'+
       (q.marcas&&q.marcas.length?'<div class="tb-trechos"><span class="ct">Trechos destacados no texto</span>'+q.marcas.map(m=>'<p><mark class="dest">'+esc(m)+'</mark></p>').join('')+'</div>':'')
-      :textoHTML(T,q.tx,art&&art.dataset.textos==='fechados'?'fechado':false,null,q.marcas);
+      :textoHTML(T,q.tx,(art&&art.dataset.textos==='fechados')||(caixa.closest('.foco')&&matchMedia('(max-width:767px)').matches)?'fechado':false,null,q.marcas);
   }
   caixa.innerHTML='<div class="q-cab"><span class="q-id">Questão '+esc(n)+'</span>'+(alvo?'<span class="selo-alvo" title="Questão da banca da sua prova"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg>IBGP · sua banca</span>':'')+(q.nivel?'<span class="selo-nivel n'+q.nivel+'" title="Nível de dificuldade da questão autoral">Nível '+q.nivel+' · '+(['','básico','intermediário','avançado'][q.nivel]||'')+'</span>':'')+'<span class="q-fonte">'+esc(fonte(q.fonte))+'</span><span class="sit" role="status"></span>'+
     '<button type="button" class="salvar-q" aria-pressed="false" title="Salvar para revisar">'+ic('i-sal')+'<span>Salvar</span></button></div>'+
@@ -35039,6 +35089,8 @@ function mostrarPagina(p){
 function trilhaTopo(html){ const t=$('#trilha'); t.innerHTML=html; t.hidden=!html; }
 
 /* ---------- Hoje ---------- */
+function planoAps(porAp){ const l=Object.entries(porAp).sort((a,b)=>b[1]-a[1]), r=l.length-3;
+  return l.slice(0,3).map(([a,c])=>c+' de '+esc(a)).join(' · ')+(r>0?' · e mais '+r+(r===1?' apostila':' apostilas'):''); }
 function renderHoje(){
   const pg=$('#pg-hoje'), agora=new Date(), hr=agora.getHours(), dev=devidas(), ds=diasEstudo();
   const sauda=hr<5?'Boa noite':hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite';
@@ -35053,7 +35105,7 @@ function renderHoje(){
   pg.innerHTML='<header class="pg-cab"><h1>'+sauda+'! Hoje é dia de <em>'+(dev.length?'revisão':'avançar')+'</em>.</h1>'+
     '<p class="sub">'+DIAS[agora.getDay()]+', '+agora.getDate()+' de '+MESES[agora.getMonth()]+(ds.seq?' · '+ds.seq+(ds.seq===1?' dia seguido':' dias seguidos')+' estudando':'')+'</p></header>'+
     '<div class="hoje-g"><section class="card plano" aria-labelledby="t-plano"><h2 class="ct" id="t-plano">Plano de hoje</h2>'+
-      '<div class="passo">'+ic('i-check','ck'+(dev.length===0&&revFeita?' ok':''))+'<div class="tx"><b>'+(dev.length?'Revisar '+dev.length+(dev.length===1?' questão':' questões'):'Revisões em dia')+'</b><small>'+(dev.length?Object.entries(porAp).map(([a,c])=>c+' de '+esc(a)).join(' · ')+' · cerca de '+min+' min':'Nada vence hoje. As próximas estão na Revisão.')+'</small></div>'+(dev.length?'<button class="btn pri" data-acao="foco-hoje">Começar</button>':'<a class="btn out" href="#/revisao">Ver fila</a>')+'</div>'+
+      '<div class="passo">'+ic('i-check','ck'+(dev.length===0&&revFeita?' ok':''))+'<div class="tx"><b>'+(dev.length?'Revisar '+dev.length+(dev.length===1?' questão':' questões'):'Revisões em dia')+'</b><small>'+(dev.length?planoAps(porAp)+' · cerca de '+min+' min':'Nada vence hoje. As próximas estão na Revisão.')+'</small></div>'+(dev.length?'<button class="btn pri" data-acao="foco-hoje">Começar</button>':'<a class="btn out" href="#/revisao">Ver fila</a>')+'</div>'+
       (ult?'<div class="passo">'+ic('i-check','ck'+(ultS&&ultS.resp===ultS.total?' ok':''))+'<div class="tx"><b>Continuar: '+esc(ult.ap)+' · Aula '+ult.num+'</b><small>'+esc(ult.nome)+' · '+ultS.resp+' de '+ultS.total+' questões</small></div><a class="btn out" href="#/aula/'+ultCap+'">Abrir</a></div>':'')+
       '<div class="passo">'+ic('i-check','ck'+(feitas>=meta?' ok':''))+'<div class="tx"><b>Meta do dia: '+meta+' questões</b><small>'+feitas+' feitas hoje'+(feitas>=meta?' · meta batida!':' · faltam '+(meta-feitas))+'</small><div class="bp"><i style="width:'+Math.min(100,pct(feitas,meta))+'%"></i></div></div><label class="meta-ed">meta <input type="number" min="5" max="300" step="5" value="'+meta+'" id="meta-in" aria-label="Meta diária de questões"></label></div>'+
     '</section><section class="card" aria-labelledby="t-aten"><h2 class="ct" id="t-aten">Precisa de atenção</h2>'+(recs.length?'<div class="atens">'+recs.map((r,i)=>{const t=rotuloCap(r.id);return '<a class="aten" href="#/aula/'+r.id+'"><span class="n">'+(i+1)+'</span><span class="tx"><b>'+esc(t.ap)+' · Aula '+t.num+'</b><small>'+esc(r.mot[0]||'')+'</small></span></a>';}).join('')+'</div><a class="link" href="#/estatisticas">Ver análise completa →</a>':'<p class="mut">Nada preocupante por enquanto. Responda questões e esta lista se ajusta sozinha.</p>')+'</section></div>'+
@@ -35147,10 +35199,11 @@ function renderRevisao(){
     abas([['hoje','Hoje',dev.length],['fila','Fila',its.length],['hist','Histórico',null],['sim','Simulado',null],['conf','Conferência',cf.problemas?'⚠ '+cf.problemas:'✓',cf.problemas]],abaRev,'data-abarev')+'<div class="aba-corpo" role="tabpanel">';
   if(abaRev==='hoje'){
     const revHoje=LOG().filter(e=>e.tipo==='resp'&&e.onde==='revisao'&&noSet(set,e.k)&&dstr(new Date(e.t))===h).length;
-    html+='<div class="kpis"><div class="kpi destaque"><b>'+dev.length+'</b><span>para revisar hoje</span></div><div class="kpi'+(cf.atras?' al':'')+'"><b>'+cf.atras+'</b><span>atrasadas (já incluídas)</span></div><div class="kpi"><b>'+revHoje+'</b><span>revisadas hoje</span></div><div class="kpi"><b>'+its.length+'</b><span>na revisão, no total</span></div></div>';
+    const kpis='<div class="kpis"><div class="kpi destaque"><b>'+dev.length+'</b><span>para revisar hoje</span></div><div class="kpi'+(cf.atras?' al':'')+'"><b>'+cf.atras+'</b><span>atrasadas (já incluídas)</span></div><div class="kpi"><b>'+revHoje+'</b><span>revisadas hoje</span></div><div class="kpi"><b>'+its.length+'</b><span>na revisão, no total</span></div></div>';
     if(dev.length) html+='<div class="acao"><button class="btn pri grande" data-acao="comecar">'+ic('i-rev')+'Começar revisão · '+dev.length+(dev.length===1?' questão':' questões')+'</button><span class="mut">Abre em modo foco. Atalhos: 1–5 marcam, 0 chute, Enter confirma e avança, Esc sai.</span></div>';
     else{const fut=its.filter(([,it])=>it.prox>h).sort((a,b)=>a[1].prox.localeCompare(b[1].prox)), pr=fut[0];
       html+='<div class="acao"><span class="ok-dia">'+ic('i-ok')+'Nada para revisar hoje.</span>'+(pr?'<span class="mut">Próxima: <b>'+fdata(pr[1].prox)+'</b> ('+quando(pr[1].prox)+')</span><button class="btn out" data-acao="adiantar">Adiantar as próximas 10</button>':'<span class="mut">Erre, chute ou salve questões nas aulas e elas aparecem aqui.</span>')+'</div>';}
+    html+=kpis;
     const cont={}; its.forEach(([,it])=>{const d=it.prox<h?h:it.prox; cont[d]=(cont[d]||0)+1;});
     const dias=[...Array(14)].map((_,i)=>somaDias(h,i)), mx=Math.max(1,...dias.map(d=>cont[d]||0));
     html+='<div class="dupla"><section class="card"><h2 class="ct">Agenda · próximos 14 dias</h2><div class="agenda" role="img" aria-label="Questões por dia nos próximos 14 dias">'+dias.map((d,i)=>{const c=cont[d]||0;return '<div class="dia" title="'+fdata(d)+': '+c+'"><span class="v">'+(c||'')+'</span><span class="b" style="height:'+(c?Math.max(6,Math.round(80*c/mx)):2)+'px"></span><span class="d">'+(i===0?'hoje':d.slice(8)+'/'+d.slice(5,7))+'</span></div>';}).join('')+'</div></section>'+
@@ -35405,10 +35458,10 @@ function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
   const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], tot=sessao.fila.length, feitas=Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
   const cx=res&&res.cxA?res.cxA:it.cx;
-  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?'Simulado':'Refazer salvas')+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
-    '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig"><span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+' · '+esc(r.nome)+'</span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula ↗</a></div><div id="f-box"></div></div>'+
+  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?'Simulado':'Refazer salvas')+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
+    '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig"><span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+'<span class="f-nome"> · '+esc(r.nome)+'</span></span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula<span class="lab"> ↗</span></a></div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
-    '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
+    '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
   const box=document.createElement('div'); $('#f-box',foco).appendChild(box);
   if(revModo) questao(box,id,n,null,true,{rev:true,onResp:(l,ok,ch)=>responderRev(k,l,ok,ch)});
   else if(simModo) questao(box,id,n,null,true,{rev:true,onde:'simulado',onResp:(l,ok,ch)=>responderSim(k,l,ok,ch)});
