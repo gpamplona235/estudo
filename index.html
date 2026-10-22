@@ -1983,35 +1983,72 @@ body.em-foco{overflow:hidden}
   .f-barra .atalhos,.f-barra .lab{display:none}
   .f-barra .btn{padding:8px 12px;min-height:48px}
   .f-barra [data-f="ok"]{flex:1;min-width:0}
-  /* foco no celular: topo numa linha só, barra de progresso fininha embaixo dele */
+  .f-barra .btn{min-height:44px;font-size:14.5px}
+  /* celular: letras um pouco menores em tudo */
+  body{font-size:15px}
+  .pg-cab h1{font-size:23px}
+  .pg-cab.peq h1{font-size:22px}
+  .sub{font-size:15px}
+  .capitulo .folha{font-size:16.5px;line-height:1.6}
+  .capitulo .aula-cab p{font-size:16px}
+  .capitulo .sec h2{font-size:22px}
+  .capitulo .sec h3{font-size:18.5px}
+  .tb-corpo{font-size:16.5px;line-height:1.65;padding:12px 14px 4px}
+  /* foco: topo numa linha só, barra de progresso fininha embaixo dele */
   .f-top{flex-wrap:nowrap;position:relative;gap:2px;padding:4px 6px;padding-top:calc(4px + env(safe-area-inset-top,0px))}
-  .f-top .btn{min-height:44px;min-width:44px;padding:8px 10px}
-  .f-top .f-tit{margin:0 6px 0 2px}
-  .f-top .f-n{font-size:13.5px}
+  .f-top .btn{min-height:44px;min-width:44px;padding:8px 10px;font-size:14.5px}
+  .f-top .f-tit{font-size:15.5px;margin:0 6px 0 2px}
+  .f-top .f-n{font-size:13px}
   .f-top .pg-bar{position:absolute;left:0;right:0;bottom:-1px;height:3px;min-width:0;max-width:none;border-radius:0}
   .f-top [data-f="tirar"]{margin-left:auto}
   .f-top [data-f="tirar"]~[data-f="hist"]{margin-left:0}
-  .f-top [data-f="hist"]{padding:8px}
-  /* origem da questão: uma linha de texto, sem pílula */
-  .f-q{padding:6px 16px 24px}
-  .f-orig{flex-wrap:nowrap;gap:10px;margin-bottom:4px}
-  .f-orig .chip{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:0;padding:0;font:600 14.5px/1.3 var(--f-ui);letter-spacing:0;color:var(--tx2)}
+  .f-top [data-f="hist"]{padding:8px;border-color:transparent;background:none}
+  .f-q{padding:2px 16px 24px}
+  /* foco: de onde vem a questão, numa linha discreta */
+  .f-orig{flex-wrap:nowrap;gap:10px;margin:0}
+  .f-orig .chip{display:block;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:0;padding:0;font:500 13px/1.3 var(--f-ui);letter-spacing:0;color:var(--mut)}
   .f-orig .f-nome,.f-orig .link .lab{display:none}
-  .f-orig .link{flex:none;min-height:44px;font-size:14.5px}
-  /* a questão é a própria tela: sem moldura dentro da moldura */
+  .f-orig .link{flex:none;min-height:40px;font-size:13px}
+  .f-orig .link .ic{width:16px;height:16px}
+  /* foco: a questão é a própria tela, sem moldura */
   .foco .questao{border:0;border-radius:0;box-shadow:none;background:none;overflow:visible;margin:0}
-  .foco .q-cab{background:none;padding:0 0 8px;gap:4px 10px}
-  .foco .q-texto{padding:12px 0 2px}
-  .foco .q-resp{padding:2px 0 14px}
-  .foco .texto-base{margin:4px 0 14px}
-  .foco .texto-base figcaption{padding:8px 14px}
-  .foco .tb-corpo{padding:14px 16px 4px;font-size:17.5px}
-  .foco .tb-mais{margin:6px 14px 12px}
-  .foco .texto-base.fechado.colapsado .tb-mais{margin:0 14px 10px}
-  .foco .coment{padding:12px 14px}
-  /* cabeçalho da questão: número, selos e Salvar na 1ª linha; a fonte embaixo */
-  .q-cab .q-fonte{order:9;flex-basis:100%}
-  .salvar-q,.btn.tb-mais{min-height:44px}
+  .foco .q-cab,.foco .banca-alvo .q-cab{background:none;border-bottom:0;padding:0}
+  .foco .q-texto{padding:4px 0 0}
+  .foco .q-resp{padding:0 0 12px}
+  /* cabeçalho da questão numa linha: número · fonte · selos · Salvar (só o ícone) */
+  .q-cab{flex-wrap:nowrap;gap:8px;padding:4px 6px 4px 12px}
+  .q-id{flex:none;font:700 12.5px/1.3 var(--f-ui);letter-spacing:0;text-transform:none}
+  .q-cab .q-fonte{order:1;flex:1 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:500 12px/1.3 var(--f-ui)}
+  .selo-alvo,.selo-nivel{order:2;flex:none;padding:2px 8px;font-size:11.5px}
+  .selo-alvo svg{width:11px;height:11px}
+  .selo-alvo .sb,.selo-nivel .sb{display:none}
+  .q-cab .sit{order:3;flex:none;white-space:nowrap;margin-left:0;font-size:20px}
+  .salvar-q{order:4;flex:none;position:relative;width:40px;height:40px;min-height:40px;padding:0;justify-content:center;border-radius:50%}
+  .q-cab .sit:empty+.salvar-q{margin-left:0}
+  .salvar-q span{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
+  /* questão: letras e alternativas mais enxutas */
+  .questao{font-size:16px;line-height:1.55}
+  .enun{margin-bottom:12px}
+  .enun p{margin-bottom:10px}
+  .alt{font-size:15.5px;line-height:1.45;padding:9px 12px 9px 9px;gap:10px;border-radius:12px}
+  .alt .l{width:28px;height:28px;font-size:13px}
+  .corpo-alt{padding-top:2px}
+  .alt .por{font-size:14.5px}
+  .coment{font-size:15px;padding:12px 14px}
+  /* texto de apoio fechado: uma faixa fina com o título e o botão de ler */
+  .texto-base{margin:4px 0 14px;border-radius:10px}
+  .texto-base figcaption{padding:8px 12px;gap:2px 8px}
+  .texto-base figcaption b{font-size:15.5px}
+  .texto-base.fechado.colapsado{display:flex;align-items:center;gap:4px}
+  .texto-base.fechado.colapsado figcaption{flex:1;min-width:0;background:none;border:0}
+  .btn.tb-mais{min-height:40px;font-size:14px;margin:6px 12px 12px}
+  .texto-base.fechado.colapsado .btn.tb-mais{flex:none;margin:0 4px 0 0;border-color:transparent;background:none;padding:6px 10px}
+  /* botões da questão na aula: lado a lado, sem a dica repetida */
+  .q-acoes{flex-wrap:nowrap;gap:8px;margin-top:12px}
+  .q-acoes .btn{min-height:44px;font-size:14.5px;padding:8px 14px}
+  .q-acoes .confirmar{flex:1 1 auto;min-width:0;white-space:normal}
+  .q-acoes .chute{flex:none}
+  .dica-marcar{display:none}
   /* aula no celular: a folha vira a própria página, sem cartão em volta */
   #trilha{flex-wrap:nowrap;padding:6px 16px 0;font-size:14.5px}
   #trilha > *{display:none}
@@ -2024,7 +2061,7 @@ body.em-foco{overflow:hidden}
   .aula-g{gap:10px}
   .capitulo .folha{background:none;border:0;border-radius:0;box-shadow:none}
   .capitulo .aula-cab{padding:8px 0 14px}
-  .capitulo .aula-cab h1{font-size:26px;margin:10px 0 8px}
+  .capitulo .aula-cab h1{font-size:24px;margin:10px 0 8px}
   .capitulo .aula-cab .meta{display:none}
   .capitulo .sec{padding:22px 0 8px}
   .aula-fim{padding:18px 0}
@@ -34794,10 +34831,10 @@ function realcar(h,marcas){ (marcas||[]).forEach(m=>{ const e=esc(m), i=h.indexO
 function textoHTML(T,tid,colapsar,idBloco,marcas){
   return '<figure class="texto-base'+(colapsar?' colapsado':'')+(colapsar==='fechado'?' fechado':'')+'"'+(idBloco?' id="'+idBloco+'"':'')+' data-tid="'+esc(tid)+'"><figcaption><span class="ct">Texto</span><b>'+esc(T.titulo||'Texto para as questões')+'</b></figcaption>'+
     '<div class="tb-corpo">'+T.linhas.map(l=>'<p>'+realcar(esc(l),marcas)+'</p>').join('')+'</div>'+
-    (colapsar?'<button type="button" class="btn out mini tb-mais" aria-expanded="false">Ler o texto inteiro</button>':'')+'</figure>';
+    (colapsar?'<button type="button" class="btn out mini tb-mais" aria-expanded="false">'+(colapsar==='fechado'?'Ler o texto':'Ler o texto inteiro')+'</button>':'')+'</figure>';
 }
 document.addEventListener('click',e=>{
-  const b=e.target.closest('.tb-mais'); if(b){ const f=b.closest('.texto-base'); const ab=f.classList.toggle('colapsado'); b.setAttribute('aria-expanded',!ab); b.textContent=ab?'Ler o texto inteiro':'Recolher o texto'; if(ab) f.scrollIntoView({block:'nearest'}); return; }
+  const b=e.target.closest('.tb-mais'); if(b){ const f=b.closest('.texto-base'); const ab=f.classList.toggle('colapsado'); b.setAttribute('aria-expanded',!ab); b.textContent=ab?(f.classList.contains('fechado')?'Ler o texto':'Ler o texto inteiro'):'Recolher o texto'; if(ab) f.scrollIntoView({block:'nearest'}); return; }
   const r=e.target.closest('.tb-ref'); if(r){ e.preventDefault(); const f=document.getElementById(r.dataset.bloco); if(f){ f.scrollIntoView({block:'start'}); f.classList.remove('colapsado'); const bt=$('.tb-mais',f); if(bt){bt.setAttribute('aria-expanded','true');bt.textContent='Recolher o texto';} } }
 });
 /* Enunciado em blocos: itens "( )" viram lista de V/F, "I, II, III" viram lista numerada e a pergunta final ganha destaque */
@@ -34826,7 +34863,7 @@ function questao(caixa,id,n,depois,fresca,opts){
       (q.marcas&&q.marcas.length?'<div class="tb-trechos"><span class="ct">Trechos destacados no texto</span>'+q.marcas.map(m=>'<p><mark class="dest">'+esc(m)+'</mark></p>').join('')+'</div>':'')
       :textoHTML(T,q.tx,(art&&art.dataset.textos==='fechados')||(caixa.closest('.foco')&&matchMedia('(max-width:767px)').matches)?'fechado':false,null,q.marcas);
   }
-  caixa.innerHTML='<div class="q-cab"><span class="q-id">Questão '+esc(n)+'</span>'+(alvo?'<span class="selo-alvo" title="Questão da banca da sua prova"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg>IBGP · sua banca</span>':'')+(q.nivel?'<span class="selo-nivel n'+q.nivel+'" title="Nível de dificuldade da questão autoral">Nível '+q.nivel+' · '+(['','básico','intermediário','avançado'][q.nivel]||'')+'</span>':'')+'<span class="q-fonte">'+esc(fonte(q.fonte))+'</span><span class="sit" role="status"></span>'+
+  caixa.innerHTML='<div class="q-cab"><span class="q-id">Questão '+esc(n)+'</span>'+(alvo?'<span class="selo-alvo" title="Questão da banca da sua prova"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg>IBGP<span class="sb"> · sua banca</span></span>':'')+(q.nivel?'<span class="selo-nivel n'+q.nivel+'" title="Nível de dificuldade da questão autoral">Nível '+q.nivel+'<span class="sb"> · '+(['','básico','intermediário','avançado'][q.nivel]||'')+'</span></span>':'')+'<span class="q-fonte">'+esc(fonte(q.fonte))+'</span><span class="sit" role="status"></span>'+
     '<button type="button" class="salvar-q" aria-pressed="false" title="Salvar para revisar">'+ic('i-sal')+'<span>Salvar</span></button></div>'+
     '<div class="q-texto">'+txHtml+'<div class="enun" data-orig="'+esc(q.enun)+'">'+fmtEnun(q.enun)+'</div>'+(q.img||[]).map(s=>'<img class="q-img" loading="lazy" src="'+s+'" alt="Figura da questão">').join('')+'</div>'+
     '<div class="q-resp"><div class="alts">'+q.alts.map(a=>'<button class="alt" type="button" data-l="'+esc(a[0])+'"><span class="l'+(ce?' ce':'')+'">'+esc(ce?a[0]:a[0].toUpperCase())+'</span><span class="corpo-alt"><span class="tx">'+(ce?'':(q.altimg&&q.altimg[a[0]]?imgAlt(q,a):comMarcas(esc(a[1]))))+'</span><span class="por" hidden></span></span></button>').join('')+'</div>'+
