@@ -35986,11 +35986,55 @@ function fmtEnun(t,hl){
   });
   fecha(); return h;
 }
+/* Alternativas embaralhadas no modo foco (pedido do usuário, 2026-10-22: estava decorando a posição da certa).
+   A ordem muda a cada sessão; as letras mostradas seguem a nova posição, e as letras de alternativa citadas no
+   comentário são trocadas junto. data-l continua com a letra original, então a correção, o registro e os salvos
+   não mudam. Fica na ordem original a questão em que a troca não é segura: Certo/Errado, alternativa que cita
+   posição ("anterior", "acima", "a)"), letra A–E usada como nome no enunciado ou nas alternativas (conjunto A,
+   Windows+E) e comentário com letra que não dá para saber se é alternativa. */
+const EMB_L='A-Za-zÀ-ÿ0-9';
+const EMB_SOLTA=new RegExp('(^|[^'+EMB_L+'])([A-E])(?!['+EMB_L+'])','g');
+const EMB_INICIO=new RegExp('(^|[.!?:;—–"“(]\\s*|\\n)(A|E)\\s+(?:[a-zà-ÿ\\u0001]|[A-ZÀ-Ý][A-Za-zÀ-ÿ]|(?:I{1,3}|IV|VI{0,3}|IX|X)(?![A-Za-z]))','g');
+const EMB_LISTA_='[A-E](?:,\\s?[A-E])*(?:\\s(?:e|ou)\\s(?:a\\s)?[A-E])?';
+const EMB_PREP=new RegExp('(^|[\\s(“"])(a|A|à|da|na|Na|pela|em|Em|Sobra|sobra|alternativa|alternativas|letra|letras|opção|opções)\\s('+EMB_LISTA_+')(?!['+EMB_L+'])','g');
+const EMB_LISTA=new RegExp('(^|[.!?;:]\\s+|\\(|\\bque\\s)([A-E](?:,\\s?[A-E])+(?:\\s(?:e|ou)\\s[A-E])?|[A-E]\\s(?:e|ou)\\s[A-E])(?!['+EMB_L+'])','g');
+const EMB_SOLO=/(^|[.!?]\s+)([A-E])(\.)(?=\s|$)/g;
+const EMB_FIM=new RegExp('(^|[^'+EMB_L+'])([A-E])(\\.\\s*)$');
+const EMB_MIN=/(?:alternativa|letra|opção|[Ss]ó a|é a|[Nn]a) [a-e](?![A-Za-zÀ-ÿ])/;
+function embSoltas(t){
+  const ini=new Set(); let m;
+  EMB_INICIO.lastIndex=0; while((m=EMB_INICIO.exec(t))) ini.add(m.index+m[1].length);
+  EMB_SOLTA.lastIndex=0; while((m=EMB_SOLTA.exec(t))){ const p=m.index+m[1].length; if(!ini.has(p)) return true; EMB_SOLTA.lastIndex=p+1; }
+  return false;
+}
+function embTrocar(t,mapa){
+  const marcas=[], tok=x=>x.replace(/[A-E]/g,c=>'\u0001'+(marcas.push(mapa[c]||c)-1)+'\u0002');
+  let s=t.replace(EMB_PREP,(m,a,p,l)=>a+p+' '+tok(l));
+  s=s.replace(EMB_LISTA,(m,a,l)=>a+tok(l));
+  s=s.replace(EMB_SOLO,(m,a,l,p)=>a+tok(l)+p);
+  s=s.replace(EMB_FIM,(m,a,l,p)=>a+tok(l)+p);
+  if(embSoltas(s)||EMB_MIN.test(s)) return null;
+  return s.replace(/\u0001(\d+)\u0002/g,(m,i)=>marcas[+i]);
+}
+function embOrdem(q){
+  const al=q.alts;
+  if(!al||al.length<3||al[0][0].length>1) return null;
+  if(al.some(a=>/anterior|acima|\b[a-e]\)/i.test(a[1]||''))) return null;
+  if(embSoltas(q.enun||'')||al.some(a=>embSoltas(a[1]||''))) return null;
+  const id={A:'A',B:'B',C:'C',D:'D',E:'E'};
+  if([q.coment||''].concat(Object.values(q.notas||{})).some(t=>t&&embTrocar(t,id)===null)) return null;
+  const ls=al.map(a=>a[0]), io=ls.indexOf(q.gab); let o=ls;
+  for(let t=0;t<20;t++){ o=ls.slice(); for(let i=o.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [o[i],o[j]]=[o[j],o[i]]; } if(o.indexOf(q.gab)!==io) break; }
+  return o;
+}
 const DICA='Toque numa alternativa para marcar · dois toques riscam';
 function questao(caixa,id,n,depois,fresca,opts){
   opts=opts||{};
   const q=DADOS[id].questoes[n], st=est['q:'+id]=est['q:'+id]||{}, ce=q.alts[0][0].length>1, k=chaveQ(id,n);
   const risc=est['r:'+id]=est['r:'+id]||{};
+  const ordem=!ce&&opts.ordem&&opts.ordem.length===q.alts.length?opts.ordem:null, mapa={};
+  const altsV=ordem?ordem.map((l,i)=>{ mapa[l.toUpperCase()]='ABCDE'[i]; return q.alts.find(a=>a[0]===l); }):q.alts;
+  const letraV=l=>ce?l:(ordem?mapa[l.toUpperCase()]:l.toUpperCase()), textoV=t=>ordem&&t?(embTrocar(t,mapa)||t):t;
   caixa.classList.add('questao'); if(opts.rev) caixa.classList.add('modo-rev'); const alvo=/^\s*IBGP(?![A-Za-z])/.test(q.fonte||''); caixa.classList.toggle('banca-alvo',alvo); caixa.dataset.n=n; caixa.dataset.k=k;
   const T=q.tx&&DADOS[id].textos&&DADOS[id].textos[q.tx];
   let txHtml='';
@@ -36003,7 +36047,7 @@ function questao(caixa,id,n,depois,fresca,opts){
   caixa.innerHTML='<div class="q-cab"><span class="q-id">Questão '+esc(n)+'</span>'+(alvo?'<span class="selo-alvo" title="Questão da banca da sua prova"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg>IBGP<span class="sb"> · sua banca</span></span>':'')+(q.nivel?'<span class="selo-nivel n'+q.nivel+'" title="Nível de dificuldade da questão autoral">Nível '+q.nivel+'<span class="sb"> · '+(['','básico','intermediário','avançado'][q.nivel]||'')+'</span></span>':'')+'<span class="q-fonte">'+esc(fonte(q.fonte))+'</span><span class="sit" role="status"></span>'+
     '<button type="button" class="salvar-q" aria-pressed="false" title="Salvar para revisar">'+ic('i-sal')+'<span>Salvar</span></button></div>'+
     '<div class="q-texto">'+txHtml+'<div class="enun" data-orig="'+esc(q.enun)+'">'+fmtEnun(q.enun)+'</div>'+(q.img||[]).map(s=>'<img class="q-img" loading="lazy" src="'+s+'" alt="Figura da questão">').join('')+'</div>'+
-    '<div class="q-resp"><div class="alts">'+q.alts.map(a=>'<button class="alt" type="button" data-l="'+esc(a[0])+'"><span class="l'+(ce?' ce':'')+'">'+esc(ce?a[0]:a[0].toUpperCase())+'</span><span class="corpo-alt"><span class="tx">'+(ce?'':(q.altimg&&q.altimg[a[0]]?imgAlt(q,a):comMarcas(esc(a[1]))))+'</span><span class="por" hidden></span></span></button>').join('')+'</div>'+
+    '<div class="q-resp"><div class="alts">'+altsV.map(a=>'<button class="alt" type="button" data-l="'+esc(a[0])+'"><span class="l'+(ce?' ce':'')+'">'+esc(letraV(a[0]))+'</span><span class="corpo-alt"><span class="tx">'+(ce?'':(q.altimg&&q.altimg[a[0]]?imgAlt(q,a):comMarcas(esc(a[1]))))+'</span><span class="por" hidden></span></span></button>').join('')+'</div>'+
     '<div class="q-acoes"><button class="btn pri confirmar" type="button" disabled>Confirmar resposta</button><button class="btn chu chute" type="button" aria-pressed="false" title="Toque antes de confirmar se não tiver certeza">'+ic('i-chute')+'Marcar chute</button><span class="dica-marcar">'+DICA+'</span></div>'+
     '<div class="coment"></div><button class="btn fant mini refazer" type="button">↺ Refazer</button></div>';
   const bChute=$('.chute',caixa), conf=$('.confirmar',caixa);
@@ -36016,12 +36060,12 @@ function questao(caixa,id,n,depois,fresca,opts){
     $$('.alt',caixa).forEach(b=>{
       const l=b.dataset.l; b.disabled=true;
       b.classList.remove('marcada'); b.classList.toggle('certa',l===q.gab); b.classList.toggle('errada',l===letra&&l!==q.gab);
-      const p=$('.por',b); if(q.notas[l]){p.textContent=q.notas[l];p.hidden=false}
+      const p=$('.por',b); if(q.notas[l]){p.textContent=textoV(q.notas[l]);p.hidden=false}
     });
     const ok=letra===q.gab, sit=$('.sit',caixa);
     const ch=novo?bChute.getAttribute('aria-pressed')==='true':!!chuteMostrado;
     sit.textContent=ok?(ch?'acertou no chute':'acertou!'):'errou'; sit.className='sit '+(ok?(ch?'chu':'ok'):'bad');
-    const c=$('.coment',caixa); c.innerHTML='<b>Gabarito: '+esc(ce?q.gab:q.gab.toUpperCase())+'</b> '+esc(q.coment); c.classList.add('vis');
+    const c=$('.coment',caixa); c.innerHTML='<b>Gabarito: '+esc(letraV(q.gab))+'</b> '+esc(textoV(q.coment)); c.classList.add('vis');
     if(novo){
       if(opts.rev){ opts.onResp(letra,ok,ch); }
       else{
@@ -36637,9 +36681,11 @@ function renderFoco(){
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
     '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
   const box=document.createElement('div'); $('#f-box',foco).appendChild(box);
-  if(revModo) questao(box,id,n,null,true,{rev:true,onResp:(l,ok,ch)=>responderRev(k,l,ok,ch)});
-  else if(simModo) questao(box,id,n,null,true,{rev:true,onde:'simulado',onResp:(l,ok,ch)=>responderSim(k,l,ok,ch)});
-  else questao(box,id,n,null,true,{onde:'salvas'});
+  sessao.ord=sessao.ord||{}; if(!(k in sessao.ord)) sessao.ord[k]=embOrdem(DADOS[id].questoes[n]);
+  const ordem=sessao.ord[k];
+  if(revModo) questao(box,id,n,null,true,{rev:true,ordem,onResp:(l,ok,ch)=>responderRev(k,l,ok,ch)});
+  else if(simModo) questao(box,id,n,null,true,{rev:true,ordem,onde:'simulado',onResp:(l,ok,ch)=>responderSim(k,l,ok,ch)});
+  else questao(box,id,n,null,true,{onde:'salvas',ordem});
   const fr=document.createElement('div'); fr.id='f-res'; fr.setAttribute('aria-live','polite'); $('.q-resp',box).prepend(fr);
   box.addEventListener('q-estado',e=>atualizarBarra(e.detail,k));
   if(res) box._mostrar(res.letra,res.ch);
