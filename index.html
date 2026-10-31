@@ -1572,6 +1572,101 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .sb-post p{margin:10px 0 8px;font:500 15.5px/1.4 var(--texto);color:var(--tinta)}
 .sb-post .pe{padding-top:6px;border-top:1px solid var(--linha);font:600 13px/1.3 var(--texto);color:var(--tinta-2)}
 
+/* Anotações do raciocínio: botão na questão, painel ao lado (ou embaixo) e aba na Revisão */
+:root{--nota-l:clamp(340px,31vw,440px)}
+.nota-q{display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--lin-forte);background:var(--card);color:var(--tx2);border-radius:999px;padding:4px 12px;font-size:13.5px;font-weight:600;cursor:pointer;min-height:34px}
+.nota-q .ic{width:17px;height:17px}
+.nota-q:hover{border-color:var(--pri);color:var(--pri-forte)}
+.nota-q[aria-expanded="true"]{border-color:var(--pri);background:var(--pri);color:var(--pri-tx)}
+.nq-c{min-width:18px;padding:0 5px;border-radius:999px;background:var(--pri-suave);color:var(--pri-forte);font:700 12px/18px var(--f-mono);text-align:center}
+.nota-q[aria-expanded="true"] .nq-c{background:var(--pri-tx);color:var(--pri)}
+
+.nota{position:fixed;z-index:140;display:flex;flex-direction:column;gap:10px;padding:14px 16px 16px;background:var(--card);color:var(--tx);box-shadow:0 0 28px rgba(10,30,28,.16);overflow:hidden}
+.nota[hidden]{display:none}
+.nota-cab{display:flex;align-items:flex-start;gap:10px}
+.nota-cab>div{flex:1;min-width:0}
+.nota-cab h2{margin:0;font:600 20px/1.2 var(--f-tit);color:var(--tx)}
+.nota-sub{margin:2px 0 0;font-size:13.5px;line-height:1.3;color:var(--mut);overflow-wrap:anywhere}
+.nota-x{flex:none;width:40px;height:40px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--tx2);cursor:pointer}
+.nota-x:hover{background:var(--campo)}
+.nota-x svg,.nota-bar svg,.nota-tranca svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+.nota-bar svg .ch{fill:currentColor;stroke:none}
+.nota-bar{display:flex;flex-wrap:wrap;align-items:center;gap:2px;padding:3px;border:1px solid var(--lin);border-radius:12px;background:var(--campo)}
+.nota-bar button{width:38px;height:38px;display:grid;place-items:center;border:0;border-radius:9px;background:transparent;color:var(--tx2);font:600 16px/1 var(--f-ui);cursor:pointer}
+.nota-bar button:hover{background:var(--card);color:var(--tx)}
+.nota-bar button[aria-pressed="true"]{background:var(--pri-suave);color:var(--pri-forte);box-shadow:inset 0 0 0 1.5px var(--pri)}
+.nota-sep{width:1px;height:22px;margin:0 4px;background:var(--lin-forte)}
+.nota-ed{flex:0 1 auto;min-height:118px;max-height:42%;overflow-y:auto;padding:12px 14px;border:1.5px solid var(--lin-forte);border-radius:12px;background:var(--card);color:var(--tx);font:400 16px/1.55 var(--f-ui);outline:none;overflow-wrap:anywhere}
+.nota-ed:focus{border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-suave)}
+.nota-ed.sem-txt::before{content:attr(data-ph);display:block;height:0;color:var(--mut);pointer-events:none}
+.nota-ed ul,.nota-ed ol,.nota-txt ul,.nota-txt ol{margin:4px 0;padding-left:24px}
+.nota-ed mark,.nota-txt mark{background:var(--dest);color:inherit;border-radius:3px;padding:0 2px}
+.nota-pe{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px}
+.nota-dica{font-size:13px;color:var(--mut)}
+.nota-st{font-size:13.5px;font-weight:600;color:var(--pri-forte)}
+.nota-ok{margin-left:auto}
+.nota-ok:disabled{opacity:.55;cursor:default}
+.nota-ant{flex:1;min-height:0;overflow-y:auto;margin:0 -6px;padding:2px 6px}
+.nota-ant h3{display:flex;align-items:center;gap:8px;margin:6px 0 8px;font:600 15px/1.3 var(--f-ui);color:var(--tx2)}
+.nota-ant h3 span,.q-notas summary span{padding:0 7px;border-radius:999px;background:var(--campo);font:600 12px/20px var(--f-mono);color:var(--tx2)}
+.nota-vazio{margin:8px 0 0;font-size:14px;color:var(--mut)}
+.nota-tranca{display:flex;gap:10px;margin:6px 0 10px;padding:10px 12px;border-radius:10px;background:var(--campo);font-size:14px;line-height:1.4;color:var(--tx2)}
+.nota-tranca svg{flex:none;margin-top:1px}
+.nota-it{position:relative;padding:10px 12px;margin:0 0 8px;border:1px solid var(--lin);border-radius:10px;background:var(--card)}
+.nota-it header{display:flex;flex-wrap:wrap;align-items:center;gap:4px 10px;margin:0 0 4px}
+.nota-it time{font:500 12.5px var(--f-mono);color:var(--mut)}
+.nota-it .ev{font-size:13px;font-weight:700}
+.nota-it .ev.chu{color:var(--chu)}
+.nota-txt{font-size:15.5px;line-height:1.5;overflow-wrap:anywhere}
+.nota-del{margin-top:4px;padding:3px 0;border:0;background:none;color:var(--mut);font-size:13px;font-weight:600;cursor:pointer;text-decoration:underline;min-height:28px}
+.nota-del:hover{color:var(--err)}
+.nota-del.conf{color:var(--err)}
+.q-notas{margin-top:12px;padding-top:10px;border-top:1px solid var(--lin);color:var(--tx)}
+.q-notas summary{display:flex;align-items:center;gap:8px;min-height:32px;font-size:15px;font-weight:600;color:var(--pri-forte);cursor:pointer}
+.q-notas .nota-it{margin-top:8px}
+.nota-busca{display:grid;gap:4px;max-width:520px;margin:12px 0 16px}
+.nota-busca label{font-size:14px;font-weight:600;color:var(--tx2)}
+.nota-busca input{min-height:44px;padding:0 16px;border:1.5px solid var(--lin-forte);border-radius:999px;background:var(--card);color:var(--tx);font-size:16px}
+.nota-busca input:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-suave)}
+.nota-card{margin:0 0 14px;padding:14px 16px;border:1px solid var(--lin);border-radius:var(--r2);background:var(--card);box-shadow:var(--som)}
+.nota-card>header{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 12px}
+.nota-card h3{margin:0;font:600 17px/1.3 var(--f-tit)}
+.nota-enun{margin:6px 0 10px;font-size:15px;line-height:1.45;color:var(--tx2)}
+.nota-ac{display:flex;flex-wrap:wrap;gap:6px}
+
+/* tela larga: coluna à direita, e o resto da página encolhe para nada ficar coberto */
+@media (min-width:1100px){
+  .nota{top:0;right:0;bottom:0;width:var(--nota-l);border-left:1px solid var(--lin)}
+  body.nota-aberta{padding-right:var(--nota-l)}
+  body.nota-aberta .foco{right:var(--nota-l)}
+}
+/* com o painel aberto, a coluna da questão fica estreita: enunciado e alternativas uma embaixo da outra */
+@media (min-width:1100px) and (max-width:1499px) and (min-height:560px){
+  body.nota-aberta .foco .questao{display:block;height:100%;overflow-y:auto}
+  body.nota-aberta .foco .q-texto,body.nota-aberta .foco .q-resp{overflow:visible}
+  body.nota-aberta .foco .q-texto{border-right:0;padding:20px 24px 14px;font-size:17.5px}
+  body.nota-aberta .foco .q-resp{padding:14px 24px 24px}
+}
+/* tela estreita: faixa embaixo, acima do teclado; a questão continua rolando acima dela */
+@media (max-width:1099.98px){
+  .nota{left:0;right:0;bottom:var(--nota-baixo,0px);height:var(--nota-h,46vh);padding:10px 12px 12px;gap:8px;border-top:1px solid var(--lin);border-radius:16px 16px 0 0;overflow-y:auto}
+  body.nota-aberta{padding-bottom:calc(var(--nota-h,46vh) + var(--nota-baixo,0px))}
+  body.nota-aberta .foco{bottom:calc(var(--nota-h,46vh) + var(--nota-baixo,0px))}
+  body.nota-aberta .nav-baixo{display:none}
+  .nota-cab h2{font-size:17px}
+  .nota-ed{min-height:84px;max-height:none;flex:none}
+  .nota-ant{flex:none;overflow:visible}
+  .nota-dica{display:none}
+}
+@media (max-width:767px){
+  .nota-q{order:5;flex:none;position:relative;width:40px;height:40px;min-height:40px;padding:0;justify-content:center;border-radius:50%}
+  .nota-q .lab-n{display:none}
+  .nota-q .nq-c{position:absolute;top:-5px;right:-5px}
+}
+/* o selo da nuvem não pode ficar em cima do botão Salvar anotação */
+@media (min-width:1100px){body.nota-aberta #nv-selo{right:calc(var(--nota-l) + 12px)}}
+@media (max-width:1099.98px){body.nota-aberta #nv-selo{display:none}}
+
 
 /* ---------- casca: barra lateral + topo ---------- */
 .app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
@@ -2411,6 +2506,7 @@ body.em-foco{overflow:hidden}
     <symbol id="i-edital" viewBox="0 0 24 24"><rect x="4.5" y="4" width="15" height="17.5" rx="2"/><path d="M9 2.5h6v3H9z"/><path class="acs" d="m7.8 11 1.4 1.4 2.4-2.6"/><path d="M13.5 11h3"/><path class="acs" d="m7.8 16 1.4 1.4 2.4-2.6"/><path d="M13.5 16h3"/></symbol>
     <symbol id="i-busca" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.4 15.4 5.1 5.1"/></symbol>
     <symbol id="i-chute" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><circle class="fill" cx="8.5" cy="8.5" r="1.5"/><circle class="fill" cx="15.5" cy="15.5" r="1.5"/><circle class="fill" cx="12" cy="12" r="1.5"/></symbol>
+    <symbol id="i-nota" viewBox="0 0 24 24"><path d="M5 19.5V16L15.6 5.4a1.6 1.6 0 0 1 2.3 0l1.2 1.2a1.6 1.6 0 0 1 0 2.3L8.5 19.5z"/><path class="acs" d="m13.8 7.2 3.5 3.5"/></symbol>
     <symbol id="i-hist" viewBox="0 0 24 24"><path d="M4.4 12a7.6 7.6 0 1 0 2.2-5.4"/><path d="M4 3.8v3.6h3.6"/><path class="acs" d="M12 8v4.5l3 2"/></symbol>
     <symbol id="i-aula" viewBox="0 0 24 24"><path d="M3 5.5c3-1.4 6-1.4 9 .6 3-2 6-2 9-.6V19c-3-1.4-6-1.4-9 .6-3-2-6-2-9-.6z"/><path d="M12 6.1v13.5"/><path class="acs" d="M6 9.5h3M15 9.5h3"/></symbol>
     <symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.3 2.7 2.7L16.3 9.4"/></symbol>
@@ -44009,7 +44105,7 @@ let ouvinte=null, recarregar=false, primeira=true;
    - toda parte criada ou mudada antes disso é JUNTADA com a da nuvem, nunca a substitui. */
 let sincronizado=false, copiaFeita=false, restaurando=false;
 const antes=new Set();
-const TRAVADAS=['log','rev'], ultimoRemoto={};
+const TRAVADAS=['log','rev','notas'], ultimoRemoto={};
 const tamanho=v=>Array.isArray(v)?v.length:(v&&typeof v==='object'?Object.keys(v).length:0);
 
 const colecao=()=>db.collection('usuarios').doc(usuario.uid).collection('estado');
@@ -44104,8 +44200,10 @@ function recuperar(k,loc,rem){
   if(loc&&rem&&typeof loc==='object'&&typeof rem==='object'&&!Array.isArray(loc)&&!Array.isArray(rem)){
     const faltam=Object.keys(loc).filter(c=>!(c in rem));
     const melhorRev=k==='rev'?Object.keys(loc).filter(c=>c in rem&&loc[c]&&rem[c]&&(loc[c].cx||0)>(rem[c].cx||0)):[];
-    if(!faltam.length&&!melhorRev.length) return null;
-    const r=Object.assign({},rem); faltam.forEach(c=>r[c]=loc[c]); melhorRev.forEach(c=>r[c]=loc[c]);
+    // anotações: se este aparelho tem nota que a nuvem não tem na mesma questão, junta as duas listas
+    const notaNova=k==='notas'?Object.keys(loc).filter(c=>c in rem&&Array.isArray(loc[c])&&Array.isArray(rem[c])&&loc[c].some(x=>!rem[c].some(y=>JSON.stringify(y)===JSON.stringify(x)))):[];
+    if(!faltam.length&&!melhorRev.length&&!notaNova.length) return null;
+    const r=Object.assign({},rem); faltam.forEach(c=>r[c]=loc[c]); melhorRev.forEach(c=>r[c]=loc[c]); notaNova.forEach(c=>r[c]=juntar(rem[c],loc[c]));
     return r;
   }
   return null;
@@ -44398,6 +44496,235 @@ function histHtml(k){
 }
 
 /* =========================================================
+   Anotações do raciocínio (pedido do usuário, 2026-10-31)
+   est.notas = { "<aula>|<questão>": [ {t, h, r?, del?} ] }
+     t   momento em que a nota foi salva (identifica a nota)
+     h   texto com formatação simples, sempre passado por notaLimpa
+     r   resultado da tentativa em que foi escrita: ok, bad ou chu
+     del nota apagada; o item fica, porque a junção da nuvem traria de volta uma nota que sumisse
+   A parte "notas" só nasce ao salvar a primeira nota: nada é criado ao abrir o site.
+   A gravação acontece ao clicar em Salvar, ao fechar o painel ou ao mudar de questão, nunca a
+   cada tecla. O rascunho fica em outra chave do navegador, que não vai para a nuvem.
+   O painel fica ao lado da questão (ou embaixo, em telas estreitas) e empurra o conteúdo,
+   para a questão continuar à vista enquanto se escreve.
+   ========================================================= */
+const NOTA_RASC=CHAVE+'-rascunho-nota';
+const NOTA_TAG={B:'b',STRONG:'b',I:'i',EM:'i',U:'u',MARK:'mark',UL:'ul',OL:'ol',LI:'li',DIV:'div',P:'div'};
+function notaLimpa(html){
+  const t=document.createElement('template'); t.innerHTML=html||'';
+  const anda=n=>[...n.childNodes].map(c=>{
+    if(c.nodeType===3) return esc(c.nodeValue);
+    if(c.nodeType!==1) return '';
+    if(c.tagName==='BR') return '<br>';
+    const tag=NOTA_TAG[c.tagName], dentro=anda(c);
+    return tag?'<'+tag+'>'+dentro+'</'+tag+'>':dentro;
+  }).join('');
+  return anda(t.content).replace(/(<div><br><\/div>)+$/,'').trim();
+}
+const notaTexto=h=>{ const t=document.createElement('template'); t.innerHTML=String(h||'').replace(/<\/(div|li)>|<br>/g,' '); return t.content.textContent.replace(/\s+/g,' ').trim(); };
+// na junção da nuvem, a mesma nota pode vir em duas versões: a apagada vence; depois, a que tem resultado
+function notasDe(k){
+  const por=new Map();
+  ((est.notas||{})[k]||[]).forEach(x=>{ if(!x||!x.t) return; const a=por.get(x.t); if(!a||x.del||(!a.del&&x.r&&!a.r)) por.set(x.t,x); });
+  return [...por.values()].filter(x=>!x.del).sort((a,b)=>b.t-a.t);
+}
+const NOTA_RES={ok:'acertou',bad:'errou',chu:'acertou no chute'};
+function notaItem(x,k){
+  return '<article class="nota-it"><header><time>'+fts(x.t)+'</time>'+(x.r?'<span class="ev '+(x.r==='bad'?'bad':x.r==='chu'?'chu':'ok')+'">'+NOTA_RES[x.r]+'</span>':'')+'</header>'+
+    '<div class="nota-txt">'+notaLimpa(x.h)+'</div><button type="button" class="nota-del" data-notadel="'+x.t+'" data-notak="'+esc(k)+'">Excluir</button></article>';
+}
+const NOTA_ICO={
+  mark:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m14 4 6 6-9 9H5v-6z"/><path d="M4 22h16"/></svg>',
+  insertUnorderedList:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 6h11M9 12h11M9 18h11"/><circle cx="4.5" cy="6" r="1.2" class="ch"/><circle cx="4.5" cy="12" r="1.2" class="ch"/><circle cx="4.5" cy="18" r="1.2" class="ch"/></svg>',
+  insertOrderedList:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 4.5 5.5 4v5M3.5 14.5c1-1.4 3-.8 2.6.6-.3.8-1.6 1.6-2.6 2.9h3"/></svg>',
+  removeFormat:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h13M12 5 9 19"/><path d="m15 14 5 5m0-5-5 5"/></svg>',
+  fechar:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+  cadeado:'<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></svg>'
+};
+const NOTA_BT=[['bold','Negrito (Ctrl+B)','<b>N</b>'],['italic','Itálico (Ctrl+I)','<i>I</i>'],['underline','Sublinhado (Ctrl+U)','<u>S</u>'],['mark','Marca-texto',NOTA_ICO.mark],0,
+  ['insertUnorderedList','Lista com marcadores',NOTA_ICO.insertUnorderedList],['insertOrderedList','Lista numerada',NOTA_ICO.insertOrderedList],0,['removeFormat','Limpar formatação',NOTA_ICO.removeFormat]];
+let nota=null, notaEd=null, notaK=null, notaCaixa=null, notaBotao=null, notaT=null;
+const notaAberta=()=>!!(nota&&!nota.hidden);
+const notaSt=t=>{ const s=$('.nota-st',nota); s.textContent=''; setTimeout(()=>{s.textContent=t;},30); };
+function notaRascunho(){
+  clearTimeout(notaT);
+  notaT=setTimeout(()=>{ try{ const h=notaLimpa(notaEd.innerHTML); if(notaK&&notaTexto(h)) localStorage.setItem(NOTA_RASC,JSON.stringify({k:notaK,h})); else localStorage.removeItem(NOTA_RASC); }catch(e){} },500);
+}
+function notaPintaEd(){
+  const vazio=!notaTexto(notaLimpa(notaEd.innerHTML));
+  notaEd.classList.toggle('sem-txt',vazio); $('.nota-ok',nota).disabled=vazio;
+}
+function notaEstado(){
+  if(document.activeElement!==notaEd) return;
+  const sel=getSelection(), base=sel.rangeCount?sel.getRangeAt(0).commonAncestorContainer:null, el=base&&(base.nodeType===1?base:base.parentElement);
+  $$('[data-cmd]',nota).forEach(b=>{ const c=b.dataset.cmd; if(c==='removeFormat') return;
+    let on=false; try{ on=c==='mark'?!!(el&&el.closest('mark')):document.queryCommandState(c); }catch(e){}
+    b.setAttribute('aria-pressed',on?'true':'false'); });
+}
+function notaMarca(){
+  const s=getSelection(); if(!s.rangeCount) return;
+  const r=s.getRangeAt(0); if(!notaEd.contains(r.commonAncestorContainer)) return;
+  const base=r.commonAncestorContainer, el=base.nodeType===1?base:base.parentElement, ja=el.closest('mark');
+  if(ja){ const p=ja.parentNode; while(ja.firstChild) p.insertBefore(ja.firstChild,ja); p.removeChild(ja); p.normalize(); return; }
+  if(s.isCollapsed){ notaSt('Selecione um trecho para marcar.'); return; }
+  const m=document.createElement('mark'); m.appendChild(r.extractContents()); r.insertNode(m);
+  s.removeAllRanges(); const n=document.createRange(); n.selectNodeContents(m); s.addRange(n);
+}
+function notaComando(c){
+  notaEd.focus();
+  if(c==='mark') notaMarca();
+  else{
+    try{ document.execCommand('styleWithCSS',false,false); }catch(e){}
+    document.execCommand(c,false,null);
+    if(c==='removeFormat'){ const s=getSelection(), r=s.rangeCount?s.getRangeAt(0):null; if(r) $$('mark',notaEd).filter(m=>r.intersectsNode(m)).forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); }); }
+  }
+  notaPintaEd(); notaRascunho(); notaEstado();
+}
+function notaAjusta(){
+  const vv=window.visualViewport, raizS=document.documentElement.style;
+  if(!vv||innerWidth>=1100){ raizS.removeProperty('--nota-h'); raizS.removeProperty('--nota-baixo'); return; }
+  const tecl=Math.max(0,Math.round(innerHeight-vv.height-vv.offsetTop));
+  raizS.setProperty('--nota-baixo',tecl+'px');
+  raizS.setProperty('--nota-h',Math.round(vv.height*(tecl>80?.58:.46))+'px');
+}
+function notaPainel(){
+  if(nota) return nota;
+  nota=document.createElement('aside'); nota.id='nota'; nota.className='nota'; nota.hidden=true; nota.setAttribute('aria-labelledby','nota-tit');
+  nota.innerHTML='<header class="nota-cab"><div><h2 id="nota-tit">Meu raciocínio</h2><p class="nota-sub"></p></div><button type="button" class="nota-x" aria-label="Fechar anotações" title="Fechar (Esc)">'+NOTA_ICO.fechar+'</button></header>'+
+    '<div class="nota-bar" role="toolbar" aria-label="Formatação do texto" aria-controls="nota-ed">'+NOTA_BT.map((b,i)=>b?'<button type="button" data-cmd="'+b[0]+'" title="'+b[1]+'" aria-label="'+b[1]+'"'+(b[0]==='removeFormat'?'':' aria-pressed="false"')+' tabindex="'+(i?'-1':'0')+'">'+b[2]+'</button>':'<span class="nota-sep" aria-hidden="true"></span>').join('')+'</div>'+
+    '<div id="nota-ed" class="nota-ed sem-txt" contenteditable="true" role="textbox" aria-multiline="true" aria-labelledby="nota-tit" aria-describedby="nota-dica" spellcheck="true" lang="pt-BR" data-ph="Como você pensou? Por que escolheu essa alternativa, o que descartou, onde ficou em dúvida."></div>'+
+    '<div class="nota-pe"><span id="nota-dica" class="nota-dica">Ctrl + Enter salva. Esc fecha.</span><span class="nota-st" role="status" aria-live="polite"></span><button type="button" class="btn pri nota-ok" disabled>Salvar anotação</button></div>'+
+    '<section class="nota-ant" aria-label="Anotações anteriores"></section>';
+  document.body.appendChild(nota);
+  notaEd=$('#nota-ed',nota);
+  try{ document.execCommand('defaultParagraphSeparator',false,'div'); }catch(e){}
+  $('.nota-x',nota).onclick=()=>notaFechar(true);
+  $('.nota-ok',nota).onclick=()=>{ notaSalva(); notaEd.focus(); };
+  notaEd.addEventListener('input',()=>{ notaPintaEd(); notaRascunho(); });
+  notaEd.addEventListener('paste',e=>{ e.preventDefault(); const t=(e.clipboardData||window.clipboardData).getData('text/plain'); document.execCommand('insertText',false,t); });
+  document.addEventListener('selectionchange',notaEstado);
+  nota.addEventListener('mousedown',e=>{ if(e.target.closest('[data-cmd]')) e.preventDefault(); });
+  nota.addEventListener('click',e=>{ const b=e.target.closest('[data-cmd]'); if(b) notaComando(b.dataset.cmd); });
+  // as teclas ficam no painel: digitar aqui nunca aciona os atalhos da revisão nem a busca do site
+  nota.addEventListener('keydown',e=>{
+    e.stopPropagation();
+    if(e.key==='Escape'){ e.preventDefault(); notaFechar(true); return; }
+    if((e.ctrlKey||e.metaKey)&&e.key==='Enter'){ e.preventDefault(); notaSalva(); return; }
+    const t=e.target; if(!t.matches('[data-cmd]')||(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')) return;
+    const l=$$('[data-cmd]',nota), i=l.indexOf(t), n=l[(i+(e.key==='ArrowRight'?1:-1)+l.length)%l.length];
+    e.preventDefault(); l.forEach(x=>x.tabIndex=-1); n.tabIndex=0; n.focus();
+  });
+  if(window.visualViewport){ visualViewport.addEventListener('resize',()=>{ if(notaAberta()) notaAjusta(); }); visualViewport.addEventListener('scroll',()=>{ if(notaAberta()) notaAjusta(); }); }
+  addEventListener('resize',()=>{ if(notaAberta()) notaAjusta(); });
+  return nota;
+}
+function notaHist(){
+  const box=$('.nota-ant',nota), L=notasDe(notaK), resp=!!(notaCaixa&&notaCaixa.classList.contains('respondida')), t0=notaCaixa&&notaCaixa._t0||0;
+  const vis=resp?L:L.filter(x=>x.t>=t0), oc=L.length-vis.length;
+  box.innerHTML=(oc?'<p class="nota-tranca">'+NOTA_ICO.cadeado+'<span>Você tem '+oc+(oc===1?' anotação antiga':' anotações antigas')+' nesta questão. Elas aparecem depois que você confirmar a resposta, para não entregar o gabarito.</span></p>':'')+
+    (vis.length?'<h3>'+(oc?'Escritas agora':'Anotações anteriores')+' <span>'+vis.length+'</span></h3>'+vis.map(x=>notaItem(x,notaK)).join(''):(oc?'':'<p class="nota-vazio">Nenhuma anotação nesta questão ainda.</p>'));
+}
+function notaPinta(k){
+  const c=notasDe(k).length;
+  $$('.questao').forEach(o=>{ if(o.dataset.k!==k) return;
+    const b=$('.nota-q',o); if(b){ const s=$('.nq-c',b); s.textContent=c||''; s.hidden=!c; b.setAttribute('aria-label',c?'Anotar. Esta questão tem '+c+(c===1?' anotação':' anotações'):'Anotar meu raciocínio'); }
+    const ct=$('.coment.vis',o); if(ct) notaNoComent(ct,k,o);
+  });
+}
+function notaNoComent(ct,k,caixa){
+  const v=$('.q-notas',ct); if(v) v.remove();
+  const t0=caixa._t0||0, L=notasDe(k).filter(x=>x.t<t0); if(!L.length) return;
+  ct.insertAdjacentHTML('beforeend','<details class="q-notas"><summary>Seu raciocínio anterior <span>'+L.length+'</span></summary>'+L.map(x=>notaItem(x,k)).join('')+'</details>');
+}
+function notaResumo(k){ const [id,n]=k.split('|'), q=DADOS[id].questoes[n]; return 'Questão '+n+' · '+fonte(q.fonte); }
+function notaSalva(r){
+  if(!notaK) return false;
+  const h=notaLimpa(notaEd.innerHTML); if(!notaTexto(h)) return false;
+  const it={t:Date.now(),h}; const sit=notaCaixa&&$('.sit',notaCaixa);
+  const res=r||(sit&&notaCaixa.classList.contains('respondida')?(sit.classList.contains('bad')?'bad':sit.classList.contains('chu')?'chu':'ok'):null);
+  if(res) it.r=res;
+  const n=est.notas=est.notas||{}; (n[notaK]=n[notaK]||[]).push(it);
+  salvar(); clearTimeout(notaT); try{ localStorage.removeItem(NOTA_RASC); }catch(e){}
+  notaEd.innerHTML=''; notaPintaEd(); notaHist(); notaPinta(notaK); notaSt('Anotação salva.');
+  if($('#nota-lista')) notaListar();
+  return true;
+}
+function notaAbrir(k,caixa,focar){
+  notaPainel();
+  if(notaAberta()&&notaK===k&&notaCaixa===caixa&&focar!==false){ notaFechar(true); return; }
+  if(notaK&&notaK!==k) notaSalva();
+  if(notaBotao) notaBotao.setAttribute('aria-expanded','false');
+  notaK=k; notaCaixa=caixa; notaBotao=$('.nota-q',caixa);
+  if(notaBotao) notaBotao.setAttribute('aria-expanded','true');
+  $('.nota-sub',nota).textContent=notaResumo(k);
+  notaEd.innerHTML=''; $('.nota-st',nota).textContent='';
+  try{ const d=JSON.parse(localStorage.getItem(NOTA_RASC)||'null'); if(d&&d.k===k&&d.h){ notaEd.innerHTML=notaLimpa(d.h); notaSt('Rascunho recuperado.'); } }catch(e){}
+  notaPintaEd(); notaHist();
+  nota.hidden=false; document.body.classList.add('nota-aberta');
+  const fc=$('#foco'); if(fc&&!fc.hidden) fc.setAttribute('aria-modal','false');
+  notaAjusta();
+  if(focar!==false){ notaEd.focus({preventScroll:true}); requestAnimationFrame(()=>{ if(caixa.isConnected&&!caixa.closest('.foco')) caixa.scrollIntoView({block:innerWidth<1100?'start':'nearest'}); }); }
+}
+function notaFechar(voltar){
+  if(!notaAberta()) return;
+  notaSalva();
+  nota.hidden=true; document.body.classList.remove('nota-aberta');
+  document.documentElement.style.removeProperty('--nota-h'); document.documentElement.style.removeProperty('--nota-baixo');
+  const fc=$('#foco'); if(fc) fc.setAttribute('aria-modal','true');
+  if(notaBotao){ notaBotao.setAttribute('aria-expanded','false'); if(voltar&&notaBotao.isConnected) notaBotao.focus({preventScroll:true}); }
+  notaK=null; notaCaixa=null; notaBotao=null;
+}
+// a questão mudou (modo foco): o painel acompanha, sem tirar o foco da questão
+function notaSegue(k,caixa){ if(notaAberta()&&notaK!==k) notaAbrir(k,caixa,false); else if(notaAberta()){ notaCaixa=caixa; notaBotao=$('.nota-q',caixa); if(notaBotao) notaBotao.setAttribute('aria-expanded','true'); notaHist(); } }
+// resposta confirmada: o que estava sendo escrito é salvo com o resultado, e as notas antigas aparecem
+function notaResultado(k,ok,ch,caixa){
+  const r=ok?(ch?'chu':'ok'):'bad';
+  if(notaK===k){ notaCaixa=caixa; notaSalva(r); }
+  const L=(est.notas||{})[k]; if(L){ const t0=caixa._t0||0; L.forEach(x=>{ if(x.t>=t0&&!x.r&&!x.del) x.r=r; }); }
+}
+function notaRespondeu(k){ if(notaK===k) notaHist(); }
+function notaApaga(k,t){
+  const L=(est.notas||{})[k]; if(!L) return;
+  L.forEach(x=>{ if(x.t===t){ x.del=1; x.h=''; } }); salvar();
+  if(notaK===k){ notaHist(); notaSt('Anotação excluída.'); }
+  notaPinta(k); if($('#nota-lista')) notaListar();
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-notadel]'); if(b){
+    if(!b.classList.contains('conf')){ b.classList.add('conf'); b.textContent='Confirmar exclusão'; setTimeout(()=>{ if(b.isConnected){ b.classList.remove('conf'); b.textContent='Excluir'; } },4000); return; }
+    notaApaga(b.dataset.notak,+b.dataset.notadel); return;
+  }
+  const p=e.target.closest('[data-pagnota]'); if(p){ notaPag=+p.dataset.pagnota; notaListar(); }
+});
+/* aba Anotações da Revisão: tudo o que foi escrito, da nota mais recente para a mais antiga, com busca */
+let notaPag=0, notaBusca='', notaSet=null;
+function notaListar(){
+  const box=$('#nota-lista'); if(!box) return;
+  const t=sem(notaBusca.trim()), POR=15;
+  const ks=Object.keys(est.notas||{}).filter(k=>valida(k)&&(!notaSet||noSet(notaSet,k))).map(k=>[k,notasDe(k)]).filter(([k,L])=>L.length).filter(([k,L])=>{
+    if(!t) return true; const [id,n]=k.split('|'), q=DADOS[id].questoes[n];
+    return sem(n+' '+semMarcas(q.enun)+' '+L.map(x=>notaTexto(x.h)).join(' ')).includes(t);
+  }).sort((a,b)=>b[1][0].t-a[1][0].t);
+  const tot=Object.keys(est.notas||{}).some(k=>notasDe(k).length);
+  if(!ks.length){ box.innerHTML='<div class="vazio">'+ic('i-nota')+'<b>'+(tot?'Nada encontrado.':'Nenhuma anotação ainda.')+'</b><span>'+(tot?'Tente outra palavra.':'Em qualquer questão, clique em Anotar para registrar como você pensou.')+'</span></div>'; return; }
+  const pag=Math.min(notaPag,Math.ceil(ks.length/POR)-1); notaPag=pag;
+  box.innerHTML=ks.slice(pag*POR,(pag+1)*POR).map(([k,L])=>{ const [id,n]=k.split('|'), q=DADOS[id].questoes[n], r=rotuloCap(id), e=semMarcas(q.enun);
+    return '<section class="nota-card"><header><h3>Questão '+esc(n)+'</h3><span class="mut">'+esc(rotTxt(r))+'</span></header><p class="nota-enun">'+esc(e.slice(0,190))+(e.length>190?'…':'')+'</p>'+L.map(x=>notaItem(x,k)).join('')+
+      '<div class="nota-ac"><a class="btn fant mini" href="'+linkQ(id,k)+'">Abrir a questão</a><button type="button" class="btn fant mini" data-refazer="'+esc(k)+'">Refazer</button></div></section>'; }).join('')+paginador(ks.length,POR,pag,'data-pagnota');
+}
+function notasAba(set){
+  notaSet=set; notaPag=0;
+  return '<p class="mut">Tudo o que você escreveu sobre como pensou em cada questão. As anotações ficam só na sua conta.</p><div class="nota-busca"><label for="nota-busca">Buscar nas anotações</label><input id="nota-busca" type="search" value="'+esc(notaBusca)+'" placeholder="Palavra da anotação, da questão ou número"></div><div id="nota-lista"></div>';
+}
+function notasAbaLiga(pg){
+  const c=$('#nota-busca',pg); if(!c) return;
+  c.oninput=()=>{ notaBusca=c.value; notaPag=0; notaListar(); };
+  notaListar();
+}
+const notasTotal=()=>Object.keys(est.notas||{}).filter(k=>valida(k)&&notasDe(k).length).length;
+
+
+/* =========================================================
    Questão (aulas, salvas e modo foco)
    ========================================================= */
 const chaveQ=(id,n)=>id+'|'+n;
@@ -44492,7 +44819,7 @@ function questao(caixa,id,n,depois,fresca,opts){
       :textoHTML(T,q.tx,(art&&art.dataset.textos==='fechados')||(caixa.closest('.foco')&&matchMedia('(max-width:767px)').matches)?'fechado':false,null,q.marcas);
   }
   caixa.innerHTML='<div class="q-cab"><span class="q-id">Questão '+esc(n)+'</span>'+(alvo?'<span class="selo-alvo" title="Questão da banca da sua prova"><svg viewBox="0 0 16 16" aria-hidden="true"><circle cx="8" cy="8" r="6.2" fill="none" stroke="currentColor" stroke-width="1.8"/><circle cx="8" cy="8" r="2.6" fill="currentColor"/></svg>IBGP<span class="sb"> · sua banca</span></span>':'')+(q.nivel?'<span class="selo-nivel n'+q.nivel+'" title="Nível de dificuldade da questão autoral">Nível '+q.nivel+'<span class="sb"> · '+(['','básico','intermediário','avançado'][q.nivel]||'')+'</span></span>':'')+'<span class="q-fonte">'+esc(fonte(q.fonte))+'</span><span class="sit" role="status"></span>'+
-    '<button type="button" class="salvar-q" aria-pressed="false" title="Salvar para revisar">'+ic('i-sal')+'<span>Salvar</span></button></div>'+
+    '<button type="button" class="salvar-q" aria-pressed="false" title="Salvar para revisar">'+ic('i-sal')+'<span>Salvar</span></button><button type="button" class="nota-q" aria-expanded="false" aria-controls="nota" aria-label="Anotar meu raciocínio" title="Anotar meu raciocínio">'+ic('i-nota')+'<span class="lab-n">Anotar</span><span class="nq-c" hidden></span></button></div>'+
     '<div class="q-texto">'+txHtml+'<div class="enun" data-orig="'+esc(q.enun)+'">'+fmtEnun(q.enun)+'</div>'+(q.img||[]).map(s=>'<img class="q-img" loading="lazy" src="'+s+'" alt="Figura da questão">').join('')+'</div>'+
     '<div class="q-resp"><div class="alts">'+altsV.map(a=>'<button class="alt" type="button" data-l="'+esc(a[0])+'"><span class="l'+(ce?' ce':'')+'">'+esc(letraV(a[0]))+'</span><span class="corpo-alt"><span class="tx">'+(ce?'':(q.altimg&&q.altimg[a[0]]?imgAlt(q,a):comMarcas(esc(a[1]))))+'</span><span class="por" hidden></span></span></button>').join('')+'</div>'+
     '<div class="q-acoes"><button class="btn pri confirmar" type="button" disabled>Confirmar resposta</button><button class="btn chu chute" type="button" aria-pressed="false" title="Toque antes de confirmar se não tiver certeza">'+ic('i-chute')+'Marcar chute</button><span class="dica-marcar">'+DICA+'</span></div>'+
@@ -44517,7 +44844,9 @@ function questao(caixa,id,n,depois,fresca,opts){
     const la=$('.q-expl-lado',caixa); if(la) la.remove();
     if(q.expl){ const d=document.createElement('div'); d.className='q-expl q-expl-lado'; d.innerHTML='<h3>Resolução explicada</h3>'+textoV(q.expl); $('.q-texto',caixa).appendChild(d);
       if(novo&&getComputedStyle(d).display!=='none') d.scrollIntoView({block:'start'}); }
+    notaNoComent(c,k,caixa);
     if(novo){
+      notaResultado(k,ok,ch,caixa);
       if(opts.rev){ opts.onResp(letra,ok,ch); }
       else{
         st[n]=letra; delete risc[n];
@@ -44530,8 +44859,12 @@ function questao(caixa,id,n,depois,fresca,opts){
       }
     }
     avisar({ok,ch,letra,novo:!!novo});
+    notaRespondeu(k);
     if(depois) depois();
   };
+  caixa._t0=Date.now();
+  $('.nota-q',caixa).onclick=()=>notaAbrir(k,caixa);
+  notaPinta(k);
   caixa._mostrar=(l,ch)=>mostrar(l,false,ch);
   const pintar=()=>{
     $$('.alt',caixa).forEach(x=>{const m=x.dataset.l===marcada;x.classList.toggle('marcada',m);x.setAttribute('aria-pressed',m);});
@@ -44560,7 +44893,7 @@ function questao(caixa,id,n,depois,fresca,opts){
   const limpar=()=>{
     caixa.classList.remove('respondida'); marcada=null; conf.disabled=true; $('.dica-marcar',caixa).textContent=DICA; bChute.setAttribute('aria-pressed','false');
     $$('.alt',caixa).forEach(b=>{b.disabled=false;b.classList.remove('certa','errada','marcada','riscada');b.setAttribute('aria-pressed','false');$('.por',b).hidden=true;});
-    $('.sit',caixa).textContent=''; $('.coment',caixa).classList.remove('vis'); const la=$('.q-expl-lado',caixa); if(la) la.remove(); avisar(); if(depois) depois();
+    $('.sit',caixa).textContent=''; $('.coment',caixa).classList.remove('vis'); const la=$('.q-expl-lado',caixa); if(la) la.remove(); caixa._t0=Date.now(); notaRespondeu(k); avisar(); if(depois) depois();
   };
   caixa._limpar=limpar;
   $('.refazer',caixa).onclick=()=>{ delete st[n]; delete risc[n]; salvar(); limpar(); irmas().forEach(o=>o._limpar&&o._limpar()); };
@@ -44884,11 +45217,11 @@ function renderRevisao(){
   let html='<header class="pg-cab peq"><h1>Revisão espaçada</h1><p class="sub">As questões que você salvou voltam no dia certo, uma por vez. Tudo fica registrado.</p></header>';
   if(sessao&&sessao.ativa) html+='<div class="aviso">'+ic('i-rev')+'<span>Você tem uma sessão em andamento: questão '+(sessao.i+1)+' de '+sessao.fila.length+'.</span><button class="btn pri" data-acao="retomar">Continuar sessão</button></div>';
   html+='<div class="barra-esc"><label class="esc">Mostrar <select id="rev-esc">'+opcoesEscopo(escRev)+'</select></label></div>'+
-    abas([['hoje','Hoje',dev.length],['fila','Fila',its.length],['hist','Histórico',null],['sim','Simulado',null],['vid','Vídeos',vidKeys().length],['conf','Conferência',cf.problemas?'⚠ '+cf.problemas:'✓',cf.problemas]],abaRev,'data-abarev')+'<div class="aba-corpo" role="tabpanel">';
+    abas([['hoje','Hoje',dev.length],['fila','Fila',its.length],['hist','Histórico',null],['sim','Simulado',null],['vid','Vídeos',vidKeys().length],['nota','Anotações',notasTotal()],['conf','Conferência',cf.problemas?'⚠ '+cf.problemas:'✓',cf.problemas]],abaRev,'data-abarev')+'<div class="aba-corpo" role="tabpanel">';
   if(abaRev==='hoje'){
     const revHoje=LOG().filter(e=>e.tipo==='resp'&&e.onde==='revisao'&&noSet(set,e.k)&&dstr(new Date(e.t))===h).length;
     const kpis='<div class="kpis"><div class="kpi destaque"><b>'+dev.length+'</b><span>para revisar hoje</span></div><div class="kpi'+(cf.atras?' al':'')+'"><b>'+cf.atras+'</b><span>atrasadas (já incluídas)</span></div><div class="kpi"><b>'+revHoje+'</b><span>revisadas hoje</span></div><div class="kpi"><b>'+its.length+'</b><span>na revisão, no total</span></div></div>';
-    if(dev.length) html+='<div class="acao"><button class="btn pri grande" data-acao="comecar">'+ic('i-rev')+'Começar revisão · '+dev.length+(dev.length===1?' questão':' questões')+'</button><span class="mut">Abre em modo foco. Atalhos: 1–5 marcam, 0 chute, Enter confirma e avança, Esc sai.</span></div>';
+    if(dev.length) html+='<div class="acao"><button class="btn pri grande" data-acao="comecar">'+ic('i-rev')+'Começar revisão · '+dev.length+(dev.length===1?' questão':' questões')+'</button><span class="mut">Abre em modo foco. Atalhos: 1–5 marcam, 0 chute, N anota, Enter confirma e avança, Esc sai.</span></div>';
     else{const fut=its.filter(([,it])=>it.prox>h).sort((a,b)=>a[1].prox.localeCompare(b[1].prox)), pr=fut[0];
       html+='<div class="acao"><span class="ok-dia">'+ic('i-ok')+'Nada para revisar hoje.</span>'+(pr?'<span class="mut">Próxima: <b>'+fdata(pr[1].prox)+'</b> ('+quando(pr[1].prox)+')</span><button class="btn out" data-acao="adiantar">Adiantar as próximas 10</button>':'<span class="mut">Erre, chute ou salve questões nas aulas e elas aparecem aqui.</span>')+'</div>';}
     html+=kpis;
@@ -44913,6 +45246,8 @@ function renderRevisao(){
     html+=simCard(escRev,escRev?'do que está escolhido em "Mostrar"':'de todas as matérias');
   }else if(abaRev==='vid'){
     html+=vidHtml();
+  }else if(abaRev==='nota'){
+    html+=notasAba(set);
   }else{
     const lin=(ok,txt)=>'<li class="'+(ok?'ok':'al')+'">'+ic(ok?'i-ok':'i-alerta')+'<span>'+txt+'</span></li>';
     html+='<p class="mut">Verificações automáticas para garantir que nenhuma questão está escondida ou esquecida.</p><ul class="conf">'+
@@ -44923,6 +45258,7 @@ function renderRevisao(){
   }
   pg.innerHTML=html+'</div>';
   $('#rev-esc',pg).onchange=e=>{escRev=e.target.value;pagFila=0;pagHist=0;renderRevisao();};
+  notasAbaLiga(pg);
   trilhaTopo('');
 }
 
@@ -45143,7 +45479,7 @@ function abrirFoco(lista,modo,tit){
 }
 function mostrarFoco(){ foco.hidden=false; document.body.classList.add('em-foco'); renderFoco(); const b=$('[data-f="ok"]',foco)||$('[data-f="sair"]',foco); if(b) setTimeout(()=>{ const a=$('#f-box .alt',foco); (a||b).focus({preventScroll:true}); },0); }
 function retomarFoco(){ if(sessao&&sessao.ativa) mostrarFoco(); }
-function fecharFoco(){ foco.hidden=true; document.body.classList.remove('em-foco'); rota(true); if(focoVoltar&&document.contains(focoVoltar)) focoVoltar.focus({preventScroll:true}); }
+function fecharFoco(){ notaFechar(); foco.hidden=true; document.body.classList.remove('em-foco'); rota(true); if(focoVoltar&&document.contains(focoVoltar)) focoVoltar.focus({preventScroll:true}); }
 function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
   const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], tot=sessao.fila.length, feitas=Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
@@ -45151,7 +45487,7 @@ function renderFoco(){
   foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?'Simulado':(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
     '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig">'+(r.video?'<span class="chip suave">Questões dos vídeos<span class="f-nome"> · '+esc(DADOS[id].questoes[n].assunto||'')+'</span></span>':'<span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+'<span class="f-nome"> · '+esc(r.nome)+'</span></span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula<span class="lab"> ↗</span></a>')+'</div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
-    '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
+    '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · N anota · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
   const box=document.createElement('div'); $('#f-box',foco).appendChild(box);
   sessao.ord=sessao.ord||{}; if(!(k in sessao.ord)) sessao.ord[k]=embOrdem(DADOS[id].questoes[n]);
   const ordem=sessao.ord[k];
@@ -45163,6 +45499,7 @@ function renderFoco(){
   if(res) box._mostrar(res.letra,res.ch);
   else atualizarBarra({marcada:false,respondida:false,chute:false},k);
   mostrarRes(k);
+  notaSegue(k,box);
 }
 function atualizarBarra(d,k){
   const ok=$('[data-f="ok"]',foco), ch=$('[data-f="chute"]',foco), pu=$('[data-f="pular"]',foco);
@@ -45204,6 +45541,7 @@ function pintarPainel(k){
   p.innerHTML='<h2 class="ct">Histórico desta questão</h2>'+(it?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k);
 }
 function resumoFoco(){
+  notaFechar();
   const ks=Object.keys(sessao.res), rs=ks.map(k=>sessao.res[k]), certos=rs.filter(r=>r.ok&&!r.ch).length, chutes=rs.filter(r=>r.ok&&r.ch).length, erros=rs.filter(r=>!r.ok).length;
   sessao.ativa=false; atualizarContadores();
   const kpis='<div class="kpis"><div class="kpi destaque"><b>'+ks.length+'</b><span>respondidas</span></div><div class="kpi"><b>'+certos+'</b><span>com certeza</span></div><div class="kpi"><b>'+chutes+'</b><span>no chute</span></div><div class="kpi'+(erros?' al':'')+'"><b>'+erros+'</b><span>erradas</span></div></div>';
@@ -45241,6 +45579,7 @@ document.addEventListener('keydown',e=>{
   const box=$('#f-box .questao',foco); if(!box) return;
   if(e.key>='1'&&e.key<='5'){ const a=$$('.alt',box)[+e.key-1]; if(a&&!a.disabled){a.click();e.preventDefault();} }
   else if(e.key==='0'){ $('[data-f="chute"]',foco).click(); e.preventDefault(); }
+  else if(e.key==='n'||e.key==='N'){ const b=$('.nota-q',box); if(b){ b.click(); e.preventDefault(); } }
   else if(e.key==='Enter'){ if(e.target.closest&&e.target.closest('button:not(.alt)')&&e.target.dataset.f!=='ok') return; const ok=$('[data-f="ok"]',foco); if(ok&&!ok.disabled){ok.click();e.preventDefault();} }
   else if(e.key==='ArrowLeft'){ $('[data-f="ant"]',foco).click(); }
 });
@@ -45660,7 +45999,7 @@ function rota(semRolar){
   if(!semRolar){ const h=$('#pg-'+(p==='aula'?'aula':PAGINAS.includes(p)?p:'hoje')+' h1'); if(h&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.side,.nav-baixo')){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); } }
   pintarRecentes(); atualizarContadores();
 }
-window.addEventListener('hashchange',()=>{ if(!foco.hidden&&sessao&&sessao.ativa){ foco.hidden=true; document.body.classList.remove('em-foco'); } rota(false); });
+window.addEventListener('hashchange',()=>{ notaFechar(); if(!foco.hidden&&sessao&&sessao.ativa){ foco.hidden=true; document.body.classList.remove('em-foco'); } rota(false); });
 if(!location.hash||location.hash==='#') history.replaceState(null,'','#/hoje');
 rota(false);
 /* Questões dos vídeos entram sozinhas na revisão, como salvas, uma vez só (est.vidAuto lembra quais já entraram:
