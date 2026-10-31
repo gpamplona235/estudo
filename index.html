@@ -1719,6 +1719,14 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
   #pill-des{display:inline-flex}
 }
 
+/* Concluir apostila e fazer as que faltam */
+.selo-conc{display:flex;align-items:center;gap:7px;margin:0 0 8px;font-weight:600;color:var(--pri-forte)}
+.selo-conc .ic{width:18px;height:18px;flex:none}
+.falta-conc{margin-top:12px;padding-top:12px;border-top:1px solid var(--lin)}
+.falta-conc .btn .ic{width:17px;height:17px}
+.ap .concluida{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--pri-forte)}
+.ap .concluida .ic{width:14px;height:14px}
+
 
 /* ---------- casca: barra lateral + topo ---------- */
 .app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
@@ -45740,6 +45748,73 @@ setInterval(desafioPinta,30000);
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) desafioPinta(); });
 addEventListener('nuvem-pronta',desafioPinta);
 
+/* =========================================================
+   Concluir apostila e fazer as que faltam (pedido do usuário, 2026-10-31): ele estudou a apostila, mas nem
+   sempre respondeu tudo. Marcar como concluída tira a apostila de "Em andamento" e de "Continuar", sem
+   mudar a porcentagem real. As que faltam saem misturadas, IBGP e IBFC primeiro, e a resposta vale como
+   resposta da aula, então o progresso avança e a questão passa a entrar no Desafio e no Simulado.
+   est.concluidas = { "<apostila>": "2026-10-31" }. Essa parte só nasce ao marcar a primeira apostila.
+   ========================================================= */
+const apConcluida=id=>!!(est.concluidas||{})[id];
+const capsDaAp=apId=>Object.keys(DADOS).filter(id=>id.startsWith(apId+'-'));
+const faltaBanca=k=>{ const [id,n]=k.split('|'), f=String(DADOS[id].questoes[n].fonte||''); return f.startsWith('IBGP')?0:f.startsWith('IBFC')?1:2; };
+function faltamDe(apId,soIb){
+  const vistas=new Set(), out=[], caps=capsDaAp(apId);
+  caps.forEach(id=>{ const st=est['q:'+id]||{}; Object.keys(st).forEach(n=>{ if(st[n]) vistas.add(n); }); });
+  caps.forEach(id=>Object.keys(DADOS[id].questoes).forEach(n=>{ if(vistas.has(n)) return; vistas.add(n); const k=chaveQ(id,n); if(!soIb||faltaBanca(k)===0) out.push(k); }));
+  return out;
+}
+function faltaFila(apId,qtd,soIb){
+  const l=faltamDe(apId,soIb), f=[0,1,2].flatMap(b=>desMistura(l.filter(k=>faltaBanca(k)===b)));
+  return qtd?f.slice(0,qtd):f;
+}
+function faltaJogar(apId,qtd,soIb){ abrirFoco(faltaFila(apId,qtd,soIb),'livre','As que faltam',{falta:apId,faltaIb:!!soIb}); }
+// a apostila de onde continuar, pulando as concluídas
+function capContinuar(){
+  const valido=c=>c&&DADOS[c]&&!apConcluida(rotuloCap(c).apId);
+  if(valido(est.ultAula)) return est.ultAula;
+  const ap=APS.find(a=>valido(est['ult:'+a.id]));
+  if(ap) return est['ult:'+ap.id];
+  const nova=APS.find(a=>!apConcluida(a.id)&&a.aulas.some(x=>x.pronta));
+  return nova?nova.aulas.find(x=>x.pronta).cap:null;
+}
+function faltaCard(ap){
+  const tot=faltamDe(ap.id).length, ib=faltamDe(ap.id,true).length, data=(est.concluidas||{})[ap.id], tq=tot===1?'questão':'questões';
+  let h='<section class="card sim falta" data-ap="'+esc(ap.id)+'" data-tot="'+tot+'" data-ib="'+ib+'" aria-label="Situação da apostila"><h2 class="ct">'+(data?'Apostila concluída':'Questões que faltam')+'</h2>';
+  if(data) h+='<p class="selo-conc">'+ic('i-ok')+'Você marcou como concluída em '+fdata(data)+'.</p>';
+  if(tot) h+='<p class="mut"><b>'+tot+'</b> '+tq+' sem resposta. Elas saem misturadas, com IBGP e IBFC primeiro. A resposta vale como resposta da aula, e você pode parar quando quiser.</p>'+
+    '<div class="qtds">'+[10,20,30].filter(x=>x<tot).map(x=>'<button type="button" class="btn out" data-falta="'+x+'">'+x+' questões</button>').join('')+'<button type="button" class="btn pri" data-falta="0">Todas ('+tot+')</button></div>'+
+    (ib?'<label class="sim-chk"><input type="checkbox" data-faltaib> Só IBGP ('+ib+')</label>':'');
+  else h+='<p class="mut">Você respondeu todas as questões das aulas prontas desta apostila.</p>';
+  return h+'<div class="acao falta-conc"><button type="button" class="btn out" data-concluir="'+esc(ap.id)+'" aria-pressed="'+(data?'true':'false')+'">'+(data?'Desfazer conclusão':ic('i-ok')+'Marcar como concluída')+'</button></div></section>';
+}
+function faltaResumo(ks,certos,chutes,erros){
+  const ap=sessao.falta, rest=faltamDe(ap,sessao.faltaIb).length, ac=certos+chutes;
+  return '<header class="f-top"><b class="f-tit">Sessão concluída</b><button class="btn pri" data-f="sair" style="margin-left:auto">Fechar</button></header><div class="f-corpo"><div class="f-q"><h1 class="f-h1">'+(ks.length?'Você acertou '+ac+' de '+ks.length+' ('+pct(ac,ks.length)+'%).':'Nenhuma questão respondida.')+'</h1>'+
+    '<div class="kpis"><div class="kpi destaque"><b>'+ks.length+'</b><span>respondidas</span></div><div class="kpi"><b>'+certos+'</b><span>com certeza</span></div><div class="kpi"><b>'+chutes+'</b><span>no chute</span></div><div class="kpi'+(erros?' al':'')+'"><b>'+erros+'</b><span>erradas</span></div></div>'+
+    '<p class="mut">'+(rest?'Ainda faltam <b>'+rest+'</b>'+(sessao.faltaIb?' da IBGP':'')+' nesta apostila.':'Não falta mais nenhuma'+(sessao.faltaIb?' da IBGP':'')+' nesta apostila.')+'</p>'+
+    (rest?'<div class="acao"><button class="btn pri" data-falta-mais="'+esc(ap)+'" data-ib="'+(sessao.faltaIb?1:0)+'">Fazer mais '+Math.min(10,rest)+'</button></div>':'')+'</div></div>';
+}
+document.addEventListener('click',e=>{
+  const f=e.target.closest('[data-falta]');
+  if(f){ const c=f.closest('.falta'), s=$('[data-faltaib]',c); faltaJogar(c.dataset.ap,+f.dataset.falta,!!(s&&s.checked)); return; }
+  const m=e.target.closest('[data-falta-mais]');
+  if(m){ faltaJogar(m.dataset.faltaMais,10,m.dataset.ib==='1'); return; }
+  const b=e.target.closest('[data-concluir]');
+  if(b){
+    const id=b.dataset.concluir, c=est.concluidas=est.concluidas||{};
+    if(c[id]) delete c[id]; else c[id]=hoje();
+    salvar(); rota(true); atualizarContadores();
+    const n=$('[data-concluir]'); if(n) n.focus({preventScroll:true});
+  }
+});
+document.addEventListener('change',e=>{
+  const c=e.target.closest&&e.target.closest('[data-faltaib]'); if(!c) return;
+  const card=c.closest('.falta'), lim=+(c.checked?card.dataset.ib:card.dataset.tot), t=$('[data-falta="0"]',card);
+  if(t) t.textContent='Todas ('+lim+')';
+  $$('[data-falta]:not([data-falta="0"])',card).forEach(x=>{ x.hidden=+x.dataset.falta>=lim; });
+});
+
 
 /* =========================================================
    Questão (aulas, salvas e modo foco)
@@ -45943,7 +46018,7 @@ function recomendar(){
     if(s.atras) mot.push(s.atras+(s.atras===1?' revisão atrasada':' revisões atrasadas'));
     if(s.chutesRec) mot.push(s.chutesRec+(s.chutesRec===1?' acerto no chute':' acertos no chute'));
     if(s.resp>=3&&acc<0.75){ sc+=Math.round((1-acc)*10); mot.push('acerto de '+Math.round(acc*100)+'%'); }
-    if(s.resp>0&&s.resp<s.total*0.5){ sc+=2; mot.push('só '+s.resp+' de '+s.total+' respondidas'); }
+    if(s.resp>0&&s.resp<s.total*0.5&&!apConcluida(rotuloCap(s.id).apId)){ sc+=2; mot.push('só '+s.resp+' de '+s.total+' respondidas'); }
     if(sc>0) out.push({id,sc,mot,s});
   });
   return out.sort((a,b)=>b.sc-a.sc);
@@ -46115,10 +46190,10 @@ function renderHoje(){
   const sauda=hr<5?'Boa noite':hr<12?'Bom dia':hr<18?'Boa tarde':'Boa noite';
   const meta=est.meta||30, feitas=respHoje();
   const porAp={}; dev.forEach(k=>{const r=rotuloCap(k.split('|')[0]);porAp[r.ap]=(porAp[r.ap]||0)+1;});
-  const ultCap=est.ultAula&&DADOS[est.ultAula]?est.ultAula:(APS[0]&&(APS[0].aulas.find(a=>a.pronta)||{}).cap);
+  const ultCap=capContinuar();
   const ult=ultCap?rotuloCap(ultCap):null, ultS=ultCap?statCap(ultCap):null;
   const recs=recomendar().slice(0,3);
-  const emAnd=APS.filter(ap=>progressoAp(ap.id).resp>0||est['ult:'+ap.id]);
+  const emAnd=APS.filter(ap=>(progressoAp(ap.id).resp>0||est['ult:'+ap.id])&&!apConcluida(ap.id));
   const revFeita=LOG().some(e=>e.tipo==='resp'&&e.onde==='revisao'&&dstr(new Date(e.t))===hoje());
   const min=Math.max(2,Math.round(dev.length*0.8));
   pg.innerHTML='<header class="pg-cab"><h1>'+sauda+'! Hoje é dia de <em>'+(dev.length?'revisão':'avançar')+'</em>.</h1>'+
@@ -46135,7 +46210,7 @@ function renderHoje(){
 function cardApostila(ap){
   const p=progressoAp(ap.id), prontas=ap.aulas.filter(a=>a.pronta).length, ult=est['ult:'+ap.id]&&CAP[est['ult:'+ap.id]];
   return '<a class="ap" href="#/biblioteca/a/'+ap.id+'"><span class="mt">'+esc(ap.materia)+'</span><b>'+esc(ap.nome)+'</b><div class="bp" role="img" aria-label="'+(pct(p.resp,p.total)||0)+'% respondido"><i style="width:'+(pct(p.resp,p.total)||0)+'%"></i></div>'+
-    '<span class="mt2"><span>'+(ult?'Aula '+ult.num+' de '+ap.aulas.length:prontas+' de '+ap.aulas.length+' aulas prontas')+'</span><span>'+(p.resp?pct(p.certas,p.resp)+'% de acerto':'não começada')+'</span></span></a>';
+    '<span class="mt2"><span>'+(apConcluida(ap.id)?'<span class="concluida">'+ic('i-ok')+'Concluída</span>':ult?'Aula '+ult.num+' de '+ap.aulas.length:prontas+' de '+ap.aulas.length+' aulas prontas')+'</span><span>'+(p.resp?pct(p.certas,p.resp)+'% de acerto':'não começada')+'</span></span></a>';
 }
 
 /* ---------- Biblioteca ---------- */
@@ -46154,7 +46229,7 @@ function renderBib(partes){
   let corpo='';
   if(ap){
     const p=progressoAp(ap.id);
-    corpo='<header class="pg-cab peq"><span class="chip">'+esc(ap.materia)+(ap.grupo?' › '+esc(ap.grupo):'')+'</span><h1>'+esc(ap.nome)+'</h1><p class="sub">'+esc(ap.descricao)+'</p><p class="meta-l"><span>'+ap.aulas.length+' aulas</span><span>'+ap.questoes_caderno+' questões</span><span>'+(pct(p.resp,p.total)||0)+'% respondido</span><span>'+(p.resp?pct(p.certas,p.resp)+'% de acerto':'sem respostas')+'</span>'+(p.naRev?'<span>'+p.naRev+' na revisão</span>':'')+'</p></header>'+simCard('ap:'+ap.id,'desta apostila')+
+    corpo='<header class="pg-cab peq"><span class="chip">'+esc(ap.materia)+(ap.grupo?' › '+esc(ap.grupo):'')+'</span><h1>'+esc(ap.nome)+'</h1><p class="sub">'+esc(ap.descricao)+'</p><p class="meta-l"><span>'+ap.aulas.length+' aulas</span><span>'+ap.questoes_caderno+' questões</span><span>'+(pct(p.resp,p.total)||0)+'% respondido</span><span>'+(p.resp?pct(p.certas,p.resp)+'% de acerto':'sem respostas')+'</span>'+(p.naRev?'<span>'+p.naRev+' na revisão</span>':'')+'</p></header>'+faltaCard(ap)+simCard('ap:'+ap.id,'desta apostila')+
       '<ol class="aulas">'+ap.aulas.map(a=>{
         if(!a.pronta||!DADOS[a.cap]) return '<li><div class="aula off"><span class="num">'+a.num+'</span><span class="tx"><b>'+esc(a.nome)+'</b><small>em breve</small></span></div></li>';
         const s=statCap(a.cap), e2=s.resp===0?'nova':s.resp===s.total?'feita':'and';
@@ -46489,10 +46564,10 @@ document.addEventListener('change',e=>{
    ========================================================= */
 let sessao=null, focoVoltar=null;
 const foco=$('#foco');
-function abrirFoco(lista,modo,tit){
+function abrirFoco(lista,modo,tit,extra){
   if(!lista.length) return;
   focoVoltar=document.activeElement;
-  sessao={fila:lista.slice(),i:0,res:{},ativa:true,modo:modo||'rev',hist:false,tit:tit||''}; mostrarFoco();
+  sessao=Object.assign({fila:lista.slice(),i:0,res:{},ativa:true,modo:modo||'rev',hist:false,tit:tit||''},extra); mostrarFoco();
 }
 function mostrarFoco(){ foco.hidden=false; document.body.classList.add('em-foco'); renderFoco(); const b=$('[data-f="ok"]',foco)||$('[data-f="sair"]',foco); if(b) setTimeout(()=>{ const a=$('#f-box .alt',foco); (a||b).focus({preventScroll:true}); },0); }
 function retomarFoco(){ if(sessao&&sessao.ativa) mostrarFoco(); }
@@ -46501,7 +46576,7 @@ function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
   const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], tot=sessao.fila.length, feitas=Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
   const cx=res&&res.cxA?res.cxA:it.cx;
-  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
+  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo||sessao.falta?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
     '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig">'+(r.video?'<span class="chip suave">Questões dos vídeos<span class="f-nome"> · '+esc(DADOS[id].questoes[n].assunto||'')+'</span></span>':'<span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+'<span class="f-nome"> · '+esc(r.nome)+'</span></span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula<span class="lab"> ↗</span></a>')+'</div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
     '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · N anota · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
@@ -46510,7 +46585,7 @@ function renderFoco(){
   const ordem=sessao.ord[k];
   if(revModo) questao(box,id,n,null,true,{rev:true,ordem,onResp:(l,ok,ch)=>responderRev(k,l,ok,ch)});
   else if(simModo) questao(box,id,n,null,true,{rev:true,ordem,onde:'simulado',onResp:(l,ok,ch)=>responderSim(k,l,ok,ch)});
-  else questao(box,id,n,null,true,{onde:'salvas',ordem});
+  else questao(box,id,n,null,true,{onde:sessao.falta?'aula':'salvas',ordem});
   const fr=document.createElement('div'); fr.id='f-res'; fr.setAttribute('aria-live','polite'); $('.q-resp',box).prepend(fr);
   box.addEventListener('q-estado',e=>atualizarBarra(e.detail,k));
   if(res) box._mostrar(res.letra,res.ch);
@@ -46549,6 +46624,7 @@ function mostrarRes(k){
   const r=sessao.res[k], el=$('#f-res',foco); if(!el) return;
   if(!r){ el.innerHTML=''; return; }
   if(sessao.modo==='sim'){ const it=rev()[k]; el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+(r.ok?(r.ch?'Acertou no chute.':'Acertou!'):'Errou.')+'</b><span>Conta só para este '+(sessao.des?'desafio':'simulado')+': a sua resposta na aula não muda'+(!r.ok&&it&&it.s?'. Como a questão é salva, ela volta para a caixa 1 da revisão':'')+'.</span></div>'; return; }
+  if(sessao.falta){ el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+(r.ok?(r.ch?'Acertou no chute.':'Acertou!'):'Errou.')+'</b><span>Sua resposta ficou guardada na aula.</span></div>'; return; }
   if(sessao.modo!=='rev'){ el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+(r.ok?(r.ch?'Acertou no chute.':'Acertou!'):'Errou.')+'</b><span>Resposta registrada no histórico. As caixas da revisão não mudam aqui'+(r.ok?'':', mas a questão volta para a caixa 1 por ter errado')+'.</span></div>'; return; }
   const regra=!r.ok?'Errou: volta para a caixa 1.':r.ch?'Acertou no chute: fica na mesma caixa.':(r.cxA===6?'Acertou com certeza: continua na última caixa.':'Acertou com certeza: sobe uma caixa.');
   el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+regra+'</b><span>Caixa '+r.cxA+' → '+r.cxD+' · próxima revisão <b>'+fdata(r.prox)+'</b> ('+quando(r.prox)+')</span></div>';
@@ -46561,6 +46637,7 @@ function resumoFoco(){
   notaFechar();
   const ks=Object.keys(sessao.res), rs=ks.map(k=>sessao.res[k]), certos=rs.filter(r=>r.ok&&!r.ch).length, chutes=rs.filter(r=>r.ok&&r.ch).length, erros=rs.filter(r=>!r.ok).length;
   sessao.ativa=false; atualizarContadores();
+  if(sessao.falta){ foco.innerHTML=faltaResumo(ks,certos,chutes,erros); const bf=$('[data-f="sair"]',foco); if(bf) bf.focus(); return; }
   const kpis='<div class="kpis"><div class="kpi destaque"><b>'+ks.length+'</b><span>respondidas</span></div><div class="kpi"><b>'+certos+'</b><span>com certeza</span></div><div class="kpi"><b>'+chutes+'</b><span>no chute</span></div><div class="kpi'+(erros?' al':'')+'"><b>'+erros+'</b><span>erradas</span></div></div>';
   if(sessao.modo==='sim'){
     if(sessao.des) desafioFim(ks);
@@ -46963,10 +47040,11 @@ function atualizarContadores(){
   const pill=$('#pill-rev'), emSessao=sessao&&sessao.ativa&&foco.hidden;
   pill.hidden=!n||emSessao; $('.txt',pill).textContent=n+' para revisar'; pill.setAttribute('aria-label',n+' questões para revisar hoje');
   $('#pill-voltar').hidden=!emSessao;
+  if(emSessao) $('#pill-voltar .txt').textContent=sessao.falta?'Voltar às que faltam':sessao.des?'Voltar ao desafio':'Voltar à revisão';
   $$('#recentes a').forEach(a=>{const p=progressoAp(a.dataset.ap);$('small',a).textContent=(pct(p.resp,p.total)||0)+'%';});
 }
 function pintarRecentes(){
-  const l=APS.filter(ap=>est['ult:'+ap.id]).sort((a,b)=>(est.ultAula&&CAP[est.ultAula]&&CAP[est.ultAula].apId===b.id)-(est.ultAula&&CAP[est.ultAula]&&CAP[est.ultAula].apId===a.id)).slice(0,5);
+  const l=APS.filter(ap=>est['ult:'+ap.id]&&!apConcluida(ap.id)).sort((a,b)=>(est.ultAula&&CAP[est.ultAula]&&CAP[est.ultAula].apId===b.id)-(est.ultAula&&CAP[est.ultAula]&&CAP[est.ultAula].apId===a.id)).slice(0,5);
   $('#recentes').innerHTML=l.length?'<span class="sep">Em andamento</span>'+l.map(ap=>'<a href="#/biblioteca/a/'+ap.id+'" data-ap="'+ap.id+'"><i aria-hidden="true"></i><span>'+esc(ap.nome)+'</span><small></small></a>').join(''):'';
 }
 document.addEventListener('click',e=>{
