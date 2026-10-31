@@ -1697,6 +1697,28 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 @media (min-width:1100px){body.nota-aberta #nv-selo{right:calc(var(--nota-l) + 12px)}}
 @media (max-width:1099.98px){body.nota-aberta #nv-selo{display:none}}
 
+/* Desafio: cartão na barra lateral; em telas menores, botão no topo que abre o mesmo cartão */
+#desafio,.des-pop{padding:12px;background:var(--card);color:var(--tx)}
+#desafio{margin-top:12px;border:1.5px solid var(--lin);border-radius:var(--r)}
+.des-t{display:flex;align-items:center;gap:6px;margin:0;font-size:14px}
+.des-t .ic{width:19px;height:19px;flex:none;color:var(--pri-forte)}
+.des-t b{flex:1;min-width:0;font-weight:700}
+.des-novo{padding:2px 7px;border-radius:999px;background:var(--pri);color:var(--pri-tx);font-size:11.5px;font-weight:700}
+.des-sub{margin:3px 0 9px;font-size:13.5px;line-height:1.3;color:var(--mut)}
+.des-bts{display:flex;gap:6px}
+.des-bts .btn{flex:1;min-width:0;padding-left:6px;padding-right:6px;justify-content:center;font-size:14px}
+.des-bts .btn:disabled{opacity:.5;cursor:default}
+.des-num{margin:9px 0 0;font-size:13px;line-height:1.4;color:var(--tx2)}
+.des-pop{position:fixed;top:66px;right:16px;z-index:60;width:min(280px,calc(100vw - 32px));border:1.5px solid var(--lin-forte);border-radius:var(--r);box-shadow:0 8px 28px rgba(10,30,28,.2)}
+.des-pop[hidden]{display:none}
+#pill-des{display:none;cursor:pointer;background:var(--card);color:var(--tx);font-family:inherit}
+#pill-des .ic{width:18px;height:18px}
+#pill-des .bol[hidden]{display:none}
+@media (max-width:1023px){
+  #desafio{display:none}
+  #pill-des{display:inline-flex}
+}
+
 
 /* ---------- casca: barra lateral + topo ---------- */
 .app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
@@ -2544,6 +2566,7 @@ body.em-foco{overflow:hidden}
     <symbol id="i-alerta" viewBox="0 0 24 24"><path d="M12 3.5 2.8 19.5h18.4z"/><path d="M12 10v4.2"/><circle class="fill" cx="12" cy="16.9" r="1"/></symbol>
     <symbol id="i-questao" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="8.5" cy="9" r="1.8"/><circle cx="8.5" cy="15" r="1.8"/><path d="M12.5 9h4M12.5 15h4"/><circle class="ac" cx="8.5" cy="9" r="1.1"/></symbol>
     <symbol id="i-sair" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+    <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></symbol>
     <symbol id="i-tema" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path class="fill" d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></symbol>
   </defs>
 </svg>
@@ -2559,6 +2582,7 @@ body.em-foco{overflow:hidden}
       <a class="nv" href="#/salvas" data-nav="salvas"><svg class="ic" aria-hidden="true"><use href="#i-sal"/></svg><span class="lab">Salvas</span><span class="cnt" data-cont="sal" hidden></span></a>
       <a class="nv" href="#/edital" data-nav="edital"><svg class="ic" aria-hidden="true"><use href="#i-edital"/></svg><span class="lab">Edital</span></a>
     </nav>
+    <section id="desafio" aria-label="Desafio"></section>
     <div id="recentes"></div>
     <div class="side-pe"><button class="nv" type="button" data-acao="tema" title="Alternar tema claro/escuro"><svg class="ic" aria-hidden="true"><use href="#i-tema"/></svg><span class="lab">Tema claro/escuro</span></button></div>
   </aside>
@@ -2573,6 +2597,7 @@ body.em-foco{overflow:hidden}
         <div id="busca-res" hidden></div>
       </div>
       <div class="topo-dir">
+        <button id="pill-des" class="pill" type="button" data-des="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="des-pop" aria-label="Desafio"><svg class="ic" aria-hidden="true"><use href="#i-raio"/></svg><span class="txt">Desafio</span><span class="bol" aria-hidden="true"></span></button>
         <button id="pill-voltar" class="pill voltar" type="button" data-acao="voltar-rev" hidden><svg class="ic" aria-hidden="true"><use href="#i-rev"/></svg><span class="txt">Voltar à revisão</span></button>
         <a id="pill-rev" class="pill" href="#/revisao" hidden><span class="bol" aria-hidden="true"></span><span class="txt">0 para revisar</span></a>
       </div>
@@ -44801,6 +44826,8 @@ Documentos  Fotos  notas.txt
   <a href="#/edital" data-nav="edital"><svg class="ic" aria-hidden="true"><use href="#i-edital"/></svg>Edital</a>
 </nav>
 
+<div id="des-pop" class="des-pop" role="dialog" aria-label="Desafio" hidden></div>
+
 <div id="foco" class="foco" role="dialog" aria-modal="true" aria-label="Modo foco" hidden></div>
 
 <script>
@@ -45629,6 +45656,90 @@ function notasAbaLiga(pg){
 }
 const notasTotal=()=>Object.keys(est.notas||{}).filter(k=>valida(k)&&notasDe(k).length).length;
 
+/* =========================================================
+   Desafio (pedido do usuário, 2026-10-31): 3 questões já respondidas nas aulas, para não esquecer de
+   treinar. A cada hora cheia o aviso volta, mas dá para jogar quando quiser, e também só com IBGP.
+   Sorteio em baralho: uma questão não volta até todas terem saído, e uma das três vem das erradas.
+   est.desafio = { ult:'2026-10-31T14', dias:{'2026-10-31':{f,a,n}}, vistas:[chaves] }
+     ult    hora do último desafio concluído (é o que apaga o aviso daquela hora)
+     dias   por dia: f desafios feitos, a acertos, n questões (guarda os 90 dias mais recentes)
+     vistas questões que já saíram no baralho atual
+   Conta como o simulado: não muda a resposta da aula nem as caixas da revisão. A parte "desafio" só
+   nasce ao concluir o primeiro desafio: abrir o site, ou deixar a tela aberta, não grava nada.
+   ========================================================= */
+const DES_QTD=3;
+const desHora=()=>{ const d=new Date(); return dstr(d)+'T'+p2(d.getHours()); };
+const desQ=k=>{ const [id,n]=k.split('|'); return [id,n,DADOS[id].questoes[n]]; };
+const desIbgp=k=>String(desQ(k)[2].fonte||'').startsWith('IBGP');
+const desErrou=k=>{ const [id,n,q]=desQ(k); return (est['q:'+id]||{})[n]!==q.gab; };
+function desPool(soIb){ const l=poolFeitas(capsDoEscopo(''),false); return soIb?l.filter(desIbgp):l; }
+function desMistura(l){ const r=l.slice(); for(let i=r.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [r[i],r[j]]=[r[j],r[i]]; } return r; }
+// tira 3 do que ainda não saiu; quando o baralho acaba, recomeça. Tenta não repetir a apostila no mesmo desafio.
+function desSorteia(soIb){
+  const pool=desPool(soIb), vistas=new Set((est.desafio||{}).vistas||[]);
+  let resta=pool.filter(k=>!vistas.has(k)), recomeca=false;
+  if(resta.length<DES_QTD){ resta=pool; recomeca=true; }
+  const sai=[], err=desMistura(resta.filter(desErrou)), apDe=k=>rotuloCap(desQ(k)[0]).apId, ordem=desMistura(resta);
+  if(err.length) sai.push(err[0]);
+  ordem.forEach(k=>{ if(sai.length<DES_QTD&&!sai.includes(k)&&!sai.some(x=>apDe(x)===apDe(k))) sai.push(k); });
+  ordem.forEach(k=>{ if(sai.length<DES_QTD&&!sai.includes(k)) sai.push(k); });
+  return {fila:desMistura(sai),recomeca};
+}
+function desJogar(soIb){
+  const s=desSorteia(soIb); if(s.fila.length<DES_QTD) return;
+  desPop(false);
+  abrirFoco(s.fila,'sim',soIb?'Desafio IBGP':'Desafio');
+  sessao.des={ib:!!soIb,recomeca:s.recomeca};
+}
+function desafioFim(ks){
+  if(!ks.length||sessao.des.fim) return;
+  sessao.des.fim=1;
+  const D=est.desafio=est.desafio||{}, dia=hoje(), dias=D.dias=D.dias||{}, g=dias[dia]=dias[dia]||{f:0,a:0,n:0};
+  g.f++; g.a+=ks.filter(k=>sessao.res[k].ok).length; g.n+=ks.length;
+  D.ult=desHora();
+  Object.keys(dias).sort().slice(0,-90).forEach(d=>delete dias[d]);
+  const fora=sessao.des.recomeca?new Set(desPool(sessao.des.ib)):new Set();
+  D.vistas=(D.vistas||[]).filter(k=>!fora.has(k)).concat(ks.filter(k=>!(D.vistas||[]).includes(k)||fora.has(k)));
+  salvar(); desafioPinta();
+}
+function desSeq(){
+  const d=(est.desafio||{}).dias||{}; let s=0, x=d[hoje()]?hoje():somaDias(hoje(),-1);
+  while(d[x]){ s++; x=somaDias(x,-1); }
+  return s;
+}
+const desProx=()=>(new Date().getHours()+1)%24;
+function desResumo(){ const s=desSeq(); return '<p class="mut">Próximo desafio às '+desProx()+'h, e você pode jogar de novo quando quiser.'+(s>1?' Sequência: '+s+' dias.':'')+'</p>'; }
+function desCard(){
+  const tot=desPool(false).length, ib=desPool(true).length, D=est.desafio||{}, feito=D.ult===desHora(), g=(D.dias||{})[hoje()]||{f:0,a:0,n:0}, seq=desSeq(), agora=new Date();
+  if(tot<DES_QTD) return '<p class="des-t">'+ic('i-raio')+'<b>Desafio</b></p><p class="des-sub">Responda '+DES_QTD+' questões nas aulas para liberar.</p>';
+  return '<p class="des-t">'+ic('i-raio')+'<b>'+(feito?'Desafio feito':'Desafio das '+agora.getHours()+'h')+'</b>'+(feito?'':'<span class="des-novo">novo</span>')+'</p>'+
+    '<p class="des-sub">'+(feito?'Próximo em '+(60-agora.getMinutes())+' min':DES_QTD+' questões que você já fez')+'</p>'+
+    '<div class="des-bts"><button type="button" class="btn pri" data-des="todas">Jogar</button><button type="button" class="btn out" data-des="ibgp"'+(ib<DES_QTD?' disabled title="Responda pelo menos '+DES_QTD+' questões da IBGP"':'')+'>Só IBGP</button></div>'+
+    (g.f||seq?'<p class="des-num">Hoje: <b>'+g.f+'</b> '+(g.f===1?'desafio':'desafios')+', '+g.a+' de '+g.n+(seq>1?'<br>Sequência: <b>'+seq+'</b> dias':'')+'</p>':'');
+}
+let desHtml='';
+function desafioPinta(){
+  const h=desCard(), feito=(est.desafio||{}).ult===desHora(), b=$('#pill-des .bol');
+  if(b) b.hidden=feito;
+  if(h===desHtml) return;
+  desHtml=h;
+  const c=$('#desafio'), p=$('#des-pop'); if(c) c.innerHTML=h; if(p) p.innerHTML=h;
+}
+function desPop(abrir){
+  const p=$('#des-pop'), b=$('#pill-des'); if(!p||!b) return;
+  p.hidden=!abrir; b.setAttribute('aria-expanded',abrir?'true':'false');
+  if(abrir){ desafioPinta(); const x=$('button:not([disabled])',p); if(x) x.focus(); }
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-des]');
+  if(b){ const a=b.dataset.des; if(a==='pop') desPop($('#des-pop').hidden); else desJogar(a==='ibgp'); return; }
+  const p=$('#des-pop'); if(p&&!p.hidden&&!p.contains(e.target)) desPop(false);
+});
+document.addEventListener('keydown',e=>{ const p=$('#des-pop'); if(e.key==='Escape'&&p&&!p.hidden){ desPop(false); $('#pill-des').focus(); } });
+setInterval(desafioPinta,30000);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) desafioPinta(); });
+addEventListener('nuvem-pronta',desafioPinta);
+
 
 /* =========================================================
    Questão (aulas, salvas e modo foco)
@@ -46390,7 +46501,7 @@ function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
   const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], tot=sessao.fila.length, feitas=Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
   const cx=res&&res.cxA?res.cxA:it.cx;
-  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?'Simulado':(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
+  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
     '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig">'+(r.video?'<span class="chip suave">Questões dos vídeos<span class="f-nome"> · '+esc(DADOS[id].questoes[n].assunto||'')+'</span></span>':'<span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+'<span class="f-nome"> · '+esc(r.nome)+'</span></span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula<span class="lab"> ↗</span></a>')+'</div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
     '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · N anota · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
@@ -46437,7 +46548,7 @@ function responderSim(k,letra,ok,ch){
 function mostrarRes(k){
   const r=sessao.res[k], el=$('#f-res',foco); if(!el) return;
   if(!r){ el.innerHTML=''; return; }
-  if(sessao.modo==='sim'){ const it=rev()[k]; el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+(r.ok?(r.ch?'Acertou no chute.':'Acertou!'):'Errou.')+'</b><span>Conta só para este simulado: a sua resposta na aula não muda'+(!r.ok&&it&&it.s?'. Como a questão é salva, ela volta para a caixa 1 da revisão':'')+'.</span></div>'; return; }
+  if(sessao.modo==='sim'){ const it=rev()[k]; el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+(r.ok?(r.ch?'Acertou no chute.':'Acertou!'):'Errou.')+'</b><span>Conta só para este '+(sessao.des?'desafio':'simulado')+': a sua resposta na aula não muda'+(!r.ok&&it&&it.s?'. Como a questão é salva, ela volta para a caixa 1 da revisão':'')+'.</span></div>'; return; }
   if(sessao.modo!=='rev'){ el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+(r.ok?(r.ch?'Acertou no chute.':'Acertou!'):'Errou.')+'</b><span>Resposta registrada no histórico. As caixas da revisão não mudam aqui'+(r.ok?'':', mas a questão volta para a caixa 1 por ter errado')+'.</span></div>'; return; }
   const regra=!r.ok?'Errou: volta para a caixa 1.':r.ch?'Acertou no chute: fica na mesma caixa.':(r.cxA===6?'Acertou com certeza: continua na última caixa.':'Acertou com certeza: sobe uma caixa.');
   el.innerHTML='<div class="res '+(r.ok?(r.ch?'chu':'ok'):'bad')+'"><b>'+regra+'</b><span>Caixa '+r.cxA+' → '+r.cxD+' · próxima revisão <b>'+fdata(r.prox)+'</b> ('+quando(r.prox)+')</span></div>';
@@ -46452,8 +46563,9 @@ function resumoFoco(){
   sessao.ativa=false; atualizarContadores();
   const kpis='<div class="kpis"><div class="kpi destaque"><b>'+ks.length+'</b><span>respondidas</span></div><div class="kpi"><b>'+certos+'</b><span>com certeza</span></div><div class="kpi"><b>'+chutes+'</b><span>no chute</span></div><div class="kpi'+(erros?' al':'')+'"><b>'+erros+'</b><span>erradas</span></div></div>';
   if(sessao.modo==='sim'){
+    if(sessao.des) desafioFim(ks);
     const errK=ks.filter(k=>!sessao.res[k].ok), naoSal=errK.filter(k=>!salvas().includes(k)), falt=sessao.fila.length-ks.length;
-    foco.innerHTML='<header class="f-top"><b class="f-tit">Simulado concluído</b><button class="btn pri" data-f="sair" style="margin-left:auto">Fechar</button></header><div class="f-corpo"><div class="f-q"><h1 class="f-h1">'+(ks.length?'Você acertou '+(certos+chutes)+' de '+ks.length+' ('+pct(certos+chutes,ks.length)+'%).':'Nenhuma questão respondida.')+'</h1>'+kpis+
+    foco.innerHTML='<header class="f-top"><b class="f-tit">'+(sessao.des?'Desafio concluído':'Simulado concluído')+'</b><button class="btn pri" data-f="sair" style="margin-left:auto">Fechar</button></header><div class="f-corpo"><div class="f-q"><h1 class="f-h1">'+(ks.length?'Você acertou '+(certos+chutes)+' de '+ks.length+' ('+pct(certos+chutes,ks.length)+'%).':'Nenhuma questão respondida.')+'</h1>'+kpis+(sessao.des?desResumo():'')+
       (errK.length?'<div class="acao">'+(naoSal.length?'<button class="btn pri" data-f="sal-err">'+ic('i-sal')+'Salvar as '+naoSal.length+(naoSal.length===1?' errada':' erradas')+' para a revisão</button><span class="mut">Elas voltam na revisão espaçada a partir de amanhã.</span>':'<span class="ok-dia">'+ic('i-ok')+'As erradas já estão salvas para a revisão.</span>')+'</div>':'')+
       (ks.length?'<div class="tab-wrap"><table class="tab"><thead><tr><th>Questão</th><th>De onde</th><th>Resultado</th><th><span class="sr">Abrir</span></th></tr></thead><tbody>'+ks.map(k=>{const r=sessao.res[k],[i,n]=k.split('|'),t=rotuloCap(i);return '<tr><td class="mono"><b>'+esc(n)+'</b></td><td>'+esc(rotTxt(t))+'</td><td>'+(r.ok?(r.ch?'<span class="ev chu">chute</span>':'<span class="ev ok">certeza</span>'):'<span class="ev bad">errou</span>')+'</td><td><a class="link" data-f="aula" href="'+linkQ(i,k)+'">'+(ehVid(i)?'ver na lista':'ver na aula')+' ↗</a></td></tr>';}).join('')+'</tbody></table></div>':'')+
       (falt>0?'<p class="mut">'+falt+(falt===1?' questão ficou sem resposta e não foi contada.':' questões ficaram sem resposta e não foram contadas.')+'</p>':'')+'</div></div>';
@@ -46844,6 +46956,7 @@ function edCartaoHoje(){
    Contadores, cliques gerais e rotas
    ========================================================= */
 function atualizarContadores(){
+  desafioPinta();
   const n=devidas().length, s=salvas().filter(valida).length;
   $$('[data-cont="rev"]').forEach(el=>{el.textContent=n;el.hidden=!n;});
   $$('[data-cont="sal"]').forEach(el=>{el.textContent=s;el.hidden=!s;});
