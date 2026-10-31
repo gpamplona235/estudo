@@ -1697,20 +1697,23 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 @media (min-width:1100px){body.nota-aberta #nv-selo{right:calc(var(--nota-l) + 12px)}}
 @media (max-width:1099.98px){body.nota-aberta #nv-selo{display:none}}
 
-/* Desafio: cartão na barra lateral; em telas menores, botão no topo que abre o mesmo cartão */
-#desafio,.des-pop{padding:12px;background:var(--card);color:var(--tx)}
-#desafio{margin-top:12px;border:1.5px solid var(--lin);border-radius:var(--r)}
-.des-t{display:flex;align-items:center;gap:6px;margin:0;font-size:14px}
-.des-t .ic{width:19px;height:19px;flex:none;color:var(--pri-forte)}
-.des-t b{flex:1;min-width:0;font-weight:700}
-.des-novo{padding:2px 7px;border-radius:999px;background:var(--pri);color:var(--pri-tx);font-size:11.5px;font-weight:700}
-.des-sub{margin:3px 0 9px;font-size:13.5px;line-height:1.3;color:var(--mut)}
-.des-bts{display:flex;gap:6px}
-.des-bts .btn{flex:1;min-width:0;padding-left:6px;padding-right:6px;justify-content:center;font-size:14px}
-.des-bts .btn:disabled{opacity:.5;cursor:default}
-.des-num{margin:9px 0 0;font-size:13px;line-height:1.4;color:var(--tx2)}
-.des-pop{position:fixed;top:66px;right:16px;z-index:60;width:min(280px,calc(100vw - 32px));border:1.5px solid var(--lin-forte);border-radius:var(--r);box-shadow:0 8px 28px rgba(10,30,28,.2)}
+/* Desafio: na barra lateral segue o desenho de "Em andamento" (título pequeno e linhas, sem caixa);
+   em telas menores, botão no topo que abre a mesma lista */
+#desafio{display:flex;flex-direction:column;gap:1px;margin-top:14px}
+#desafio .sep,.des-pop .sep{font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);padding:12px 10px 8px;border-top:1px solid var(--lin)}
+.des-pop .sep{display:block;border-top:0;padding-top:4px}
+.des-l{display:flex;align-items:center;gap:10px;width:100%;padding:7px 10px;border:0;border-radius:var(--r);background:none;color:var(--tx2);font:inherit;font-size:14.5px;text-align:left;cursor:pointer}
+.des-l:hover:not(:disabled){background:var(--campo)}
+.des-l i{width:10px;height:10px;border-radius:50%;border:2px solid var(--pri);flex:none}
+.des-l span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.des-l small{font:500 12px var(--f-mono);color:var(--pri-forte)}
+.des-l.novo{color:var(--tx);font-weight:600}
+.des-l.novo i{background:var(--pri)}
+.des-l:disabled{opacity:.5;cursor:default}
+.des-num{margin:4px 0 0;padding:0 10px;font:500 12px/1.55 var(--f-mono);color:var(--mut)}
+.des-pop{position:fixed;top:66px;right:16px;z-index:60;display:flex;flex-direction:column;gap:1px;width:min(280px,calc(100vw - 32px));padding:10px 6px 12px;background:var(--card);color:var(--tx);border:1px solid var(--lin);border-radius:var(--r);box-shadow:var(--som)}
 .des-pop[hidden]{display:none}
+.des-pop .des-l{min-height:44px}
 #pill-des{display:none;cursor:pointer;background:var(--card);color:var(--tx);font-family:inherit}
 #pill-des .ic{width:18px;height:18px}
 #pill-des .bol[hidden]{display:none}
@@ -45719,11 +45722,13 @@ const desProx=()=>(new Date().getHours()+1)%24;
 function desResumo(){ const s=desSeq(); return '<p class="mut">Próximo desafio às '+desProx()+'h, e você pode jogar de novo quando quiser.'+(s>1?' Sequência: '+s+' dias.':'')+'</p>'; }
 function desCard(){
   const tot=desPool(false).length, ib=desPool(true).length, D=est.desafio||{}, feito=D.ult===desHora(), g=(D.dias||{})[hoje()]||{f:0,a:0,n:0}, seq=desSeq(), agora=new Date();
-  if(tot<DES_QTD) return '<p class="des-t">'+ic('i-raio')+'<b>Desafio</b></p><p class="des-sub">Responda '+DES_QTD+' questões nas aulas para liberar.</p>';
-  return '<p class="des-t">'+ic('i-raio')+'<b>'+(feito?'Desafio feito':'Desafio das '+agora.getHours()+'h')+'</b>'+(feito?'':'<span class="des-novo">novo</span>')+'</p>'+
-    '<p class="des-sub">'+(feito?'Próximo em '+(60-agora.getMinutes())+' min':DES_QTD+' questões que você já fez')+'</p>'+
-    '<div class="des-bts"><button type="button" class="btn pri" data-des="todas">Jogar</button><button type="button" class="btn out" data-des="ibgp"'+(ib<DES_QTD?' disabled title="Responda pelo menos '+DES_QTD+' questões da IBGP"':'')+'>Só IBGP</button></div>'+
-    (g.f||seq?'<p class="des-num">Hoje: <b>'+g.f+'</b> '+(g.f===1?'desafio':'desafios')+', '+g.a+' de '+g.n+(seq>1?'<br>Sequência: <b>'+seq+'</b> dias':'')+'</p>':'');
+  if(tot<DES_QTD) return '<span class="sep">Desafio</span><p class="des-num">Responda '+DES_QTD+' questões nas aulas para liberar.</p>';
+  const info=[feito?'Próximo em '+(60-agora.getMinutes())+' min':'',g.f?'Hoje '+g.f+' · '+g.a+' de '+g.n+' certas':'',seq>1?seq+' dias seguidos':''].filter(Boolean);
+  const lin=(a,txt,dir,extra)=>'<button type="button" class="des-l'+(a==='todas'&&!feito?' novo':'')+'" data-des="'+a+'"'+(extra||'')+'><i aria-hidden="true"></i><span>'+txt+'</span>'+(dir?'<small>'+dir+'</small>':'')+'</button>';
+  return '<span class="sep">Desafio</span>'+
+    lin('todas',feito?'Jogar de novo':'Desafio das '+agora.getHours()+'h',feito?'':'novo')+
+    lin('ibgp','Só IBGP','',ib<DES_QTD?' disabled title="Responda pelo menos '+DES_QTD+' questões da IBGP"':'')+
+    (info.length?'<p class="des-num">'+info.join('<br>')+'</p>':'');
 }
 let desHtml='';
 function desafioPinta(){
