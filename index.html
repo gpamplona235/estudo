@@ -1722,13 +1722,27 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
   #pill-des{display:inline-flex}
 }
 
-/* Concluir apostila e fazer as que faltam */
-.selo-conc{display:flex;align-items:center;gap:7px;margin:0 0 8px;font-weight:600;color:var(--pri-forte)}
-.selo-conc .ic{width:18px;height:18px;flex:none}
-.falta-conc{margin-top:12px;padding-top:12px;border-top:1px solid var(--lin)}
-.falta-conc .btn .ic{width:17px;height:17px}
+/* Página da apostila: uma linha de ações; a quantidade aparece só ao clicar */
+.pratica{margin:0 0 18px}
+.pr-lin{display:flex;flex-wrap:wrap;align-items:center;gap:8px}
+.pr-abre .cnt{margin-left:2px}
+.pr-abre[aria-expanded="true"]{background:var(--pri-suave)}
+.pr-dir{display:inline-flex;align-items:center;gap:10px;margin-left:auto}
+.pr-conc{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 4px;border:0;background:none;color:var(--tx2);font:inherit;font-size:14.5px;font-weight:600;cursor:pointer}
+.pr-conc:hover{color:var(--pri-forte)}
+.pr-conc .ic,.pr-feita .ic{width:17px;height:17px;flex:none}
+.pr-feita{display:inline-flex;align-items:center;gap:6px;font-size:14.5px;font-weight:600;color:var(--pri-forte)}
+.pr-pan{margin-top:10px;padding:12px 14px;border-radius:var(--r);background:var(--campo)}
+.pr-pan p{margin:0 0 8px;font-size:14px;line-height:1.35;color:var(--tx2)}
+.pr-esc{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px}
+.pr-esc .qtds{margin:0;gap:6px}
+.pr-esc .sim-chk{margin:0;font-size:14.5px}
 .ap .concluida{display:inline-flex;align-items:center;gap:4px;font-weight:700;color:var(--pri-forte)}
 .ap .concluida .ic{width:14px;height:14px}
+@media (max-width:767px){
+  .pr-abre{flex:1 1 auto;justify-content:center}
+  .pr-dir{margin-left:0}
+}
 
 
 /* ---------- casca: barra lateral + topo ---------- */
@@ -45783,15 +45797,15 @@ function capContinuar(){
   const nova=APS.find(a=>!apConcluida(a.id)&&a.aulas.some(x=>x.pronta));
   return nova?nova.aulas.find(x=>x.pronta).cap:null;
 }
-function faltaCard(ap){
-  const tot=faltamDe(ap.id).length, ib=faltamDe(ap.id,true).length, data=(est.concluidas||{})[ap.id], tq=tot===1?'questão':'questões';
-  let h='<section class="card sim falta" data-ap="'+esc(ap.id)+'" data-tot="'+tot+'" data-ib="'+ib+'" aria-label="Situação da apostila"><h2 class="ct">'+(data?'Apostila concluída':'Questões que faltam')+'</h2>';
-  if(data) h+='<p class="selo-conc">'+ic('i-ok')+'Você marcou como concluída em '+fdata(data)+'.</p>';
-  if(tot) h+='<p class="mut"><b>'+tot+'</b> '+tq+' sem resposta. Elas saem misturadas, com IBGP e IBFC primeiro. A resposta vale como resposta da aula, e você pode parar quando quiser.</p>'+
-    '<div class="qtds">'+[10,20,30].filter(x=>x<tot).map(x=>'<button type="button" class="btn out" data-falta="'+x+'">'+x+' questões</button>').join('')+'<button type="button" class="btn pri" data-falta="0">Todas ('+tot+')</button></div>'+
-    (ib?'<label class="sim-chk"><input type="checkbox" data-faltaib> Só IBGP ('+ib+')</label>':'');
-  else h+='<p class="mut">Você respondeu todas as questões das aulas prontas desta apostila.</p>';
-  return h+'<div class="acao falta-conc"><button type="button" class="btn out" data-concluir="'+esc(ap.id)+'" aria-pressed="'+(data?'true':'false')+'">'+(data?'Desfazer conclusão':ic('i-ok')+'Marcar como concluída')+'</button></div></section>';
+// na página da apostila: uma linha só; a escolha da quantidade aparece ao clicar
+function praticaBar(ap){
+  const tot=faltamDe(ap.id).length, ib=faltamDe(ap.id,true).length, data=(est.concluidas||{})[ap.id], escopo='ap:'+ap.id, set=capsDoEscopo(escopo), feitas=poolFeitas(set,false).length, err=poolFeitas(set,true).length;
+  const abre=(q,txt,n)=>'<button type="button" class="btn out pr-abre" data-pr="'+q+'" aria-expanded="false" aria-controls="pr-'+q+'">'+txt+'<span class="cnt">'+n+'</span></button>';
+  const qtds=(n,at)=>'<div class="qtds">'+[10,20,30].filter(x=>x<n).map(x=>'<button type="button" class="btn out mini" '+at+'="'+x+'"'+(at==='data-sim'?' data-simesc="'+esc(escopo)+'"':'')+'>'+x+'</button>').join('')+'<button type="button" class="btn pri mini" '+at+'="0"'+(at==='data-sim'?' data-simesc="'+esc(escopo)+'"':'')+'>Todas ('+n+')</button></div>';
+  const conc=data?'<span class="pr-feita">'+ic('i-ok')+'Concluída em '+fdata(data)+'</span><button type="button" class="pr-conc" data-concluir="'+esc(ap.id)+'" aria-pressed="true">Desfazer</button>':'<button type="button" class="pr-conc" data-concluir="'+esc(ap.id)+'" aria-pressed="false">'+ic('i-ok')+'Marcar como concluída</button>';
+  return '<section class="pratica" aria-label="Praticar esta apostila"><div class="pr-lin">'+(tot?abre('falta','Fazer as que faltam',tot):'')+(feitas?abre('sim','Simulado',feitas):'')+'<span class="pr-dir">'+conc+'</span></div>'+
+    (tot?'<div id="pr-falta" class="pr-pan falta" data-ap="'+esc(ap.id)+'" data-tot="'+tot+'" data-ib="'+ib+'" hidden><p>Quantas? IBGP e IBFC vêm primeiro, e a resposta fica guardada na aula.</p><div class="pr-esc">'+qtds(tot,'data-falta')+(ib?'<label class="sim-chk"><input type="checkbox" data-faltaib> Só IBGP ('+ib+')</label>':'')+'</div></div>':'')+
+    (feitas?'<div id="pr-sim" class="pr-pan sim" data-tot="'+feitas+'" data-err="'+err+'" hidden><p>Quantas? Sorteia entre as que você já fez, e sua resposta na aula não muda.</p><div class="pr-esc">'+qtds(feitas,'data-sim')+(err?'<label class="sim-chk"><input type="checkbox" data-simerr> Só as que errei ('+err+')</label>':'')+'</div></div>':'')+'</section>';
 }
 function faltaResumo(ks,certos,chutes,erros){
   const ap=sessao.falta, rest=faltamDe(ap,sessao.faltaIb).length, ac=certos+chutes;
@@ -45801,6 +45815,8 @@ function faltaResumo(ks,certos,chutes,erros){
     (rest?'<div class="acao"><button class="btn pri" data-falta-mais="'+esc(ap)+'" data-ib="'+(sessao.faltaIb?1:0)+'">Fazer mais '+Math.min(10,rest)+'</button></div>':'')+'</div></div>';
 }
 document.addEventListener('click',e=>{
+  const pr=e.target.closest('[data-pr]');
+  if(pr){ const abrir=pr.getAttribute('aria-expanded')!=='true'; $$('[data-pr]').forEach(x=>{ const on=abrir&&x===pr; x.setAttribute('aria-expanded',on?'true':'false'); $('#pr-'+x.dataset.pr).hidden=!on; }); return; }
   const f=e.target.closest('[data-falta]');
   if(f){ const c=f.closest('.falta'), s=$('[data-faltaib]',c); faltaJogar(c.dataset.ap,+f.dataset.falta,!!(s&&s.checked)); return; }
   const m=e.target.closest('[data-falta-mais]');
@@ -46234,7 +46250,7 @@ function renderBib(partes){
   let corpo='';
   if(ap){
     const p=progressoAp(ap.id);
-    corpo='<header class="pg-cab peq"><span class="chip">'+esc(ap.materia)+(ap.grupo?' › '+esc(ap.grupo):'')+'</span><h1>'+esc(ap.nome)+'</h1><p class="sub">'+esc(ap.descricao)+'</p><p class="meta-l"><span>'+ap.aulas.length+' aulas</span><span>'+ap.questoes_caderno+' questões</span><span>'+(pct(p.resp,p.total)||0)+'% respondido</span><span>'+(p.resp?pct(p.certas,p.resp)+'% de acerto':'sem respostas')+'</span>'+(p.naRev?'<span>'+p.naRev+' na revisão</span>':'')+'</p></header>'+faltaCard(ap)+simCard('ap:'+ap.id,'desta apostila')+
+    corpo='<header class="pg-cab peq"><span class="chip">'+esc(ap.materia)+(ap.grupo?' › '+esc(ap.grupo):'')+'</span><h1>'+esc(ap.nome)+'</h1><p class="sub">'+esc(ap.descricao)+'</p><p class="meta-l"><span>'+ap.aulas.length+' aulas</span><span>'+ap.questoes_caderno+' questões</span><span>'+(pct(p.resp,p.total)||0)+'% respondido</span><span>'+(p.resp?pct(p.certas,p.resp)+'% de acerto':'sem respostas')+'</span>'+(p.naRev?'<span>'+p.naRev+' na revisão</span>':'')+'</p></header>'+praticaBar(ap)+
       '<ol class="aulas">'+ap.aulas.map(a=>{
         if(!a.pronta||!DADOS[a.cap]) return '<li><div class="aula off"><span class="num">'+a.num+'</span><span class="tx"><b>'+esc(a.nome)+'</b><small>em breve</small></span></div></li>';
         const s=statCap(a.cap), e2=s.resp===0?'nova':s.resp===s.total?'feita':'and';
