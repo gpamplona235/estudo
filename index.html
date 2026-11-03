@@ -1832,27 +1832,31 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .cmb-fichas i.vai{border-color:var(--marinho);background:var(--marinho-fundo);color:var(--marinho)}
 .cmb-fichas i.sai{border-style:dashed;color:var(--tinta-3);text-decoration:line-through}
 
-/* Relógio: pílula no topo e no cabeçalho da revisão; detalhes só ao clicar, no mesmo quadro do Desafio */
-.pill.rel{position:relative;gap:6px;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
-.pill.rel .ic{width:17px;height:17px}
-.pill.rel.aviso{border-color:var(--chu);background:var(--chu-suave);color:var(--chu)}
-.pill.rel.zero{border-color:var(--err);background:var(--err-suave);color:var(--err)}
-.pill.rel.parado{border-color:var(--lin);background:var(--card);color:var(--mut)}
-.rel-mais{position:absolute;right:10px;top:-6px;font:700 13px var(--f-mono);color:var(--ok);opacity:0;pointer-events:none}
+/* Relógio: discreto, só o ícone e os minutos, sem caixa; o tempo exato e os números aparecem ao clicar */
+.rel-b{position:relative;display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:4px 8px;border:0;border-radius:999px;background:none;color:var(--mut);font:600 13.5px var(--f-mono);font-variant-numeric:tabular-nums;cursor:pointer}
+.rel-b:hover{background:var(--campo);color:var(--tx2)}
+.rel-b[aria-expanded="true"]{background:var(--campo)}
+.rel-b .ic{width:16px;height:16px}
+.rel-b.vivo{color:var(--tx2)}
+.rel-b.aviso{color:var(--chu)}
+.rel-b.zero{color:var(--err)}
+.rel-mais{position:absolute;right:2px;top:-4px;font:700 12px var(--f-mono);color:var(--ok);opacity:0;pointer-events:none}
 .rel-mais.vai{animation:relSobe 1.3s ease-out}
-@keyframes relSobe{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-20px)}}
+@keyframes relSobe{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-16px)}}
 .rel-f{margin-left:auto}
 .f-top .rel-f~[data-f="tirar"],.f-top .rel-f~[data-f="hist"]{margin-left:0}
 .rel-pop{position:fixed;top:66px;right:16px;z-index:110;display:flex;flex-direction:column;gap:2px;width:min(290px,calc(100vw - 32px));padding:10px 14px 12px;background:var(--card);color:var(--tx);border:1px solid var(--lin);border-radius:var(--r);box-shadow:var(--som)}
 .rel-pop[hidden]{display:none}
-.rel-pop .sep{display:block;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);padding:4px 0 8px}
+.rel-pop .sep{display:block;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);padding:4px 0 6px}
+.rel-agora{display:flex;align-items:baseline;gap:8px;margin:0 0 6px}
+.rel-agora b{font:600 26px/1.2 var(--f-mono);font-variant-numeric:tabular-nums;color:var(--tx)}
+.rel-agora span{font-size:13.5px;color:var(--mut)}
 .rel-regra{margin:0 0 6px;font-size:13.5px;line-height:1.5;color:var(--tx2)}
 .rel-l{display:flex;justify-content:space-between;gap:12px;margin:0;padding:5px 0;border-top:1px solid var(--lin);font-size:14px;color:var(--tx2)}
 .rel-l b{font:600 14px var(--f-mono);color:var(--tx);font-variant-numeric:tabular-nums}
 @media (max-width:767px){
-  .pill.rel{padding:6px 10px;min-height:36px;font-size:14px}
-  .pill.rel .ic{display:none}
-  .f-top .rel-f{min-height:36px;margin-right:2px}
+  .rel-b{padding:4px 6px}
+  .f-top .rel-f{margin-right:2px}
 }
 
 
@@ -2734,7 +2738,7 @@ body.em-foco{overflow:hidden}
         <div id="busca-res" hidden></div>
       </div>
       <div class="topo-dir">
-        <button id="pill-rel" class="pill rel" type="button" data-rel="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="rel-pop" aria-label="Relógio"><svg class="ic" aria-hidden="true"><use href="#i-relogio"/></svg><span class="rel-t">0:00</span><span class="rel-mais" aria-hidden="true"></span></button>
+        <button id="pill-rel" class="rel-b" type="button" data-rel="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="rel-pop" aria-label="Relógio"><svg class="ic" aria-hidden="true"><use href="#i-relogio"/></svg><span class="rel-t">0</span><span class="rel-mais" aria-hidden="true"></span></button>
         <button id="pill-des" class="pill" type="button" data-des="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="des-pop" aria-label="Desafio"><svg class="ic" aria-hidden="true"><use href="#i-raio"/></svg><span class="txt">Desafio</span><span class="bol" aria-hidden="true"></span></button>
         <button id="pill-voltar" class="pill voltar" type="button" data-acao="voltar-rev" hidden><svg class="ic" aria-hidden="true"><use href="#i-rev"/></svg><span class="txt">Voltar à revisão</span></button>
         <a id="pill-rev" class="pill" href="#/revisao" hidden><span class="bol" aria-hidden="true"></span><span class="txt">0 para revisar</span></a>
@@ -49002,6 +49006,8 @@ document.addEventListener('change',e=>{
    3 minutos com certeza, 1 minuto no chute. O relógio desce o tempo todo, também com o site fechado,
    e o jogo é não deixar zerar. Vale em toda tela de questões em foco (revisão, simulado, desafio,
    salvas, as que faltam); a mesma questão só rende uma vez por dia. Erro não tira tempo.
+   Discreto (pedido do mesmo dia): na tela fica só o ícone e os minutos ("2" = 2 minutos);
+   o tempo exato, correndo, aparece ao clicar, junto com os números do dia.
    est.relogio = { fim:ms, rec:s, dias:{'2026-11-03':{c,s,m,k:[chaves]}} }
      fim   hora em que o crédito acaba (o saldo é fim - agora: igual em qualquer aparelho)
      rec   maior saldo já alcançado, em segundos
@@ -49012,6 +49018,8 @@ document.addEventListener('change',e=>{
 const REL_CERTA=180, REL_CHUTE=60;
 const relSaldo=()=>Math.max(0,Math.round((((est.relogio||{}).fim||0)-Date.now())/1000));
 function relFmt(s){ const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=p2(s%60); return h?h+':'+p2(m)+':'+x:m+':'+x; }
+// na tela, só os minutos que faltam (arredondados para cima: com 40 segundos ainda aparece 1)
+function relCurto(s){ const m=Math.ceil(s/60); return m<60?String(m):Math.floor(m/60)+'h'+p2(m%60); }
 function relSeq(){
   const d=(est.relogio||{}).dias||{}, tem=x=>d[x]&&d[x].c>0; let s=0, x=tem(hoje())?hoje():somaDias(hoje(),-1);
   while(tem(x)){ s++; x=somaDias(x,-1); }
@@ -49027,39 +49035,46 @@ function relGanha(k,ch){
   g.k.push(k); g.c++; g.s+=seg;
   const s=relSaldo(); if(s>g.m) g.m=s; if(s>(R.rec||0)) R.rec=s;
   Object.keys(dias).sort().slice(0,-60).forEach(x=>delete dias[x]);
-  salvar(); relPinta();
-  $$('.pill.rel .rel-mais').forEach(m=>{ m.textContent='+'+(seg/60)+':00'; m.classList.remove('vai'); void m.offsetWidth; m.classList.add('vai'); });
+  salvar(); relPinta(true);
+  $$('.rel-b .rel-mais').forEach(m=>{ m.textContent='+'+(seg/60); m.classList.remove('vai'); void m.offsetWidth; m.classList.add('vai'); });
 }
 function relEstado(s){
-  if(s>=REL_CERTA) return '';
+  if(s>=REL_CERTA) return 'vivo';
   if(s>0) return 'aviso';
   const f=(est.relogio||{}).fim;
   return f&&dstr(new Date(f))===hoje()?'zero':'parado';
 }
+// o cabeçalho da revisão é redesenhado a cada questão: o relógio já nasce com o número e a cor certos,
+// para não piscar nem mudar de tamanho até o próximo segundo
+function relRot(s){ const m=Math.ceil(s/60); return 'Relógio: '+(s?m+(m===1?' minuto':' minutos')+' de crédito':'sem crédito'); }
 function relPill(noFoco){
-  return '<button class="pill rel'+(noFoco?' rel-f':'')+'" type="button" data-rel="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="rel-pop" aria-label="Relógio">'+ic('i-relogio')+'<span class="rel-t">0:00</span><span class="rel-mais" aria-hidden="true"></span></button>';
+  const s=relSaldo();
+  return '<button class="rel-b '+relEstado(s)+(noFoco?' rel-f':'')+'" type="button" data-rel="pop" data-rot="1" aria-haspopup="dialog" aria-expanded="false" aria-controls="rel-pop" aria-label="'+relRot(s)+'">'+ic('i-relogio')+'<span class="rel-t">'+relCurto(s)+'</span><span class="rel-mais" aria-hidden="true"></span></button>';
 }
 let relMin=-1;
-function relPinta(){
-  const s=relSaldo(), t=relFmt(s), e=relEstado(s), min=Math.ceil(s/60);
-  $$('.pill.rel').forEach(b=>{
+function relPinta(tudo){
+  const s=relSaldo(), t=relCurto(s), e=relEstado(s), min=Math.ceil(s/60);
+  $$('.rel-b').forEach(b=>{
     const x=$('.rel-t',b); if(x.textContent!==t) x.textContent=t;
-    b.classList.toggle('aviso',e==='aviso'); b.classList.toggle('zero',e==='zero'); b.classList.toggle('parado',e==='parado');
-    if(relMin!==min||!b.dataset.rot){ b.setAttribute('aria-label','Relógio: '+(s?min+(min===1?' minuto':' minutos')+' de crédito':'sem crédito')); b.dataset.rot=1; }
+    ['vivo','aviso','zero','parado'].forEach(c=>b.classList.toggle(c,c===e));
+    if(relMin!==min||!b.dataset.rot){ b.setAttribute('aria-label',relRot(s)); b.dataset.rot=1; }
   });
   relMin=min;
-  const p=$('#rel-pop'); if(p&&!p.hidden) relPopPinta();
+  const p=$('#rel-pop'); if(!p||p.hidden) return;
+  if(tudo===true) relPopPinta();
+  else{ const a=$('.rel-agora b',p); if(a) a.textContent=relFmt(s); }
 }
 function relPopPinta(){
-  const R=est.relogio||{}, g=(R.dias||{})[hoje()], seq=relSeq(), lin=(a,b)=>'<p class="rel-l"><span>'+a+'</span><b>'+b+'</b></p>';
-  $('#rel-pop').innerHTML='<span class="sep">Relógio</span><p class="rel-regra">Cada questão certa dá corda: 3 minutos com certeza, 1 no chute. O relógio desce o tempo todo, e a mesma questão rende uma vez por dia.</p>'+
+  const R=est.relogio||{}, g=(R.dias||{})[hoje()], seq=relSeq(), s=relSaldo(), lin=(a,b)=>'<p class="rel-l"><span>'+a+'</span><b>'+b+'</b></p>';
+  $('#rel-pop').innerHTML='<span class="sep">Relógio</span><p class="rel-agora"><b>'+relFmt(s)+'</b><span>de crédito</span></p>'+
+    '<p class="rel-regra">Cada questão certa dá corda: 3 minutos com certeza, 1 no chute. O relógio desce o tempo todo, e a mesma questão rende uma vez por dia.</p>'+
     (g&&g.c?lin('Hoje',g.c+(g.c===1?' certa':' certas')+' · '+Math.round(g.s/60)+' min')+lin('Maior saldo hoje',relFmt(g.m)):'')+
     (R.rec?lin('Recorde',relFmt(R.rec)):'')+(seq>1?lin('Sequência',seq+' dias'):'')+
     (R.fim?'':'<p class="rel-regra">Acerte uma questão na revisão para dar a primeira corda.</p>');
 }
 function relPop(abrir,botao){
   const p=$('#rel-pop'); if(!p) return;
-  p.hidden=!abrir; $$('.pill.rel').forEach(b=>b.setAttribute('aria-expanded',abrir&&b===botao?'true':'false'));
+  p.hidden=!abrir; $$('.rel-b').forEach(b=>b.setAttribute('aria-expanded',abrir&&b===botao?'true':'false'));
   if(abrir){ relPopPinta(); const r=botao.getBoundingClientRect(); p.style.top=Math.round(r.bottom+8)+'px'; p.style.right=Math.max(16,Math.round(innerWidth-r.right))+'px'; p._de=botao; }
 }
 document.addEventListener('click',e=>{
@@ -49070,8 +49085,8 @@ document.addEventListener('click',e=>{
 // captura: o Esc fecha só o quadro, sem sair da revisão
 document.addEventListener('keydown',e=>{ const p=$('#rel-pop'); if(e.key==='Escape'&&p&&!p.hidden){ e.stopImmediatePropagation(); e.preventDefault(); const b=p._de; relPop(false); if(b&&document.contains(b)) b.focus(); } },true);
 setInterval(relPinta,1000);
-document.addEventListener('visibilitychange',()=>{ if(!document.hidden) relPinta(); });
-addEventListener('nuvem-pronta',relPinta);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) relPinta(true); });
+addEventListener('nuvem-pronta',()=>relPinta(true));
 
 /* =========================================================
    Ferramentas de Análise Combinatória (aulas cmb-*)
