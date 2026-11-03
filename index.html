@@ -1832,6 +1832,29 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .cmb-fichas i.vai{border-color:var(--marinho);background:var(--marinho-fundo);color:var(--marinho)}
 .cmb-fichas i.sai{border-style:dashed;color:var(--tinta-3);text-decoration:line-through}
 
+/* Relógio: pílula no topo e no cabeçalho da revisão; detalhes só ao clicar, no mesmo quadro do Desafio */
+.pill.rel{position:relative;gap:6px;font-family:var(--f-mono);font-variant-numeric:tabular-nums}
+.pill.rel .ic{width:17px;height:17px}
+.pill.rel.aviso{border-color:var(--chu);background:var(--chu-suave);color:var(--chu)}
+.pill.rel.zero{border-color:var(--err);background:var(--err-suave);color:var(--err)}
+.pill.rel.parado{border-color:var(--lin);background:var(--card);color:var(--mut)}
+.rel-mais{position:absolute;right:10px;top:-6px;font:700 13px var(--f-mono);color:var(--ok);opacity:0;pointer-events:none}
+.rel-mais.vai{animation:relSobe 1.3s ease-out}
+@keyframes relSobe{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-20px)}}
+.rel-f{margin-left:auto}
+.f-top .rel-f~[data-f="tirar"],.f-top .rel-f~[data-f="hist"]{margin-left:0}
+.rel-pop{position:fixed;top:66px;right:16px;z-index:110;display:flex;flex-direction:column;gap:2px;width:min(290px,calc(100vw - 32px));padding:10px 14px 12px;background:var(--card);color:var(--tx);border:1px solid var(--lin);border-radius:var(--r);box-shadow:var(--som)}
+.rel-pop[hidden]{display:none}
+.rel-pop .sep{display:block;font:500 11px/1 var(--f-mono);letter-spacing:.14em;text-transform:uppercase;color:var(--mut);padding:4px 0 8px}
+.rel-regra{margin:0 0 6px;font-size:13.5px;line-height:1.5;color:var(--tx2)}
+.rel-l{display:flex;justify-content:space-between;gap:12px;margin:0;padding:5px 0;border-top:1px solid var(--lin);font-size:14px;color:var(--tx2)}
+.rel-l b{font:600 14px var(--f-mono);color:var(--tx);font-variant-numeric:tabular-nums}
+@media (max-width:767px){
+  .pill.rel{padding:6px 10px;min-height:36px;font-size:14px}
+  .pill.rel .ic{display:none}
+  .f-top .rel-f{min-height:36px;margin-right:2px}
+}
+
 
 /* ---------- casca: barra lateral + topo ---------- */
 .app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
@@ -2680,6 +2703,7 @@ body.em-foco{overflow:hidden}
     <symbol id="i-questao" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="2"/><circle cx="8.5" cy="9" r="1.8"/><circle cx="8.5" cy="15" r="1.8"/><path d="M12.5 9h4M12.5 15h4"/><circle class="ac" cx="8.5" cy="9" r="1.1"/></symbol>
     <symbol id="i-sair" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
     <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></symbol>
+    <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 1.8"/><path d="M9.5 2.8h5"/></symbol>
     <symbol id="i-tema" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path class="fill" d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></symbol>
   </defs>
 </svg>
@@ -2710,6 +2734,7 @@ body.em-foco{overflow:hidden}
         <div id="busca-res" hidden></div>
       </div>
       <div class="topo-dir">
+        <button id="pill-rel" class="pill rel" type="button" data-rel="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="rel-pop" aria-label="Relógio"><svg class="ic" aria-hidden="true"><use href="#i-relogio"/></svg><span class="rel-t">0:00</span><span class="rel-mais" aria-hidden="true"></span></button>
         <button id="pill-des" class="pill" type="button" data-des="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="des-pop" aria-label="Desafio"><svg class="ic" aria-hidden="true"><use href="#i-raio"/></svg><span class="txt">Desafio</span><span class="bol" aria-hidden="true"></span></button>
         <button id="pill-voltar" class="pill voltar" type="button" data-acao="voltar-rev" hidden><svg class="ic" aria-hidden="true"><use href="#i-rev"/></svg><span class="txt">Voltar à revisão</span></button>
         <a id="pill-rev" class="pill" href="#/revisao" hidden><span class="bol" aria-hidden="true"></span><span class="txt">0 para revisar</span></a>
@@ -47987,6 +48012,7 @@ Documentos  Fotos  notas.txt
 </nav>
 
 <div id="des-pop" class="des-pop" role="dialog" aria-label="Desafio" hidden></div>
+<div id="rel-pop" class="rel-pop" role="dialog" aria-label="Relógio" hidden></div>
 
 <div id="foco" class="foco" role="dialog" aria-modal="true" aria-label="Modo foco" hidden></div>
 
@@ -48972,6 +48998,82 @@ document.addEventListener('change',e=>{
 });
 
 /* =========================================================
+   Relógio (pedido do usuário, 2026-11-03): estímulo para revisar. Cada questão certa dá corda:
+   3 minutos com certeza, 1 minuto no chute. O relógio desce o tempo todo, também com o site fechado,
+   e o jogo é não deixar zerar. Vale em toda tela de questões em foco (revisão, simulado, desafio,
+   salvas, as que faltam); a mesma questão só rende uma vez por dia. Erro não tira tempo.
+   est.relogio = { fim:ms, rec:s, dias:{'2026-11-03':{c,s,m,k:[chaves]}} }
+     fim   hora em que o crédito acaba (o saldo é fim - agora: igual em qualquer aparelho)
+     rec   maior saldo já alcançado, em segundos
+     dias  por dia: c certas que renderam, s segundos ganhos, m maior saldo do dia; k só no dia de hoje
+   A parte "relogio" só nasce no primeiro acerto: abrir o site, ou deixar a tela aberta, não grava nada.
+   Não muda as caixas da revisão nem as respostas.
+   ========================================================= */
+const REL_CERTA=180, REL_CHUTE=60;
+const relSaldo=()=>Math.max(0,Math.round((((est.relogio||{}).fim||0)-Date.now())/1000));
+function relFmt(s){ const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=p2(s%60); return h?h+':'+p2(m)+':'+x:m+':'+x; }
+function relSeq(){
+  const d=(est.relogio||{}).dias||{}, tem=x=>d[x]&&d[x].c>0; let s=0, x=tem(hoje())?hoje():somaDias(hoje(),-1);
+  while(tem(x)){ s++; x=somaDias(x,-1); }
+  return s;
+}
+function relGanha(k,ch){
+  const R=est.relogio=est.relogio||{}, d=hoje(), dias=R.dias=R.dias||{};
+  Object.keys(dias).forEach(x=>{ if(x!==d) delete dias[x].k; });
+  const g=dias[d]=dias[d]||{c:0,s:0,m:0,k:[]}; g.k=g.k||[];
+  if(g.k.includes(k)) return;
+  const seg=ch?REL_CHUTE:REL_CERTA;
+  R.fim=Math.max(R.fim||0,Date.now())+seg*1000;
+  g.k.push(k); g.c++; g.s+=seg;
+  const s=relSaldo(); if(s>g.m) g.m=s; if(s>(R.rec||0)) R.rec=s;
+  Object.keys(dias).sort().slice(0,-60).forEach(x=>delete dias[x]);
+  salvar(); relPinta();
+  $$('.pill.rel .rel-mais').forEach(m=>{ m.textContent='+'+(seg/60)+':00'; m.classList.remove('vai'); void m.offsetWidth; m.classList.add('vai'); });
+}
+function relEstado(s){
+  if(s>=REL_CERTA) return '';
+  if(s>0) return 'aviso';
+  const f=(est.relogio||{}).fim;
+  return f&&dstr(new Date(f))===hoje()?'zero':'parado';
+}
+function relPill(noFoco){
+  return '<button class="pill rel'+(noFoco?' rel-f':'')+'" type="button" data-rel="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="rel-pop" aria-label="Relógio">'+ic('i-relogio')+'<span class="rel-t">0:00</span><span class="rel-mais" aria-hidden="true"></span></button>';
+}
+let relMin=-1;
+function relPinta(){
+  const s=relSaldo(), t=relFmt(s), e=relEstado(s), min=Math.ceil(s/60);
+  $$('.pill.rel').forEach(b=>{
+    const x=$('.rel-t',b); if(x.textContent!==t) x.textContent=t;
+    b.classList.toggle('aviso',e==='aviso'); b.classList.toggle('zero',e==='zero'); b.classList.toggle('parado',e==='parado');
+    if(relMin!==min||!b.dataset.rot){ b.setAttribute('aria-label','Relógio: '+(s?min+(min===1?' minuto':' minutos')+' de crédito':'sem crédito')); b.dataset.rot=1; }
+  });
+  relMin=min;
+  const p=$('#rel-pop'); if(p&&!p.hidden) relPopPinta();
+}
+function relPopPinta(){
+  const R=est.relogio||{}, g=(R.dias||{})[hoje()], seq=relSeq(), lin=(a,b)=>'<p class="rel-l"><span>'+a+'</span><b>'+b+'</b></p>';
+  $('#rel-pop').innerHTML='<span class="sep">Relógio</span><p class="rel-regra">Cada questão certa dá corda: 3 minutos com certeza, 1 no chute. O relógio desce o tempo todo, e a mesma questão rende uma vez por dia.</p>'+
+    (g&&g.c?lin('Hoje',g.c+(g.c===1?' certa':' certas')+' · '+Math.round(g.s/60)+' min')+lin('Maior saldo hoje',relFmt(g.m)):'')+
+    (R.rec?lin('Recorde',relFmt(R.rec)):'')+(seq>1?lin('Sequência',seq+' dias'):'')+
+    (R.fim?'':'<p class="rel-regra">Acerte uma questão na revisão para dar a primeira corda.</p>');
+}
+function relPop(abrir,botao){
+  const p=$('#rel-pop'); if(!p) return;
+  p.hidden=!abrir; $$('.pill.rel').forEach(b=>b.setAttribute('aria-expanded',abrir&&b===botao?'true':'false'));
+  if(abrir){ relPopPinta(); const r=botao.getBoundingClientRect(); p.style.top=Math.round(r.bottom+8)+'px'; p.style.right=Math.max(16,Math.round(innerWidth-r.right))+'px'; p._de=botao; }
+}
+document.addEventListener('click',e=>{
+  const b=e.target.closest('[data-rel]'), p=$('#rel-pop');
+  if(b){ relPop(p.hidden||p._de!==b,b); return; }
+  if(p&&!p.hidden&&!p.contains(e.target)) relPop(false);
+});
+// captura: o Esc fecha só o quadro, sem sair da revisão
+document.addEventListener('keydown',e=>{ const p=$('#rel-pop'); if(e.key==='Escape'&&p&&!p.hidden){ e.stopImmediatePropagation(); e.preventDefault(); const b=p._de; relPop(false); if(b&&document.contains(b)) b.focus(); } },true);
+setInterval(relPinta,1000);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) relPinta(); });
+addEventListener('nuvem-pronta',relPinta);
+
+/* =========================================================
    Ferramentas de Análise Combinatória (aulas cmb-*)
    Cada figura com data-cmb vira uma ferramenta de mexer, sempre com a
    estrutura real do problema e a conta ao lado. Só mudam a própria figura:
@@ -49880,7 +49982,7 @@ function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
   const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], tot=sessao.fila.length, feitas=Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
   const cx=res&&res.cxA?res.cxA:it.cx;
-  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+(simModo||sessao.falta?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
+  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+relPill(true)+(simModo||sessao.falta?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
     '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig">'+(r.video?'<span class="chip suave">Questões dos vídeos<span class="f-nome"> · '+esc(DADOS[id].questoes[n].assunto||'')+'</span></span>':'<span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+'<span class="f-nome"> · '+esc(r.nome)+'</span></span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula<span class="lab"> ↗</span></a>')+'</div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
     '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · N anota · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
@@ -49901,7 +50003,7 @@ function atualizarBarra(d,k){
   const ok=$('[data-f="ok"]',foco), ch=$('[data-f="chute"]',foco), pu=$('[data-f="pular"]',foco);
   if(!ok) return;
   if(d.respondida){
-    if(d.novo){ if(sessao.modo!=='rev') sessao.res[k]={ok:d.ok,ch:d.ch,letra:d.letra}; mostrarRes(k); pintarPainel(k); }
+    if(d.novo){ if(sessao.modo!=='rev') sessao.res[k]={ok:d.ok,ch:d.ch,letra:d.letra}; if(d.ok) relGanha(k,d.ch); mostrarRes(k); pintarPainel(k); }
     ok.disabled=false; ok.textContent=sessao.i+1<sessao.fila.length?'Próxima →':'Ver resumo →'; ok.dataset.modo='prox'; ch.disabled=true; pu.disabled=true;
     if(d.novo) setTimeout(()=>ok.focus({preventScroll:true}),0);
     const b=$('.pg-bar i',foco); if(b) b.style.width=pct(Object.keys(sessao.res).length,sessao.fila.length)+'%';
