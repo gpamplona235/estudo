@@ -1837,9 +1837,9 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .rel-b:hover{background:var(--campo);color:var(--tx2)}
 .rel-b[aria-expanded="true"]{background:var(--campo)}
 .rel-b .ic{width:16px;height:16px}
-.rel-b.vivo{color:var(--tx2)}
-.rel-b.aviso{color:var(--chu)}
-.rel-b.zero{color:var(--err)}
+.rel-b.rel-vivo{color:var(--tx2)}
+.rel-b.rel-aviso{color:var(--chu)}
+.rel-b.rel-zero{color:var(--err)}
 .rel-mais{position:absolute;right:2px;top:-4px;font:700 12px var(--f-mono);color:var(--ok);opacity:0;pointer-events:none}
 .rel-mais.vai{animation:relSobe 1.3s ease-out}
 @keyframes relSobe{0%{opacity:0;transform:translateY(6px)}20%{opacity:1}100%{opacity:0;transform:translateY(-16px)}}
@@ -49038,11 +49038,12 @@ function relGanha(k,ch){
   salvar(); relPinta(true);
   $$('.rel-b .rel-mais').forEach(m=>{ m.textContent='+'+(seg/60); m.classList.remove('vai'); void m.offsetWidth; m.classList.add('vai'); });
 }
+// nomes com prefixo: o site já tem uma classe .aviso (caixa de recado), que inchava o relógio
 function relEstado(s){
-  if(s>=REL_CERTA) return 'vivo';
-  if(s>0) return 'aviso';
+  if(s>=REL_CERTA) return 'rel-vivo';
+  if(s>0) return 'rel-aviso';
   const f=(est.relogio||{}).fim;
-  return f&&dstr(new Date(f))===hoje()?'zero':'parado';
+  return f&&dstr(new Date(f))===hoje()?'rel-zero':'rel-parado';
 }
 // o cabeçalho da revisão é redesenhado a cada questão: o relógio já nasce com o número e a cor certos,
 // para não piscar nem mudar de tamanho até o próximo segundo
@@ -49056,7 +49057,7 @@ function relPinta(tudo){
   const s=relSaldo(), t=relCurto(s), e=relEstado(s), min=Math.ceil(s/60);
   $$('.rel-b').forEach(b=>{
     const x=$('.rel-t',b); if(x.textContent!==t) x.textContent=t;
-    ['vivo','aviso','zero','parado'].forEach(c=>b.classList.toggle(c,c===e));
+    ['rel-vivo','rel-aviso','rel-zero','rel-parado'].forEach(c=>b.classList.toggle(c,c===e));
     if(relMin!==min||!b.dataset.rot){ b.setAttribute('aria-label',relRot(s)); b.dataset.rot=1; }
   });
   relMin=min;
