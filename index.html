@@ -1859,6 +1859,244 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
   .f-top .rel-f{margin-right:2px}
 }
 
+/* Caderno das videoaulas: lista discreta à esquerda e uma folha limpa; a ficha do vídeo é uma linha que abre ao clicar.
+   Com o vídeo aberto, o caderno ocupa a janela inteira: vídeo de um lado, anotação do outro, com divisória que se arrasta. */
+:root{--cm-am:#fff3a3;--cm-vd:#c9f0d3;--cm-az:#d3e5ff;--cm-rs:#ffd9e8}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--cm-am:rgba(250,204,21,.34);--cm-vd:rgba(52,211,153,.3);--cm-az:rgba(96,165,250,.32);--cm-rs:rgba(244,114,182,.32)}}
+:root[data-theme="dark"]{--cm-am:rgba(250,204,21,.34);--cm-vd:rgba(52,211,153,.3);--cm-az:rgba(96,165,250,.32);--cm-rs:rgba(244,114,182,.32)}
+
+body[data-pg="caderno"] #pg-caderno{max-width:1440px}
+.cad-pag svg{fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.cad-pag svg .ch{fill:currentColor;stroke:none}
+
+.cad-g{display:grid;grid-template-columns:236px minmax(0,1fr);gap:36px;align-items:start}
+.cad-pag.cad-sem .cad-g{grid-template-columns:minmax(0,1fr)}
+.cad-pag.cad-sem .cad-lista{display:none}
+.cad-video,.cad-div{display:none}
+
+/* lista */
+.cad-lista{position:sticky;top:80px;max-height:calc(100vh - 100px);overflow-y:auto;display:flex;flex-direction:column;gap:6px;padding:2px 2px 12px}
+.cad-l-topo{display:flex;gap:6px}
+.cad-l-topo input{flex:1;min-width:0;font-size:14.5px;padding:8px 12px;border:1px solid transparent;border-radius:9px;background:var(--campo);color:var(--tx)}
+.cad-l-topo input:focus{outline:none;border-color:var(--lin-forte);background:var(--card)}
+.cad-novo{flex:none;width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:9px;background:var(--pri);color:var(--pri-tx);cursor:pointer}
+.cad-novo:hover{background:var(--pri-forte)}
+.cad-novo:disabled{opacity:.45;cursor:not-allowed}
+.cad-novo svg{width:18px;height:18px;stroke-width:2.4}
+.cad-l-mat{font-size:13.5px;padding:6px 8px;border:0;border-radius:8px;background:transparent;color:var(--mut);cursor:pointer}
+.cad-l-mat:hover,.cad-l-mat:focus{outline:none;background:var(--campo);color:var(--tx)}
+.cad-itens{display:flex;flex-direction:column;gap:1px}
+.cad-gt{margin:14px 10px 4px;font:600 11.5px/1.3 var(--f-ui);letter-spacing:.06em;text-transform:uppercase;color:var(--mut)}
+.cad-it{display:grid;gap:1px;padding:8px 10px;border-radius:9px;text-decoration:none;color:var(--tx2)}
+.cad-it:hover{background:var(--campo);color:var(--tx)}
+.cad-it.cad-on{background:var(--pri-suave);color:var(--tx)}
+.cad-it b{font-size:14.5px;font-weight:600;line-height:1.35;display:flex;align-items:flex-start;gap:5px;overflow-wrap:anywhere}
+.cad-it small{font-size:12.5px;color:var(--mut);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cad-ok-s{color:var(--ok)}
+.cad-pin svg{width:14px;height:14px;margin-top:2px;color:var(--pri)}
+.cad-nada{color:var(--mut);font-size:14px;margin:12px 10px}
+
+/* área e folha */
+.cad-area{display:grid;grid-template-columns:minmax(0,1fr);gap:28px;align-items:start;min-width:0}
+@media (min-width:1500px){.cad-pag:not(.cad-estudo) .cad-area{grid-template-columns:minmax(0,1fr) 188px}}
+.cad-doc{position:relative;min-width:0;max-width:880px;background:var(--card);border:1px solid var(--lin);border-radius:16px;padding:34px 48px 18px}
+.cad-mais{position:absolute;top:26px;right:20px;width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:50%;background:transparent;color:var(--mut);cursor:pointer}
+.cad-mais:hover,.cad-mais[aria-expanded="true"]{background:var(--campo);color:var(--tx)}
+.cad-mais svg{width:20px;height:20px}
+.cad-tit{width:calc(100% - 40px);border:0;background:transparent;color:var(--tx);font:700 30px/1.25 var(--f-tit);letter-spacing:-.015em;padding:0;outline:none}
+.cad-tit::placeholder{color:var(--mut);opacity:.55}
+
+/* ficha do vídeo: uma linha discreta */
+.cad-resumo{display:flex;flex-wrap:wrap;align-items:center;gap:4px 16px;margin:8px 0 0}
+.cad-ficha-b{display:inline-flex;align-items:center;gap:8px;max-width:100%;border:0;background:transparent;padding:4px 8px 4px 0;border-radius:8px;font:400 14px/1.4 var(--f-ui);color:var(--mut);cursor:pointer;text-align:left}
+.cad-ficha-b:hover{color:var(--tx)}
+.cad-ficha-b>svg{width:18px;height:18px;flex:none;color:var(--pri)}
+.cad-ficha-b>svg:last-child{width:15px;height:15px;color:var(--mut);transition:transform .15s}
+.cad-ficha-b[aria-expanded="true"]>svg:last-child{transform:rotate(180deg)}
+.cad-ficha-b span{min-width:0;overflow-wrap:anywhere}
+.cad-ficha-b b{font-weight:600;color:var(--tx2)}
+.cad-ficha-b i{font-style:normal;margin:0 6px;opacity:.6}
+.cad-abrir,.cad-assistir{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;padding:0;font:600 14px var(--f-ui);color:var(--pri-forte);text-decoration:none;white-space:nowrap;cursor:pointer}
+.cad-abrir:hover,.cad-assistir:hover{text-decoration:underline}
+.cad-assistir svg{width:15px;height:15px}
+.cad-campos{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 16px;margin:12px 0 2px;padding:16px 18px;border-radius:12px;background:var(--campo)}
+.cad-campos[hidden]{display:none}
+.cad-campos label{display:grid;gap:5px;font-size:12.5px;font-weight:600;color:var(--mut);min-width:0}
+.cad-campos .l2{grid-column:span 2}
+.cad-campos input[type=text],.cad-campos input[type=url],.cad-campos select{width:100%;min-width:0;font:400 15px var(--f-ui);padding:8px 11px;border:1px solid var(--lin);border-radius:9px;background:var(--card);color:var(--tx)}
+.cad-campos input:focus,.cad-campos select:focus{outline:none;border-color:var(--pri);box-shadow:0 0 0 3px var(--pri-suave)}
+.cad-campos .cad-ok-l{display:flex;align-items:center;gap:8px;font-size:14.5px;font-weight:500;color:var(--tx2);align-self:end;min-height:38px}
+.cad-campos .cad-ok-l input{width:18px;height:18px;accent-color:var(--pri)}
+
+/* barra: uma linha leve */
+.cad-bar{position:sticky;top:62px;z-index:6;display:flex;align-items:center;justify-content:space-between;gap:8px;margin:20px -14px 0;padding:6px 8px;border-radius:10px;background:var(--card);box-shadow:0 0 0 1px var(--lin)}
+.cad-bar-e{display:flex;flex-wrap:wrap;align-items:center;gap:2px 10px;min-width:0}
+.cad-gr{display:inline-flex;align-items:center;gap:1px}
+.cad-tab-bts[hidden]{display:none}
+.cad-bar button{min-width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:7px;background:transparent;color:var(--tx2);font:600 15px/1 var(--f-ui);cursor:pointer}
+.cad-bar button.txt{padding:0 8px;font-size:12.5px;white-space:nowrap}
+.cad-bar button:hover{background:var(--campo);color:var(--tx)}
+.cad-bar button[aria-pressed="true"],.cad-bar button[aria-expanded="true"]{background:var(--pri-suave);color:var(--pri-forte)}
+.cad-bar svg{width:18px;height:18px}
+.cad-bar-d button{color:var(--mut)}
+.cad-ins{display:inline-flex;align-items:center;gap:5px;padding:0 6px;font:600 13.5px var(--f-ui)}
+.cad-ins svg{width:15px;height:15px;stroke-width:2.2}
+.cad-bar select{height:32px;font:600 13.5px var(--f-ui);padding:0 22px 0 8px;border:0;border-radius:7px;color:var(--tx2);background:transparent url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%237b8c8f' stroke-width='1.6'/%3E%3C/svg%3E") no-repeat right 7px center;appearance:none;cursor:pointer}
+.cad-bar select:hover{background-color:var(--campo)}
+.cad-bar .nota-a i{background:var(--nc,var(--lin-forte))}
+.cad-bar .nota-a i[data-cor="#c62828"]{--nc:var(--nc-1)}.cad-bar .nota-a i[data-cor="#b85c00"]{--nc:var(--nc-2)}.cad-bar .nota-a i[data-cor="#1b7f4b"]{--nc:var(--nc-3)}.cad-bar .nota-a i[data-cor="#1f5fbf"]{--nc:var(--nc-4)}.cad-bar .nota-a i[data-cor="#7b3fc4"]{--nc:var(--nc-5)}
+
+/* o texto */
+.cad-ed{min-height:46vh;padding:26px 0 30px;outline:none;color:var(--tx);font:400 17px/1.75 var(--f-ui);overflow-wrap:anywhere;caret-color:var(--pri)}
+.cad-ed[contenteditable="false"]{opacity:.65}
+.cad-ed.cad-vz::before{content:attr(data-ph);display:block;height:0;color:var(--mut);opacity:.7;pointer-events:none}
+.cad-ed>*:first-child{margin-top:0}
+.cad-ed p{margin:0 0 .7em}
+.cad-ed h2{font:700 22px/1.3 var(--f-tit);color:var(--tx);margin:1.4em 0 .5em}
+.cad-ed h3{font:700 18.5px/1.35 var(--f-tit);color:var(--tx);margin:1.2em 0 .4em}
+.cad-ed h4{font:700 13px/1.4 var(--f-ui);letter-spacing:.07em;text-transform:uppercase;color:var(--mut);margin:1.1em 0 .35em}
+.cad-ed ul,.cad-ed ol{margin:0 0 .8em;padding-left:26px}
+.cad-ed li{margin:.2em 0}
+.cad-ed ul.cad-tarefas{list-style:none;padding-left:2px}
+.cad-ed ul.cad-tarefas>li{position:relative;padding-left:30px}
+.cad-ed ul.cad-tarefas>li::before{content:"";position:absolute;left:2px;top:.36em;width:17px;height:17px;border:1.6px solid var(--lin-forte);border-radius:5px;background:var(--card);cursor:pointer}
+.cad-ed ul.cad-tarefas>li.cad-feito::before{background:var(--pri) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='m5 12.5 4.5 4.5L19 7.5' fill='none' stroke='white' stroke-width='3.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/13px no-repeat;border-color:var(--pri)}
+.cad-ed ul.cad-tarefas>li.cad-feito{color:var(--mut);text-decoration:line-through;text-decoration-color:var(--lin-forte)}
+.cad-ed blockquote{margin:.5em 0 1em;padding:2px 0 2px 18px;border-left:3px solid var(--lin-forte);color:var(--tx2)}
+.cad-ed blockquote.cad-imp{padding:12px 16px;border-left:0;border-radius:10px;background:var(--chu-suave);color:var(--tx)}
+.cad-ed hr{border:0;border-top:1px solid var(--lin);margin:1.6em 0}
+.cad-ed a{color:var(--pri-forte);text-decoration:underline;text-underline-offset:2px}
+.cad-ed code{font:500 .9em var(--f-mono);background:var(--campo);border-radius:5px;padding:0 4px}
+.cad-ed table{border-collapse:collapse;margin:.5em 0 1.1em;min-width:50%;max-width:100%;font-size:16px}
+.cad-ed th,.cad-ed td{border:1px solid var(--lin);padding:7px 11px;vertical-align:top;min-width:70px}
+.cad-ed th{background:var(--campo);font-weight:600;text-align:left}
+.cad-ed mark,.cad-ed mark[data-c="am"]{background:var(--cm-am);color:inherit;border-radius:3px;padding:0 2px}
+.cad-ed mark[data-c="vd"]{background:var(--cm-vd)}
+.cad-ed mark[data-c="az"]{background:var(--cm-az)}
+.cad-ed mark[data-c="rs"]{background:var(--cm-rs)}
+/* marca-texto recém-aplicado (o navegador escreve a cor; o CSS troca pelo tom do tema) */
+.cad-ed span[style*="background-color: rgb(255, 241, 118)"]{background-color:var(--cm-am)!important}
+.cad-ed span[style*="background-color: rgb(165, 214, 167)"]{background-color:var(--cm-vd)!important}
+.cad-ed span[style*="background-color: rgb(144, 202, 249)"]{background-color:var(--cm-az)!important}
+.cad-ed span[style*="background-color: rgb(244, 143, 177)"]{background-color:var(--cm-rs)!important}
+.cad-ed font[color="#c62828"]{--nc:var(--nc-1)}.cad-ed font[color="#b85c00"]{--nc:var(--nc-2)}.cad-ed font[color="#1b7f4b"]{--nc:var(--nc-3)}.cad-ed font[color="#1f5fbf"]{--nc:var(--nc-4)}.cad-ed font[color="#7b3fc4"]{--nc:var(--nc-5)}
+.cad-ed font{color:var(--nc,inherit)}
+.cad-tempo{display:inline-flex;align-items:center;gap:4px;margin:0 1px;padding:0 8px 0 7px;border-radius:999px;background:var(--pri-suave);color:var(--pri-forte);font:600 13px/1.7 var(--f-mono);cursor:pointer;user-select:none;vertical-align:baseline}
+.cad-tempo::before{content:"";width:0;height:0;border-left:6px solid currentColor;border-top:4px solid transparent;border-bottom:4px solid transparent}
+.cad-tempo:hover{background:var(--pri);color:var(--pri-tx)}
+
+.cad-modelos{display:flex;flex-wrap:wrap;align-items:center;gap:4px 12px;margin:-18px 0 18px;font-size:14px;color:var(--mut)}
+.cad-modelos[hidden]{display:none}
+.cad-modelos button{border:0;background:transparent;padding:4px 2px;font:600 14px var(--f-ui);color:var(--pri-forte);cursor:pointer}
+.cad-modelos button:hover{text-decoration:underline}
+.cad-pe{display:flex;justify-content:space-between;gap:12px;font-size:12.5px;color:var(--mut);min-height:18px}
+
+/* janelinhas */
+.cad-pop{position:absolute;z-index:20;min-width:200px;max-width:min(340px,calc(100% - 8px));padding:8px;border:1px solid var(--lin);border-radius:12px;background:var(--card);box-shadow:0 12px 32px rgba(10,30,28,.16)}
+.cad-pop[hidden],.cad-bolha[hidden]{display:none}
+.cad-pal{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+.cad-pal button{width:32px;height:32px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;cursor:pointer}
+.cad-pal button:hover{background:var(--campo)}
+.cad-pal button.txt{width:auto;padding:0 10px;font:600 13px var(--f-ui);color:var(--tx2)}
+.cad-pal i{display:block;width:20px;height:20px;border-radius:50%;background:var(--nc)}
+.cad-pal i.mk-am{background:var(--cm-am)}.cad-pal i.mk-vd{background:var(--cm-vd)}.cad-pal i.mk-az{background:var(--cm-az)}.cad-pal i.mk-rs{background:var(--cm-rs)}
+.cad-pal i.mk-am,.cad-pal i.mk-vd,.cad-pal i.mk-az,.cad-pal i.mk-rs{border-radius:5px}
+.cad-form{display:grid;gap:8px;padding:4px}
+.cad-form label{display:grid;gap:4px;font-size:12.5px;font-weight:600;color:var(--mut)}
+.cad-form input{font:400 15px var(--f-ui);padding:8px 11px;border:1px solid var(--lin-forte);border-radius:9px;background:var(--card);color:var(--tx)}
+.cad-form input:focus{outline:none;border-color:var(--pri)}
+.cad-form small{font-size:12.5px;color:var(--mut);line-height:1.4}
+.cad-form-bt{display:flex;gap:6px}
+.cad-menu{display:grid;gap:1px}
+.cad-menu button{display:flex;align-items:center;gap:10px;border:0;border-radius:8px;background:transparent;padding:8px 10px;font:500 14px var(--f-ui);color:var(--tx);cursor:pointer;text-align:left}
+.cad-menu button span{flex:1}
+.cad-menu button:hover{background:var(--campo)}
+.cad-menu svg{width:17px;height:17px;flex:none;color:var(--mut)}
+.cad-menu kbd{font:500 11.5px var(--f-mono);color:var(--mut)}
+.cad-menu .perigo,.cad-menu .perigo svg{color:var(--err)}
+.cad-menu .confirma{background:var(--err);color:#fff}.cad-menu .confirma svg{color:#fff}
+.cad-bolha{position:absolute;z-index:15;display:flex;align-items:center;gap:2px;padding:3px;border:1px solid var(--lin);border-radius:10px;background:var(--card);box-shadow:0 6px 18px rgba(10,30,28,.12)}
+.cad-bolha a,.cad-bolha button{padding:5px 9px;border:0;border-radius:7px;background:transparent;color:var(--pri-forte);font:600 13px var(--f-ui);text-decoration:none;cursor:pointer}
+.cad-bolha a:hover,.cad-bolha button:hover{background:var(--campo)}
+
+/* sumário (só com dois itens ou mais) */
+.cad-sum{position:sticky;top:96px;display:none;flex-direction:column;gap:1px;max-height:calc(100vh - 120px);overflow-y:auto;padding-top:6px}
+@media (min-width:1500px){.cad-pag:not(.cad-estudo) .cad-sum:not(:empty){display:flex}}
+.cad-sum button{display:grid;gap:1px;border:0;background:transparent;padding:4px 8px;border-radius:7px;font:500 13px/1.35 var(--f-ui);color:var(--mut);cursor:pointer;text-align:left}
+.cad-sum button:hover{color:var(--tx);background:var(--campo)}
+.cad-sum button.h2{font-weight:600;color:var(--tx2)}
+.cad-sum button.h3{padding-left:16px}
+.cad-sum button.h4{padding-left:24px;font-size:12px}
+.cad-sum button.t{padding-left:16px}
+.cad-sum button.t b{font:600 12px var(--f-mono);color:var(--pri-forte)}
+.cad-sum button.t span{font-size:12px}
+
+/* modo vídeo: o caderno ocupa a janela inteira, com o vídeo de um lado e a anotação do outro */
+body.cad-em-estudo{overflow:hidden}
+body.cad-em-estudo #nv-selo{display:none}
+.cad-pag.cad-estudo .cad-g{position:fixed;inset:0;z-index:150;display:grid;grid-template-columns:minmax(0,var(--cad-v,58%)) 14px minmax(0,1fr);gap:0;padding:16px 18px;background:var(--bg)}
+.cad-pag.cad-estudo .cad-lista,.cad-pag.cad-estudo .cad-sum{display:none}
+.cad-pag.cad-estudo .cad-video{display:flex;flex-direction:column;gap:10px;min-width:0;align-self:start}
+.cad-pag.cad-estudo .cad-div{display:block;align-self:stretch;cursor:col-resize;position:relative;touch-action:none}
+.cad-div::before{content:"";position:absolute;top:0;bottom:0;left:50%;width:2px;transform:translateX(-50%);border-radius:2px;background:var(--lin)}
+.cad-div::after{content:"";position:absolute;top:50%;left:50%;width:6px;height:44px;transform:translate(-50%,-50%);border-radius:4px;background:var(--lin-forte)}
+.cad-div:hover::before,.cad-div.arrastando::before{background:var(--pri)}
+.cad-div:hover::after,.cad-div.arrastando::after{background:var(--pri)}
+.cad-pag.cad-estudo .cad-area{height:100%;overflow-y:auto;padding:0 4px 0 6px;align-content:start}
+.cad-pag.cad-estudo .cad-doc{max-width:none;padding:26px 32px 14px}
+.cad-pag.cad-estudo .cad-bar{top:0}
+.cad-pag.cad-estudo .cad-ed{min-height:60vh}
+.cad-tela{position:relative;aspect-ratio:16/9;width:100%;border-radius:14px;overflow:hidden;background:#000}
+.cad-tela iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+.cad-v-msg{position:absolute;inset:0;display:grid;place-items:center;margin:0;padding:20px;text-align:center;color:#e3ecea;font-size:15px}
+.cad-v-bar{display:flex;flex-wrap:wrap;align-items:center;gap:6px}
+.cad-v-bar button{display:inline-flex;align-items:center;gap:6px;min-height:36px;padding:0 12px;border:0;border-radius:999px;background:var(--card);box-shadow:0 0 0 1px var(--lin);color:var(--tx2);font:600 13.5px var(--f-ui);cursor:pointer}
+.cad-v-bar button:hover{color:var(--tx);box-shadow:0 0 0 1px var(--lin-forte)}
+.cad-v-bar svg{width:16px;height:16px}
+.cad-v-bar .cad-v-marca{background:var(--pri);box-shadow:none;color:var(--pri-tx)}
+.cad-v-bar .cad-v-marca:hover{background:var(--pri-forte);color:var(--pri-tx)}
+.cad-v-bar .cad-v-sair{margin-left:auto}
+.cad-v-dica{margin:0;font-size:12.5px;color:var(--mut)}
+.cad-v-dica b{font-weight:600;color:var(--tx2)}
+
+/* primeira tela */
+.cad-boas{display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:64px 24px;color:var(--mut)}
+.cad-boas>b{font:700 22px/1.3 var(--f-tit);color:var(--tx)}
+.cad-boas>span{max-width:46ch;font-size:15.5px;line-height:1.5}
+.cad-boas .btn{margin-top:8px}
+.cad-boas .btn svg{width:18px;height:18px;stroke-width:2.4}
+.cad-dica{margin:14px 0 0;font-size:13px;color:var(--mut)}
+
+@media (max-width:1000px){
+  .cad-pag.cad-estudo .cad-g{grid-template-columns:minmax(0,1fr);grid-template-rows:auto minmax(0,1fr);gap:12px;padding:10px}
+  .cad-pag.cad-estudo .cad-div{display:none}
+  .cad-pag.cad-estudo .cad-area{padding:0}
+}
+@media (max-width:900px){
+  .cad-g{grid-template-columns:minmax(0,1fr);gap:20px}
+  .cad-lista{position:static;max-height:none}
+  .cad-pag.aberta .cad-lista{display:none}
+  .cad-doc,.cad-pag.cad-estudo .cad-doc{padding:20px 18px 14px;border-radius:14px}
+  .cad-mais{top:14px;right:8px}
+  .cad-tit{font-size:24px}
+  .cad-campos{grid-template-columns:minmax(0,1fr)}
+  .cad-campos .l2{grid-column:auto}
+  .cad-bar{margin:16px -8px 0;align-items:flex-start}
+}
+@media (max-width:767px){ .cad-pag:not(.cad-estudo) .cad-bar{top:56px} }
+
+/* impressão: só a anotação */
+@media print{
+  body.cad-imprime .side,body.cad-imprime .topo,body.cad-imprime #trilha,body.cad-imprime .nav-baixo,body.cad-imprime .pg-cab,body.cad-imprime .cad-lista,body.cad-imprime .cad-video,body.cad-imprime .cad-div,
+  body.cad-imprime .cad-bar,body.cad-imprime .cad-mais,body.cad-imprime .cad-campos,body.cad-imprime .cad-pe,body.cad-imprime .cad-sum,body.cad-imprime .cad-modelos,
+  body.cad-imprime .cad-ficha-b>svg,body.cad-imprime .cad-abrir,body.cad-imprime .cad-assistir,body.cad-imprime #nv-selo,body.cad-imprime .cad-pop,body.cad-imprime .cad-bolha{display:none!important}
+  body.cad-imprime .app{display:block}
+  body.cad-imprime .pg{padding:0;max-width:none}
+  body.cad-imprime .cad-g,body.cad-imprime .cad-area{display:block;position:static;padding:0}
+  body.cad-imprime .cad-doc{border:0;padding:0;max-width:none}
+  body.cad-imprime .cad-ed{min-height:0;padding:14px 0}
+}
+
 
 /* ---------- casca: barra lateral + topo ---------- */
 .app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
@@ -2708,6 +2946,7 @@ body.em-foco{overflow:hidden}
     <symbol id="i-sair" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
     <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></symbol>
     <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 1.8"/><path d="M9.5 2.8h5"/></symbol>
+    <symbol id="i-caderno" viewBox="0 0 24 24"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v15a1.5 1.5 0 0 1-1.5 1.5h-11z"/><path d="M6.5 3v18"/><path d="M4.5 7h3M4.5 12h3M4.5 17h3"/><path class="acs" d="M10.5 8h5M10.5 11.5h5"/></symbol>
     <symbol id="i-tema" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path class="fill" d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></symbol>
   </defs>
 </svg>
@@ -2722,6 +2961,7 @@ body.em-foco{overflow:hidden}
       <a class="nv" href="#/estatisticas" data-nav="estatisticas"><svg class="ic" aria-hidden="true"><use href="#i-est"/></svg><span class="lab">Estatísticas</span></a>
       <a class="nv" href="#/salvas" data-nav="salvas"><svg class="ic" aria-hidden="true"><use href="#i-sal"/></svg><span class="lab">Salvas</span><span class="cnt" data-cont="sal" hidden></span></a>
       <a class="nv" href="#/edital" data-nav="edital"><svg class="ic" aria-hidden="true"><use href="#i-edital"/></svg><span class="lab">Edital</span></a>
+      <a class="nv" href="#/caderno" data-nav="caderno"><svg class="ic" aria-hidden="true"><use href="#i-caderno"/></svg><span class="lab">Caderno</span></a>
     </nav>
     <section id="desafio" aria-label="Desafio"></section>
     <div id="recentes"></div>
@@ -50740,6 +50980,7 @@ Documentos  Fotos  notas.txt
       <div class="pg" id="pg-estatisticas" hidden></div>
       <div class="pg" id="pg-salvas" hidden></div>
       <div class="pg" id="pg-edital" hidden></div>
+      <div class="pg" id="pg-caderno" hidden></div>
     </main>
   </div>
 </div>
@@ -51975,6 +52216,678 @@ addEventListener('nuvem-pronta',()=>relPinta(true));
   });
 })();
 
+/* =========================================================
+   Caderno das videoaulas (pedido do usuário, 2026-11-06)
+   Cada anotação é uma parte separada do progresso: est['cad:<id>'] = {t, m, ap, v, h, c, u, fix}
+     t   título da anotação            m   matéria (nome, como no MAPA)     ap  apostila relacionada (id)
+     v   ficha do vídeo: tit (título), url (link), prof (professor ou canal), fim (onde parou, em segundos), ok (assistido)
+     h   texto com formatação, sempre passado por cadLimpa
+     c   criada em (ms)                u   atualizada em (ms)                fix fixada no topo da lista
+   Na nuvem, só vai a anotação que mudou. Nada é criado ao abrir o site: a parte nasce em "Nova anotação".
+   Gravação: ao parar de digitar por 8 s (no máximo a cada 60 s digitando), ao sair do texto, ao trocar de
+   anotação ou de página, ao esconder a aba e ao fechar. A gravação junta só esta anotação ao que está no
+   navegador (cadGrava): nunca regrava o resto do progresso com uma cópia velha da memória.
+   Enquanto você digita, um rascunho fica numa chave própria deste aparelho (não vai para a nuvem); se o
+   navegador fechar de repente, ele volta na próxima abertura, depois de a nuvem sincronizar.
+   O editor só aceita digitação depois da primeira sincronização ('nuvem-pronta'): assim o que você
+   escreve não é trocado pela versão da nuvem que chega logo depois.
+   Vídeo do YouTube: "Assistir aqui" abre o modo vídeo, em que o caderno ocupa a janela inteira, com o
+   player oficial (youtube-nocookie) de um lado e a anotação do outro; a divisória se arrasta e a proporção
+   fica guardada neste aparelho. Alt+T marca o minuto (com o vídeo aberto, sai sozinho), Alt+K pausa,
+   Alt+J e Alt+L voltam e avançam 10 s; clicar numa marca leva o vídeo àquele ponto. Sem vídeo aberto,
+   o minuto é digitado, e a marca abre o link do vídeo naquele ponto.
+   Visual limpo (pedido do usuário): a ficha do vídeo é uma linha discreta que abre os campos ao clicar;
+   a barra é uma linha só, e o que se insere (citação, destaque, tabela, link, linha, minuto) fica em "Inserir".
+   ========================================================= */
+const CAD_RASC=CHAVE+'-rascunho-caderno';
+const CAD_MARCA=[['am','Amarelo','#fff176'],['vd','Verde','#a5d6a7'],['az','Azul','#90caf9'],['rs','Rosa','#f48fb1']];
+const PGC=$('#pg-caderno');
+let cadId=null, cadEd=null, cadSujo=false, cadT1=null, cadT2=null, cadTmax=0, cadQ='', cadMat='', cadSel=null, cadNovoId=null, cadTSum=null;
+let cadPlayer=null, cadTick=null, cadVideoOn=false, cadYtP=null;
+const CAD_DIV=CHAVE+'-caderno-divisao'; // proporção do vídeo no modo vídeo (preferência deste aparelho)
+const cadK=id=>'cad:'+id;
+const cadNota=id=>{ const n=est[cadK(id)]; return n&&typeof n==='object'?n:null; };
+const cadIds=()=>Object.keys(est).filter(k=>k.slice(0,4)==='cad:'&&est[k]&&typeof est[k]==='object').map(k=>k.slice(4));
+const cadPronto=()=>!window.NUVEM_ESPERA||!!window.NUVEM_PRONTA;
+const cadSemAcento=s=>String(s||'').normalize('NFD').replace(/[̀-ͯ]/g,'');
+const cadNorm=s=>cadSemAcento(s).toLowerCase();
+const cadSvg=p=>'<svg viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>';
+const CAD_ICO={
+  undo:cadSvg('<path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/>'),
+  redo:cadSvg('<path d="m15 14 5-5-5-5"/><path d="M20 9H9.5a5.5 5.5 0 0 0 0 11H13"/>'),
+  check:cadSvg('<rect x="3.5" y="4.5" width="6" height="6" rx="1.5"/><path d="m4.9 7.6 1.3 1.3 2.2-2.4"/><path d="M13 7.5h7.5"/><rect x="3.5" y="13.5" width="6" height="6" rx="1.5"/><path d="M13 16.5h7.5"/>'),
+  quote:cadSvg('<path d="M4 18c3-1 4-3.5 4-7V6H4v5h4M14 18c3-1 4-3.5 4-7V6h-4v5h4"/>'),
+  imp:cadSvg('<path d="M12 3.5 2.5 20h19z"/><path d="M12 10v4.5"/><path d="M12 17.3v.2"/>'),
+  hr:cadSvg('<path d="M3 12h18"/><path d="M7 6.5h10M7 17.5h10" opacity=".45"/>'),
+  tabela:cadSvg('<rect x="3" y="4.5" width="18" height="15" rx="2"/><path d="M3 9.5h18M9.5 9.5v10M15 9.5v10"/>'),
+  link:cadSvg('<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1"/><path d="M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>'),
+  tempo:cadSvg('<circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 1.8"/><path d="M9.5 2.8h5"/>'),
+  mais:cadSvg('<circle cx="5" cy="12" r="1.5" class="ch"/><circle cx="12" cy="12" r="1.5" class="ch"/><circle cx="19" cy="12" r="1.5" class="ch"/>'),
+  inserir:cadSvg('<path d="M12 5v14M5 12h14"/>'),
+  seta:cadSvg('<path d="m7 10 5 5 5-5"/>'),
+  lapis:cadSvg('<path d="M5 19.5V16L15.6 5.4a1.6 1.6 0 0 1 2.3 0l1.2 1.2a1.6 1.6 0 0 1 0 2.3L8.5 19.5z"/>'),
+  tv:cadSvg('<rect x="2.5" y="4.5" width="19" height="13" rx="2"/><path d="m10 8.3 5 2.7-5 2.7z" class="ch"/><path d="M8 21h8"/>'),
+  pin:cadSvg('<path d="M9 3h6l-1 6 3 3v2H7v-2l3-3z"/><path d="M12 14v7"/>'),
+  word:cadSvg('<path d="M6 3h9l4 4v14H6z"/><path d="M15 3v4h4"/><path d="m8.5 11 1.5 6 2-4.5 2 4.5 1.5-6"/>'),
+  imprimir:cadSvg('<path d="M7 9V3.5h10V9"/><rect x="3.5" y="9" width="17" height="8" rx="2"/><path d="M7 14h10v6.5H7z"/>'),
+  lixo:cadSvg('<path d="M4 7h16M10 11v6M14 11v6"/><path d="M6 7l1 13h10l1-13M9 7V4h6v3"/>'),
+  play:cadSvg('<path d="M8 5v14l11-7z" class="ch"/>'),
+  pausa:cadSvg('<path d="M8 5h3v14H8zM13 5h3v14h-3z" class="ch"/>'),
+  volta:cadSvg('<path d="M11 7 6 12l5 5"/><path d="M18 7l-5 5 5 5"/>'),
+  avanca:cadSvg('<path d="m13 7 5 5-5 5"/><path d="m6 7 5 5-5 5"/>'),
+  sair:cadSvg('<path d="M9 4H5v16h4"/><path d="m14 8 4 4-4 4M18 12H9"/>')
+};
+// a barra: grupos de [comando, rótulo, ícone, tipo]; p = liga e desliga, pop = abre opções
+const CAD_GRUPOS=[
+  ['bloco'],
+  [['bold','Negrito (Ctrl+B)','<b>N</b>','p'],['italic','Itálico (Ctrl+I)','<i>I</i>','p'],['underline','Sublinhado (Ctrl+U)','<u>S</u>','p'],['strikeThrough','Tachado','<s>T</s>','p']],
+  [['mark','Marca-texto',NOTA_ICO.mark,'pop'],['cor','Cor do texto','<span class="nota-a">A<i></i></span>','pop']],
+  [['insertUnorderedList','Lista com marcadores',NOTA_ICO.insertUnorderedList,'p'],['insertOrderedList','Lista numerada',NOTA_ICO.insertOrderedList,'p'],['check','Lista de tarefas',CAD_ICO.check,'p']],
+  [['ins','Inserir: citação, destaque, tabela, link, linha ou minuto do vídeo','<span class="cad-ins">'+CAD_ICO.inserir+'Inserir</span>','pop']]
+];
+const CAD_DIR=[['undo','Desfazer (Ctrl+Z)',CAD_ICO.undo],['redo','Refazer (Ctrl+Y)',CAD_ICO.redo],['limpar','Limpar formatação',NOTA_ICO.removeFormat]];
+const CAD_INS=[['tempo','Minuto do vídeo','Alt+T',CAD_ICO.tempo],['link','Link','Ctrl+K',CAD_ICO.link],['quote','Citação','> e espaço',CAD_ICO.quote],['imp','Caixa de destaque','! e espaço',CAD_ICO.imp],
+  ['tabela','Tabela','',CAD_ICO.tabela],['hr','Linha divisória','',CAD_ICO.hr]];
+const CAD_MODELOS={
+  aula:['Videoaula','<h2>Ideia principal</h2><p><br></p><h2>Pontos-chave</h2><ul><li><br></li></ul><h2>Exemplos do professor</h2><ul><li><br></li></ul><blockquote class="cad-imp">O que a banca troca: </blockquote><h2>Dúvidas para rever</h2><ul class="cad-tarefas"><li><br></li></ul>'],
+  questoes:['Resolução de questões','<h2>A questão</h2><p>Banca e ano: </p><h2>Por que a certa está certa</h2><ul><li><br></li></ul><h2>Por que as outras erram</h2><ul><li><br></li></ul><blockquote class="cad-imp">Macete: </blockquote>'],
+  lei:['Lei seca','<h2>Artigo</h2><blockquote>Texto literal: </blockquote><h2>Em palavras simples</h2><p><br></p><h2>Exemplo</h2><p><br></p><blockquote class="cad-imp">O que a banca troca: </blockquote>']
+};
+
+/* ---------- tempo e links ---------- */
+function cadSeg(s){
+  s=String(s||'').trim().toLowerCase().replace(/\s/g,'').replace(/h/g,':').replace(/m(in)?/g,':').replace(/s$/,'').replace(/:+$/,'');
+  if(!s) return null; const p=s.split(':'); if(p.length>3||p.some(x=>!/^\d+$/.test(x))) return null;
+  const n=p.map(Number); return n.length===1?n[0]*60:n.reduce((a,x)=>a*60+x,0);
+}
+const cadHms=s=>{ s=Math.max(0,Math.floor(s||0)); const h=Math.floor(s/3600), m=Math.floor(s%3600/60), x=s%60; return (h?h+':'+String(m).padStart(2,'0'):m)+':'+String(x).padStart(2,'0'); };
+function cadYt(u){ const m=/(?:youtube(?:-nocookie)?\.com\/(?:watch\?(?:[^#]*&)?v=|embed\/|live\/|shorts\/|v\/)|youtu\.be\/)([\w-]{11})/i.exec(u||''); return m?m[1]:null; }
+const cadLinkT=(u,s)=>{ const id=cadYt(u); return id?'https://www.youtube.com/watch?v='+id+(s?'&t='+Math.floor(s)+'s':''):u; };
+function cadUrl(u){ u=String(u||'').trim(); if(!u) return ''; if(!/^[a-z]+:\/\//i.test(u)&&/^[\w-]+(\.[\w-]+)+/.test(u)) u='https://'+u; return /^https?:\/\/[^\s]+$/i.test(u)?u:''; }
+const cadSite=u=>{ if(cadYt(u)) return 'YouTube'; try{ return new URL(u).hostname.replace(/^www\./,''); }catch(e){ return ''; } };
+const cadChip=s=>'<span class="cad-tempo" data-s="'+s+'" contenteditable="false">'+cadHms(s)+'</span>';
+const cadQuando=t=>{ if(!t) return ''; const d=new Date(t), h=hoje(), dd=dstr(d), hm=p2(d.getHours())+':'+p2(d.getMinutes()); return dd===h?'hoje, '+hm:dd===somaDias(h,-1)?'ontem, '+hm:p2(d.getDate())+'/'+p2(d.getMonth()+1)+(d.getFullYear()!==new Date().getFullYear()?'/'+d.getFullYear():''); };
+
+/* ---------- limpeza do texto: só a formatação que o caderno conhece ---------- */
+const CAD_TAG={P:'p',H1:'h2',H2:'h2',H3:'h3',H4:'h4',H5:'h4',H6:'h4',B:'b',STRONG:'b',I:'i',EM:'i',U:'u',S:'s',STRIKE:'s',DEL:'s',SUB:'sub',SUP:'sup',CODE:'code',
+  OL:'ol',THEAD:'thead',TBODY:'tbody',TFOOT:'tbody',TR:'tr',TABLE:'table'};
+const CAD_FORA=/^(SCRIPT|STYLE|IMG|PICTURE|VIDEO|AUDIO|IFRAME|OBJECT|EMBED|SVG|CANVAS|BUTTON|INPUT|SELECT|TEXTAREA|NOSCRIPT|TEMPLATE|HEAD|TITLE|META|LINK)$/;
+const CAD_BLOCOS=/^(P|DIV|H[1-6]|UL|OL|LI|BLOCKQUOTE|TABLE|THEAD|TBODY|TFOOT|TR|TD|TH|HR|SECTION|ARTICLE|HEADER|FOOTER|MAIN|ASIDE|NAV|FIGURE|PRE|DL|DT|DD)$/;
+function cadLimpa(html){
+  const t=document.createElement('template'); t.innerHTML=html||'';
+  const temBloco=n=>[...n.children].some(c=>CAD_BLOCOS.test(c.tagName));
+  const anda=n=>[...n.childNodes].map(c=>{
+    if(c.nodeType===3) return esc(c.nodeValue.replace(/ /g,' ')).replace(/ {2}/g,' &nbsp;');
+    if(c.nodeType!==1) return '';
+    const T=c.tagName.toUpperCase();
+    if(CAD_FORA.test(T)) return '';
+    if(T==='BR') return '<br>';
+    if(T==='HR') return '<hr>';
+    if(c.classList.contains('cad-tempo')){ const s=parseInt(c.dataset.s,10); return s>=0?cadChip(s):''; }
+    const d=anda(c);
+    if(T==='MARK'){ const k=CAD_MARCA.some(x=>x[0]===c.dataset.c)?c.dataset.c:'am'; return d?'<mark data-c="'+k+'">'+d+'</mark>':''; }
+    if(T==='FONT'||T==='SPAN'){
+      let r=d; const cor=notaHex(c.getAttribute('color')||c.style.color), fundo=notaHex(c.style.backgroundColor), mk=CAD_MARCA.find(x=>x[2]===fundo);
+      if(NOTA_COR.some(x=>x[1]===cor)) r='<font color="'+cor+'">'+r+'</font>';
+      if(mk&&r) r='<mark data-c="'+mk[0]+'">'+r+'</mark>';
+      const fw=c.style.fontWeight; if(fw==='bold'||+fw>=600) r='<b>'+r+'</b>';
+      if(c.style.fontStyle==='italic') r='<i>'+r+'</i>';
+      if(/underline/.test(c.style.textDecoration)) r='<u>'+r+'</u>';
+      if(/line-through/.test(c.style.textDecoration)) r='<s>'+r+'</s>';
+      return r;
+    }
+    if(T==='B'&&/^(normal|[1-5]00)$/.test(c.style.fontWeight)) return d; // o Google Docs embrulha tudo num <b> sem negrito
+    if(T==='A'){ const h=cadUrl(c.getAttribute('href')); return h&&d?'<a href="'+esc(h)+'" target="_blank" rel="noopener">'+d+'</a>':d; }
+    if(T==='UL') return d?'<ul'+(c.classList.contains('cad-tarefas')?' class="cad-tarefas"':'')+'>'+d+'</ul>':'';
+    if(T==='LI') return '<li'+(c.classList.contains('cad-feito')?' class="cad-feito"':'')+'>'+(d||'<br>')+'</li>';
+    if(T==='BLOCKQUOTE') return '<blockquote'+(c.classList.contains('cad-imp')?' class="cad-imp"':'')+'>'+(d||'<br>')+'</blockquote>';
+    if(T==='TD'||T==='TH') return '<'+T.toLowerCase()+'>'+(d||'<br>')+'</'+T.toLowerCase()+'>';
+    if(T==='P'||T==='DIV'||T==='SECTION'||T==='ARTICLE'||T==='HEADER'||T==='FOOTER'||T==='MAIN'||T==='ASIDE'||T==='FIGURE'||T==='PRE'||T==='DD'||T==='DT')
+      return temBloco(c)?d:'<p>'+(d||'<br>')+'</p>';
+    const tg=CAD_TAG[T]; return tg?(d||/^(table|thead|tbody|tr)$/.test(tg)?'<'+tg+'>'+d+'</'+tg+'>':''):d;
+  }).join('');
+  return anda(t.content).trim();
+}
+const cadTxt=h=>{ const t=document.createElement('template'); t.innerHTML=String(h||'').replace(/<\/(p|h\d|li|blockquote|td|th)>|<br>/g,' $&'); return t.content.textContent.replace(/\s+/g,' ').trim(); };
+
+/* ---------- gravação ---------- */
+// junta só esta anotação ao progresso guardado no navegador (nunca regrava o resto com uma cópia velha)
+function cadGrava(id,n){
+  const k=cadK(id); if(n) est[k]=n; else delete est[k];
+  try{ const cur=JSON.parse(localStorage.getItem(CHAVE))||{}; if(n) cur[k]=n; else delete cur[k]; localStorage.setItem(CHAVE,JSON.stringify(cur)); }catch(e){ salvar(); }
+}
+function cadColeta(){
+  const n=cadNota(cadId)||{}, v=Object.assign({},n.v||{}), val=s=>{ const el=$(s,PGC); return el?el.value.trim():''; };
+  if($('#cad-f-vt',PGC)){
+    v.tit=val('#cad-f-vt'); v.url=cadUrl(val('#cad-f-url')); v.prof=val('#cad-f-prof');
+    const f=cadSeg(val('#cad-f-fim')); if(f==null) delete v.fim; else v.fim=f;
+    v.ok=$('#cad-f-ok',PGC).checked;
+  }
+  Object.keys(v).forEach(k=>{ if(v[k]===''||v[k]===false||v[k]==null) delete v[k]; });
+  return Object.assign({},n,{t:val('#cad-t'),m:$('#cad-f-mat',PGC)?$('#cad-f-mat',PGC).value:(n.m||''),ap:$('#cad-f-ap',PGC)?$('#cad-f-ap',PGC).value:(n.ap||''),v,h:cadEd?cadLimpa(cadEd.innerHTML):(n.h||'')});
+}
+function cadStatus(t){ const s=$('.cad-st',PGC); if(s) s.textContent=t; }
+function cadRascunho(){ if(!cadId||!cadSujo||!cadEd) return; try{ localStorage.setItem(CAD_RASC,JSON.stringify({id:cadId,n:Object.assign(cadColeta(),{u:Date.now()})})); }catch(e){} }
+function cadCommit(){
+  clearTimeout(cadT1); clearTimeout(cadT2); cadT2=null; cadTmax=0;
+  if(!cadId||!cadSujo||!cadEd) return;
+  if(!cadNota(cadId)){ cadSujo=false; return; } // apagada em outro aparelho
+  const n=cadColeta(); n.u=Date.now(); cadGrava(cadId,n); cadSujo=false;
+  try{ localStorage.removeItem(CAD_RASC); }catch(e){}
+  const d=new Date(); cadStatus('Salvo às '+p2(d.getHours())+':'+p2(d.getMinutes())); cadPintaLista(); cadTrilha();
+}
+function cadSujar(){
+  if(!cadId||!cadEd) return;
+  cadSujo=true; cadStatus('Editando…');
+  clearTimeout(cadT1); cadT1=setTimeout(cadRascunho,600);
+  const agora=Date.now(); if(!cadTmax) cadTmax=agora+60000;
+  clearTimeout(cadT2); cadT2=setTimeout(cadCommit,Math.max(0,Math.min(8000,cadTmax-agora)));
+  clearTimeout(cadTSum); cadTSum=setTimeout(()=>{ cadSumario(); cadConta(); cadVazio(); },350);
+}
+// rascunho que sobrou de um fechamento inesperado: volta depois da sincronização, se for mais novo
+function cadRecupera(){
+  let r=null; try{ r=JSON.parse(localStorage.getItem(CAD_RASC)); }catch(e){}
+  if(!r||!r.id||!r.n) return;
+  const n=cadNota(r.id);
+  if(n&&(n.u||0)<(r.n.u||0)) cadGrava(r.id,r.n);
+  try{ localStorage.removeItem(CAD_RASC); }catch(e){}
+}
+function cadLibera(){
+  cadRecupera();
+  if(!/^#\/caderno/.test(location.hash)) return;
+  const id=cadId; cadId=null; renderCaderno(id);
+}
+if(window.NUVEM_ESPERA&&!window.NUVEM_PRONTA) addEventListener('nuvem-pronta',cadLibera,{once:true}); else cadRecupera();
+addEventListener('hashchange',()=>{ if(cadSujo) cadCommit(); if(!/^#\/caderno/.test(location.hash)){ cadPararPlayer(); cadVideoOn=false; document.body.classList.remove('cad-em-estudo'); } });
+addEventListener('pagehide',()=>{ if(cadSujo){ cadRascunho(); cadCommit(); } });
+document.addEventListener('visibilitychange',()=>{ if(document.hidden&&cadSujo) cadCommit(); });
+
+/* ---------- lista ---------- */
+const cadOrdem=()=>cadIds().map(id=>[id,cadNota(id)]).sort((a,b)=>(!!b[1].fix-!!a[1].fix)||((b[1].u||0)-(a[1].u||0)));
+function cadCombina(n){
+  if(!cadQ) return true; const v=n.v||{}, ap=apPorId(n.ap);
+  return cadNorm([n.t,v.tit,v.prof,n.m,ap&&ap.nome,cadTxt(n.h)].join(' ')).includes(cadNorm(cadQ));
+}
+function cadItem([id,n]){
+  const v=n.v||{}, sub=v.tit&&v.tit!==n.t?v.tit:v.prof||'';
+  return '<a class="cad-it'+(id===cadId?' cad-on':'')+'" href="#/caderno/'+id+'"'+(id===cadId?' aria-current="true"':'')+'>'+
+    '<b>'+(n.fix?'<span class="cad-pin" title="Fixada">'+CAD_ICO.pin+'</span>':'')+esc(n.t||v.tit||'Sem título')+'</b>'+
+    '<small>'+(sub?esc(sub)+' · ':'')+esc(cadQuando(n.u))+(v.ok?' · <span class="cad-ok-s">assistido</span>':'')+'</small></a>';
+}
+function cadItens(){
+  const l=cadOrdem().filter(([,n])=>(cadMat===''||(cadMat==='~'?!n.m:n.m===cadMat))&&cadCombina(n));
+  if(!l.length) return '<p class="cad-nada">'+(cadIds().length?'Nada encontrado.':'Nenhuma anotação ainda.')+'</p>';
+  let h=''; const fix=l.filter(x=>x[1].fix), grupos=new Map();
+  if(fix.length) h+='<span class="cad-gt">Fixadas</span>'+fix.map(cadItem).join('');
+  l.filter(x=>!x[1].fix).forEach(x=>{ const g=x[1].m||'Sem matéria'; if(!grupos.has(g)) grupos.set(g,[]); grupos.get(g).push(x); });
+  const ord=MAPA.map(m=>m.nome).concat(['Sem matéria']);
+  [...grupos.keys()].sort((a,b)=>ord.indexOf(a)-ord.indexOf(b)).forEach(g=>{ h+='<span class="cad-gt">'+esc(g)+'</span>'+grupos.get(g).map(cadItem).join(''); });
+  return h;
+}
+function cadListaHtml(){
+  const mats=new Set(cadIds().map(id=>cadNota(id).m||''));
+  return '<div class="cad-l-topo"><input type="search" id="cad-q" placeholder="Buscar" aria-label="Buscar nas anotações" autocomplete="off" value="'+esc(cadQ)+'">'+
+    '<button type="button" class="cad-novo" data-cad="novo" title="Nova anotação" aria-label="Nova anotação"'+(cadPronto()?'':' disabled')+'>'+CAD_ICO.inserir+'</button></div>'+
+    (mats.size>1?'<select id="cad-mat" class="cad-l-mat" aria-label="Mostrar a matéria"><option value="">Todas as matérias</option>'+MAPA.map(m=>m.nome).filter(x=>mats.has(x)).map(x=>'<option value="'+esc(x)+'"'+(x===cadMat?' selected':'')+'>'+esc(x)+'</option>').join('')+
+      (mats.has('')?'<option value="~"'+(cadMat==='~'?' selected':'')+'>Sem matéria</option>':'')+'</select>':'')+'<div class="cad-itens">'+cadItens()+'</div>';
+}
+function cadPintaLista(){ const l=$('.cad-itens',PGC); if(l) l.innerHTML=cadItens(); }
+function cadTrilha(){ const n=cadId&&cadNota(cadId); trilhaTopo(n?'<a href="#/caderno">Caderno</a><span aria-hidden="true">›</span><b>'+esc(n.t||(n.v&&n.v.tit)||'Sem título')+'</b>':''); }
+
+/* ---------- página ---------- */
+const cadOpMat=m=>'<option value="">Sem matéria</option>'+MAPA.map(x=>'<option value="'+esc(x.nome)+'"'+(x.nome===m?' selected':'')+'>'+esc(x.nome)+'</option>').join('');
+const cadOpAp=(m,ap)=>'<option value="">Nenhuma</option>'+APS.filter(a=>!m||a.materia===m).map(a=>'<option value="'+esc(a.id)+'"'+(a.id===ap?' selected':'')+'>'+esc(a.nome)+'</option>').join('');
+// a ficha numa linha só, discreta: clicar abre os campos
+function cadResumo(n,aberta){
+  const v=n.v||{}, ap=apPorId(n.ap), partes=[];
+  if(v.tit) partes.push('<b>'+esc(v.tit)+'</b>');
+  if(v.prof) partes.push(esc(v.prof));
+  if(n.m) partes.push(esc(n.m)+(ap?' · '+esc(ap.nome):''));
+  if(v.ok) partes.push('<span class="cad-ok-s">assistido</span>'); else if(v.fim) partes.push('parou em '+cadHms(v.fim));
+  return '<button type="button" class="cad-ficha-b" data-cad="ficha" aria-controls="cad-campos" aria-expanded="'+!!aberta+'">'+CAD_ICO.tv+
+      '<span>'+(partes.length?partes.join('<i aria-hidden="true">·</i>'):'Anotar de qual vídeo é')+'</span>'+CAD_ICO.seta+'</button>'+
+    (cadYt(v.url)&&!cadVideoOn?'<button type="button" class="cad-assistir" data-cad="video">'+CAD_ICO.play+'Assistir aqui</button>':'')+
+    (v.url?'<a class="cad-abrir" href="'+esc(cadLinkT(v.url,v.fim))+'" target="_blank" rel="noopener">Abrir no site ↗</a>':'');
+}
+const cadFichaAberta=n=>{ const v=n.v||{}; return !v.tit&&!v.url&&!cadTxt(n.h); };
+function cadPintaResumo(){ const r=$('.cad-resumo',PGC), f=$('#cad-campos',PGC); if(r&&cadId) r.innerHTML=cadResumo(Object.assign({},cadNota(cadId),cadColeta()),f&&!f.hidden); }
+const cadBt=b=>'<button type="button" data-cc="'+b[0]+'" title="'+b[1]+'" aria-label="'+b[1]+'"'+(b[3]==='p'?' aria-pressed="false"':b[3]==='pop'?' aria-haspopup="true" aria-expanded="false"':'')+(b[0]==='ins'?' class="cad-ins-b"':'')+'>'+b[2]+'</button>';
+function cadBarHtml(){
+  return '<div class="cad-bar-e">'+CAD_GRUPOS.map(g=>'<span class="cad-gr">'+g.map(b=>b==='bloco'?
+      '<select id="cad-bloco" aria-label="Estilo do parágrafo" title="Estilo do parágrafo (Ctrl+Alt+0 a 3)"><option value="p">Texto</option><option value="h2">Título</option><option value="h3">Subtítulo</option><option value="h4">Tópico</option></select>':cadBt(b)).join('')+'</span>').join('')+
+    '<span class="cad-gr cad-tab-bts" hidden>'+[['t:lin+','+ Linha','Inserir linha abaixo'],['t:col+','+ Coluna','Inserir coluna à direita'],['t:lin-','− Linha','Apagar esta linha'],['t:col-','− Coluna','Apagar esta coluna'],['t:tab-','Apagar tabela','Apagar a tabela inteira']]
+      .map(x=>'<button type="button" class="txt" data-cc="'+x[0]+'" title="'+x[2]+'">'+x[1]+'</button>').join('')+'</span></div>'+
+    '<span class="cad-gr cad-bar-d">'+CAD_DIR.map(cadBt).join('')+'</span>';
+}
+function cadDocHtml(n){
+  const v=n.v||{}, profs=[...new Set(cadIds().map(id=>(cadNota(id).v||{}).prof).filter(Boolean))], aberta=cadFichaAberta(n);
+  return '<article class="cad-doc">'+
+    '<button type="button" class="cad-mais" data-cad="mais" aria-label="Mais opções" title="Mais opções" aria-haspopup="true" aria-expanded="false">'+CAD_ICO.mais+'</button>'+
+    '<input id="cad-t" class="cad-tit" type="text" placeholder="Sem título" aria-label="Título da anotação" maxlength="160" value="'+esc(n.t||'')+'">'+
+    '<div class="cad-resumo">'+cadResumo(n,aberta)+'</div>'+
+    '<div class="cad-campos" id="cad-campos"'+(aberta?'':' hidden')+'>'+
+      '<label class="l2">Vídeo<input id="cad-f-vt" type="text" maxlength="200" value="'+esc(v.tit||'')+'" placeholder="Título do vídeo"></label>'+
+      '<label class="l2">Link<input id="cad-f-url" type="url" inputmode="url" value="'+esc(v.url||'')+'" placeholder="Endereço do vídeo (YouTube ou outro site)"></label>'+
+      '<label>Professor ou canal<input id="cad-f-prof" type="text" list="cad-profs" maxlength="120" value="'+esc(v.prof||'')+'"></label><datalist id="cad-profs">'+profs.map(p=>'<option value="'+esc(p)+'">').join('')+'</datalist>'+
+      '<label>Parou em<input id="cad-f-fim" type="text" inputmode="numeric" placeholder="12:34" value="'+(v.fim!=null?cadHms(v.fim):'')+'"></label>'+
+      '<label>Matéria<select id="cad-f-mat">'+cadOpMat(n.m||'')+'</select></label>'+
+      '<label>Apostila<select id="cad-f-ap">'+cadOpAp(n.m||'',n.ap||'')+'</select></label>'+
+      '<label class="cad-ok-l"><input type="checkbox" id="cad-f-ok"'+(v.ok?' checked':'')+'> Terminei o vídeo</label>'+
+    '</div>'+
+    '<div class="cad-bar" role="toolbar" aria-label="Formatação do texto" aria-controls="cad-ed">'+cadBarHtml()+'</div>'+
+    '<div id="cad-ed" class="cad-ed" contenteditable="'+(cadPronto()?'true':'false')+'" role="textbox" aria-multiline="true" aria-label="Texto da anotação" spellcheck="true" lang="pt-BR" data-ph="Comece a escrever…">'+(cadLimpa(n.h)||'<p><br></p>')+'</div>'+
+    '<div class="cad-modelos" hidden><span>Ou comece com um modelo:</span>'+Object.entries(CAD_MODELOS).map(([k,m])=>'<button type="button" data-cadmod="'+k+'">'+m[0]+'</button>').join('')+'</div>'+
+    '<footer class="cad-pe"><span class="cad-st" role="status" aria-live="polite">'+(cadPronto()?'':'Sincronizando com a nuvem…')+'</span><span class="cad-conta"></span></footer>'+
+    '<div class="cad-pop" id="cad-pop" hidden></div><div class="cad-bolha" hidden></div>'+
+  '</article><nav class="cad-sum" aria-label="Nesta anotação"></nav>';
+}
+function cadBoasVindas(qtd){
+  return '<div class="cad-boas">'+(qtd?'<b>Escolha uma anotação</b><span>ou comece outra.</span>':'<b>Seu caderno está em branco</b><span>Uma anotação para cada videoaula, com o vídeo, o professor e o minuto em que você parou.</span>')+
+    '<button type="button" class="btn pri" data-cad="novo"'+(cadPronto()?'':' disabled')+'>'+CAD_ICO.inserir+'Nova anotação</button>'+
+    '<p class="cad-dica"># e espaço vira título · - e espaço, lista · [] e espaço, tarefa · Alt+T marca o minuto do vídeo</p></div>';
+}
+function renderCaderno(id){
+  if(cadId&&cadId!==id&&cadSujo) cadCommit();
+  if(cadId!==id){ cadPararPlayer(); cadVideoOn=false; document.body.classList.remove('cad-em-estudo'); }
+  if(id&&!cadNota(id)){ id=null; history.replaceState(null,'','#/caderno'); }
+  cadId=id||null; cadSujo=false;
+  const n=cadId&&cadNota(cadId), tem=cadIds().length;
+  PGC.innerHTML='<div class="cad-pag'+(n?' aberta':'')+(tem?'':' cad-sem')+'">'+(n?'':'<header class="pg-cab peq"><h1>Caderno</h1></header>')+
+    '<div class="cad-g"><aside class="cad-lista" aria-label="Anotações">'+cadListaHtml()+'</aside>'+
+    (n?'<div class="cad-video"><div class="cad-tela"></div><div class="cad-v-bar">'+
+      '<button type="button" data-cadv="-10" title="Voltar 10 s (Alt+J)" aria-label="Voltar 10 segundos">'+CAD_ICO.volta+'10 s</button>'+
+      '<button type="button" data-cadv="pp" title="Tocar ou pausar (Alt+K)" aria-label="Tocar ou pausar">'+CAD_ICO.play+'</button>'+
+      '<button type="button" data-cadv="10" title="Avançar 10 s (Alt+L)" aria-label="Avançar 10 segundos">10 s'+CAD_ICO.avanca+'</button>'+
+      '<button type="button" class="cad-v-marca" data-cadv="marca" title="Marcar o minuto no texto (Alt+T)">'+CAD_ICO.tempo+'Marcar o minuto</button>'+
+      '<button type="button" class="cad-v-sair" data-cadv="sair" title="Sair do modo vídeo">'+CAD_ICO.sair+'Sair do modo vídeo</button></div>'+
+      '<p class="cad-v-dica">Com o cursor no texto: <b>Alt+K</b> pausa, <b>Alt+J</b> e <b>Alt+L</b> voltam e avançam 10 s, <b>Alt+T</b> marca o minuto. Arraste a divisória para mudar o tamanho.</p></div>'+
+      '<div class="cad-div" role="separator" aria-orientation="vertical" aria-label="Arraste para mudar o tamanho do vídeo" title="Arraste para mudar o tamanho"></div>':'')+
+    '<section class="cad-area">'+(n?cadDocHtml(n):cadBoasVindas(tem))+'</section></div></div>';
+  cadEd=$('#cad-ed',PGC);
+  cadTrilha();
+  if(!cadEd) return;
+  cadSumario(); cadConta(); cadVazio();
+  if(cadVideoOn) cadVideo(true);
+  if(cadNovoId===cadId){ cadNovoId=null; const t=$('#cad-t',PGC); if(t) t.focus(); }
+}
+
+/* ---------- editor: estado da barra, sumário, contagem ---------- */
+const cadNo=n=>n?(n.nodeType===1?n:n.parentElement):null;
+function cadAncora(){ const s=getSelection(); return s.rangeCount?cadNo(s.getRangeAt(0).startContainer):null; }
+function cadRestaura(){ if(cadSel&&cadEd&&cadEd.contains(cadSel.commonAncestorContainer)){ const s=getSelection(); s.removeAllRanges(); s.addRange(cadSel); } }
+function cadCelula(){ const el=cadAncora(), c=el&&el.closest('td,th'); return c&&cadEd&&cadEd.contains(c)?c:null; }
+function cadEstado(){
+  if(!cadEd||!cadEd.contains(document.activeElement)) return;
+  const s=getSelection(); if(!s.rangeCount) return; const r=s.getRangeAt(0); if(!cadEd.contains(r.commonAncestorContainer)) return;
+  cadSel=r.cloneRange(); const el=cadNo(r.startContainer);
+  $$('.cad-bar [data-cc][aria-pressed]',PGC).forEach(b=>{ const c=b.dataset.cc; let on=false;
+    try{ on=c==='check'?!!el.closest('ul.cad-tarefas'):c==='insertUnorderedList'?!!el.closest('ul:not(.cad-tarefas)'):document.queryCommandState(c); }catch(e){}
+    b.setAttribute('aria-pressed',on?'true':'false'); });
+  const blk=el.closest('h2,h3,h4'), sel=$('#cad-bloco',PGC); if(sel) sel.value=blk&&cadEd.contains(blk)?blk.tagName.toLowerCase():'p';
+  let cor=null; try{ const f=el.closest('font[color]'); cor=f&&cadEd.contains(f)?f.getAttribute('color'):notaHex(document.queryCommandValue('foreColor')); }catch(e){}
+  const bar=$('.cad-bar .nota-a i',PGC); if(bar){ if(NOTA_COR.some(x=>x[1]===cor)) bar.dataset.cor=cor; else delete bar.dataset.cor; }
+  const tb=$('.cad-tab-bts',PGC); if(tb) tb.hidden=!cadCelula();
+  cadBolha(el);
+}
+document.addEventListener('selectionchange',()=>{ if(cadEd&&document.body.dataset.pg==='caderno') cadEstado(); });
+function cadSumario(){
+  const el=$('.cad-sum',PGC); if(!el||!cadEd) return;
+  const it=$$('h2,h3,h4,.cad-tempo',cadEd);
+  el.innerHTML=it.length<2?'':it.map((x,i)=>{
+    if(x.classList.contains('cad-tempo')){ const b=cadNo(x.parentNode).closest('p,li,h2,h3,h4,blockquote,td,th'), tx=b&&cadEd.contains(b)?(()=>{ const c=b.cloneNode(true); c.querySelectorAll('.cad-tempo').forEach(z=>z.replaceWith(' ')); return c.textContent.replace(/\s+/g,' ').trim(); })():'';
+      return '<button type="button" class="t" data-cadir="'+i+'"><b>'+esc(x.textContent)+'</b>'+(tx?'<span>'+esc(tx.slice(0,42))+(tx.length>42?'…':'')+'</span>':'')+'</button>'; }
+    return '<button type="button" class="'+x.tagName.toLowerCase()+'" data-cadir="'+i+'">'+esc(x.textContent.trim()||'(título vazio)')+'</button>';
+  }).join('');
+}
+function cadConta(){ const c=$('.cad-conta',PGC); if(!c||!cadEd) return; const n=(cadEd.innerText.match(/\S+/g)||[]).length; c.textContent=n?n+(n===1?' palavra':' palavras'):''; }
+function cadVazio(){ if(!cadEd) return; const vazio=!cadEd.textContent.trim()&&!$('li,table,hr,.cad-tempo',cadEd); cadEd.classList.toggle('cad-vz',vazio); const m=$('.cad-modelos',PGC); if(m) m.hidden=!vazio; }
+
+/* ---------- comandos ---------- */
+function cadExec(c,v){ try{ document.execCommand('styleWithCSS',false,false); }catch(e){} return document.execCommand(c,false,v==null?null:v); }
+function cadCmd(c,b){
+  if(c==='mark'||c==='cor'||c==='link'||c==='mais'||c==='ins') return cadPopAbre(c,b);
+  if(c==='tempo') return cadTempo(b);
+  if(!cadEd||cadEd.getAttribute('contenteditable')!=='true') return;
+  cadEd.focus(); cadRestaura();
+  if(c==='check') cadCheck();
+  else if(c==='quote'||c==='imp') cadQuote(c==='imp');
+  else if(c==='hr') cadExec('insertHTML','<hr><p><br></p>');
+  else if(c==='tabela') cadExec('insertHTML','<table><thead><tr><th>Coluna 1</th><th>Coluna 2</th><th>Coluna 3</th></tr></thead><tbody><tr><td><br></td><td><br></td><td><br></td></tr><tr><td><br></td><td><br></td><td><br></td></tr></tbody></table><p><br></p>');
+  else if(c==='limpar'){ cadExec('removeFormat'); cadTiraMarcas(); }
+  else if(c.slice(0,2)==='t:') cadTab(c.slice(2));
+  else if(c==='insertUnorderedList') cadLista('ul',false);
+  else if(c==='insertOrderedList') cadLista('ol',false);
+  else cadExec(c);
+  cadSujar(); cadEstado();
+}
+function cadBloco(v){ if(!cadEd) return; cadEd.focus(); cadRestaura(); const el=cadAncora(), q=el&&el.closest('blockquote'); if(q&&cadEd.contains(q)&&v!=='p') cadDesembrulha(q); cadExec('formatBlock','<'+v+'>'); cadSujar(); cadEstado(); }
+// transforma a linha atual numa lista montando os elementos à mão: o Chrome, com uma linha vazia, enfia a lista dentro do parágrafo
+function cadViraLista(tag,tarefas){
+  const el=cadAncora(), bl=el&&el.closest('p,div,h2,h3,h4');
+  if(!bl||bl===cadEd||bl.parentNode!==cadEd){
+    cadExec(tag==='ol'?'insertOrderedList':'insertUnorderedList');
+    const u=cadAncora()&&cadAncora().closest(tag); if(u&&cadEd.contains(u)) u.classList.toggle('cad-tarefas',!!tarefas); return;
+  }
+  const li=document.createElement('li'); li.innerHTML=bl.textContent.trim()?bl.innerHTML:'<br>';
+  const ant=bl.previousElementSibling;
+  if(ant&&ant.tagName===tag.toUpperCase()&&ant.classList.contains('cad-tarefas')===!!tarefas){ ant.appendChild(li); bl.remove(); }
+  else{ const l=document.createElement(tag); if(tarefas) l.className='cad-tarefas'; l.appendChild(li); bl.replaceWith(l); }
+  cadCaret(li);
+}
+function cadLista(tag,tarefas){
+  const el=cadAncora(), l=el&&el.closest('ul,ol');
+  if(l&&cadEd.contains(l)){
+    if(l.tagName===tag.toUpperCase()&&l.classList.contains('cad-tarefas')===!!tarefas){ cadExec(tag==='ol'?'insertOrderedList':'insertUnorderedList'); return; } // desliga
+    if(l.tagName===tag.toUpperCase()){ l.classList.toggle('cad-tarefas',!!tarefas); return; }
+    const n=document.createElement(tag); if(tarefas) n.className='cad-tarefas'; while(l.firstChild) n.appendChild(l.firstChild); l.replaceWith(n); cadCaret(n.querySelector('li')||n,true); return;
+  }
+  cadViraLista(tag,tarefas);
+}
+function cadCheck(){ cadLista('ul',true); }
+function cadDesembrulha(q){
+  const blocos=[...q.childNodes].some(n=>n.nodeType===1&&CAD_BLOCOS.test(n.tagName));
+  if(blocos){ while(q.firstChild) q.parentNode.insertBefore(q.firstChild,q); q.remove(); return; }
+  const p=document.createElement('p'); while(q.firstChild) p.appendChild(q.firstChild); if(!p.firstChild) p.innerHTML='<br>'; q.replaceWith(p);
+  const r=document.createRange(); r.selectNodeContents(p); r.collapse(false); const s=getSelection(); s.removeAllRanges(); s.addRange(r);
+}
+function cadQuote(imp){
+  const el=cadAncora(), q=el&&el.closest('blockquote');
+  if(q&&cadEd.contains(q)){ if(q.classList.contains('cad-imp')===imp) cadDesembrulha(q); else q.classList.toggle('cad-imp',imp); return; }
+  cadExec('formatBlock','<blockquote>'); const n=cadAncora(), q2=n&&n.closest('blockquote'); if(q2&&imp) q2.classList.add('cad-imp');
+}
+function cadTiraMarcas(r){
+  const s=getSelection(); r=r||(s.rangeCount?s.getRangeAt(0):null); if(!r||!cadEd) return;
+  $$('mark',cadEd).filter(m=>r.intersectsNode(m)).forEach(m=>{ const p=m.parentNode; while(m.firstChild) p.insertBefore(m.firstChild,m); p.removeChild(m); });
+  $$('span[style*="background"]',cadEd).filter(x=>r.intersectsNode(x)).forEach(x=>{ x.style.backgroundColor=''; if(!x.getAttribute('style')){ const p=x.parentNode; while(x.firstChild) p.insertBefore(x.firstChild,x); p.removeChild(x); } });
+}
+function cadMarca(c){
+  cadEd.focus(); cadRestaura(); const s=getSelection(); if(!s.rangeCount) return;
+  cadTiraMarcas(s.getRangeAt(0));
+  if(c&&s.isCollapsed){ cadStatus('Selecione um trecho para marcar.'); return; }
+  if(c){ try{ document.execCommand('styleWithCSS',false,true); }catch(e){} document.execCommand('hiliteColor',false,CAD_MARCA.find(x=>x[0]===c)[2]); try{ document.execCommand('styleWithCSS',false,false); }catch(e){} }
+  cadSujar();
+}
+function cadCor(c){ cadEd.focus(); cadRestaura(); cadExec('foreColor',c); cadSujar(); cadEstado(); }
+function cadCaret(el,fim){ const r=document.createRange(); r.selectNodeContents(el); r.collapse(!fim); const s=getSelection(); s.removeAllRanges(); s.addRange(r); }
+function cadTab(op){
+  const c=cadCelula(); if(!c) return; const tr=c.parentElement, tb=c.closest('table'), i=[...tr.children].indexOf(c);
+  const nova=tag=>{ const x=document.createElement(tag); x.innerHTML='<br>'; return x; };
+  if(op==='lin+'){ const n=document.createElement('tr'); [...tr.children].forEach(()=>n.appendChild(nova('td')));
+    if(tr.parentElement.tagName==='THEAD'){ const b=tb.tBodies[0]||tb.createTBody(); b.insertBefore(n,b.firstChild); } else tr.after(n); cadCaret(n.firstChild); }
+  else if(op==='col+'){ [...tb.rows].forEach(r=>{ const ref=r.children[i], x=nova(ref&&ref.tagName==='TH'?'th':'td'); if(ref) ref.after(x); else r.appendChild(x); }); cadCaret(tr.children[i+1]); }
+  else if(op==='lin-'){ const viz=tr.nextElementSibling||tr.previousElementSibling; if(tb.rows.length<=1){ cadTab('tab-'); return; } tr.remove(); if(viz) cadCaret(viz.children[Math.min(i,viz.children.length-1)]); else cadTab('tab-'); }
+  else if(op==='col-'){ if(tr.children.length<=1){ cadTab('tab-'); return; } [...tb.rows].forEach(r=>{ if(r.children[i]) r.children[i].remove(); }); cadCaret(tr.children[Math.max(0,i-1)]); }
+  else if(op==='tab-'){ const p=document.createElement('p'); p.innerHTML='<br>'; tb.replaceWith(p); cadCaret(p); }
+}
+function cadTabPula(volta){
+  const c=cadCelula(); if(!c) return; const cs=$$('td,th',c.closest('table')), i=cs.indexOf(c);
+  if(!volta&&i===cs.length-1){ cadTab('lin+'); cadSujar(); return; }
+  const alvo=cs[i+(volta?-1:1)]; if(alvo) cadCaret(alvo,true);
+}
+// atalhos de digitação (logo depois do espaço): # título, ## subtítulo, ### tópico, - lista, 1. numerada, [] tarefa, > citação, ! destaque
+function cadAtalhoMd(){
+  const s=getSelection(); if(!s.isCollapsed||!s.rangeCount) return false;
+  const r=s.getRangeAt(0), bl=cadNo(r.startContainer).closest('p,div,h2,h3,h4,li,td,th,blockquote');
+  if(!bl||bl===cadEd||!cadEd.contains(bl)||!/^(P|DIV)$/.test(bl.tagName)||bl.closest('li,td,th,blockquote')) return false;
+  const pre=document.createRange(); pre.setStart(bl,0); pre.setEnd(r.startContainer,r.startOffset);
+  const bruto=pre.toString(); if(!/[\s ]$/.test(bruto)) return false;
+  const t=bruto.replace(/[\s ]$/,''), acao={'#':'h2','##':'h3','###':'h4','-':'ul','*':'ul','1.':'ol','[]':'check','[ ]':'check','>':'quote','!':'imp'}[t];
+  if(!acao) return false;
+  s.removeAllRanges(); s.addRange(pre); document.execCommand('delete');
+  if(/^h\d$/.test(acao)) cadExec('formatBlock','<'+acao+'>');
+  else if(acao==='ul'||acao==='ol') cadViraLista(acao,false);
+  else if(acao==='check') cadViraLista('ul',true); else cadQuote(acao==='imp');
+  cadSujar(); cadEstado(); return true;
+}
+
+/* ---------- janelinhas: marca-texto, cor, inserir, link, minuto, mais ---------- */
+function cadPopFecha(volta){
+  const p=$('#cad-pop',PGC); if(!p||p.hidden) return; p.hidden=true; p.innerHTML='';
+  $$('[aria-expanded="true"][data-cc],[aria-expanded="true"][data-cad="mais"]',PGC).forEach(b=>b.setAttribute('aria-expanded','false'));
+  if(volta&&cadEd){ cadEd.focus(); cadRestaura(); }
+}
+function cadPopAbre(tipo,b){
+  const p=$('#cad-pop',PGC); if(!p) return;
+  const aberto=!p.hidden&&p.dataset.tipo===tipo; cadPopFecha(); if(aberto) return;
+  const n=cadNota(cadId)||{}; let h='';
+  if(tipo==='mark') h='<div class="cad-pal" role="group" aria-label="Marca-texto">'+CAD_MARCA.map(x=>'<button type="button" data-cadmk="'+x[0]+'" title="'+x[1]+'" aria-label="'+x[1]+'"><i class="mk-'+x[0]+'"></i></button>').join('')+'<button type="button" class="txt" data-cadmk="">Tirar</button></div>';
+  else if(tipo==='cor') h='<div class="cad-pal" role="group" aria-label="Cor do texto">'+NOTA_COR.map((x,i)=>'<button type="button" data-cadcor="'+x[1]+'" title="'+x[0]+'" aria-label="'+x[0]+'"><i style="--nc:var(--nc-'+(i+1)+')"></i></button>').join('')+'<button type="button" class="txt" data-cadcor="'+NOTA_SEMCOR+'">Normal</button></div>';
+  else if(tipo==='ins') h='<div class="cad-menu" role="menu">'+CAD_INS.map(x=>'<button type="button" role="menuitem" data-cc="'+x[0]+'">'+x[3]+'<span>'+x[1]+'</span>'+(x[2]?'<kbd>'+x[2]+'</kbd>':'')+'</button>').join('')+'</div>';
+  else if(tipo==='link'){ const el=cadAncora(), a=el&&el.closest('a[href]'), col=!cadSel||cadSel.collapsed;
+    h='<form class="cad-form" data-cadf="link"><label>Endereço<input name="u" type="url" inputmode="url" placeholder="https://" value="'+esc(a&&cadEd.contains(a)?a.getAttribute('href'):'')+'" required></label>'+(col&&!a?'<label>Texto que aparece<input name="t" type="text" placeholder="Se ficar vazio, aparece o endereço"></label>':'')+
+      '<div class="cad-form-bt"><button class="btn pri mini">Inserir</button><button type="button" class="btn fant mini" data-cad="popx">Cancelar</button></div></form>'; }
+  else if(tipo==='tempo') h='<form class="cad-form" data-cadf="tempo"><label>Minuto do vídeo<input name="t" type="text" inputmode="numeric" placeholder="12:34" value="'+(()=>{ const s=cadSeg(($('#cad-f-fim',PGC)||{}).value); return s!=null?cadHms(s):''; })()+'" required></label>'+
+      '<small>Como 12:34, ou 1:02:03 com horas. Clicar na marca abre o vídeo nesse ponto.</small><div class="cad-form-bt"><button class="btn pri mini">Marcar</button><button type="button" class="btn fant mini" data-cad="popx">Cancelar</button></div></form>';
+  else if(tipo==='mais') h='<div class="cad-menu" role="menu">'+
+      '<button type="button" role="menuitem" data-cad="fixar">'+CAD_ICO.pin+'<span>'+(n.fix?'Tirar do topo da lista':'Fixar no topo da lista')+'</span></button>'+
+      '<button type="button" role="menuitem" data-cad="word">'+CAD_ICO.word+'<span>Baixar para o Word</span></button>'+
+      '<button type="button" role="menuitem" data-cad="imprimir">'+CAD_ICO.imprimir+'<span>Imprimir ou salvar em PDF</span></button>'+
+      '<button type="button" role="menuitem" class="perigo" data-cad="apagar">'+CAD_ICO.lixo+'<span>Excluir anotação</span></button></div>';
+  p.innerHTML=h; p.dataset.tipo=tipo; p.hidden=false; if(b) b.setAttribute('aria-expanded','true');
+  const doc=$('.cad-doc',PGC).getBoundingClientRect(), r=(b&&document.contains(b)?b:$('.cad-ins-b',PGC)).getBoundingClientRect();
+  p.style.top=(r.bottom-doc.top+6)+'px'; p.style.left=Math.max(0,Math.min(r.left-doc.left,doc.width-p.offsetWidth-4))+'px';
+  const f=$('input',p)||$('button',p); if(f) f.focus();
+}
+function cadPopSubmete(f){
+  const tipo=f.dataset.cadf;
+  if(tipo==='link'){ const u=cadUrl(f.u.value), t=f.t?f.t.value.trim():''; if(!u){ f.u.setCustomValidity('Endereço inválido: comece com https://'); f.u.reportValidity(); f.u.setCustomValidity(''); return; }
+    cadPopFecha(true);
+    const el=cadAncora(), a=el&&el.closest('a[href]');
+    if(a&&cadEd.contains(a)) a.setAttribute('href',u);
+    else if(!cadSel||cadSel.collapsed) cadExec('insertHTML','<a href="'+esc(u)+'" target="_blank" rel="noopener">'+esc(t||u)+'</a>&nbsp;');
+    else cadExec('createLink',u);
+    $$('a[href]',cadEd).forEach(x=>{ x.target='_blank'; x.rel='noopener'; });
+  }
+  if(tipo==='tempo'){ const s=cadSeg(f.t.value); if(s==null){ f.t.setCustomValidity('Use minutos e segundos, como 12:34'); f.t.reportValidity(); f.t.setCustomValidity(''); return; } cadPopFecha(true); cadInsTempo(s); }
+  cadSujar(); cadEstado();
+}
+function cadBolha(el){
+  const b=$('.cad-bolha',PGC); if(!b) return; const a=el&&el.closest('a[href]');
+  if(!a||!cadEd.contains(a)){ b.hidden=true; return; }
+  b.innerHTML='<a href="'+esc(a.href)+'" target="_blank" rel="noopener">Abrir ↗</a><button type="button" data-cad="unlink">Tirar o link</button>'; b._a=a;
+  const doc=$('.cad-doc',PGC).getBoundingClientRect(), r=a.getBoundingClientRect();
+  b.style.top=(r.bottom-doc.top+4)+'px'; b.style.left=Math.max(0,r.left-doc.left)+'px'; b.hidden=false;
+}
+
+/* ---------- minuto do vídeo ---------- */
+function cadInsTempo(s){
+  if(!cadEd) return; cadEd.focus(); cadRestaura();
+  // a marca entra exatamente no ponto do cursor, dentro da linha (o insertHTML do Chrome a jogava para fora do parágrafo)
+  const sel=getSelection(); let r=sel.rangeCount?sel.getRangeAt(0):null;
+  if(!r||!cadEd.contains(r.commonAncestorContainer)){ r=document.createRange(); r.selectNodeContents(cadEd); r.collapse(false); }
+  r.deleteContents();
+  if(r.startContainer===cadEd){ const p=document.createElement('p'); r.insertNode(p); r=document.createRange(); r.selectNodeContents(p); }
+  const tp=document.createElement('template'); tp.innerHTML=cadChip(s); const chip=tp.content.firstChild, esp=document.createTextNode(' ');
+  const c0=r.startContainer, antes=c0.nodeType===3&&r.startOffset>0?c0.nodeValue[r.startOffset-1]:'';
+  r.insertNode(esp); r.insertNode(chip); if(antes&&!/\s/.test(antes)) r.insertNode(document.createTextNode(' '));
+  const fim=document.createRange(); fim.setStartAfter(esp); fim.collapse(true); sel.removeAllRanges(); sel.addRange(fim); cadSel=fim.cloneRange();
+  const inp=$('#cad-f-fim',PGC); if(inp&&!cadPlayerOk()&&(cadSeg(inp.value)||0)<s) inp.value=cadHms(s);
+  cadSujar(); cadPintaResumo();
+}
+function cadTempo(b){
+  if(!cadEd||cadEd.getAttribute('contenteditable')!=='true') return;
+  if(cadPlayerOk()){ cadInsTempo(Math.floor(cadPlayer.getCurrentTime()||0)); cadParou(); return; }
+  cadPopAbre('tempo',b&&b.closest('.cad-bar')?b:$('.cad-ins-b',PGC));
+}
+function cadIrTempo(s){
+  if(cadPlayerOk()){ try{ cadPlayer.seekTo(s,true); cadPlayer.playVideo(); }catch(e){} return; }
+  const u=cadUrl(($('#cad-f-url',PGC)||{}).value);
+  if(cadYt(u)){ cadVideo(true,s); return; }
+  if(u){ window.open(u,'_blank','noopener'); cadStatus('Vá até '+cadHms(s)+' no vídeo.'); return; }
+  cadStatus('Ponha o link do vídeo na ficha para o minuto virar atalho.');
+}
+
+/* ---------- vídeo dentro do caderno ---------- */
+function cadYTApi(){
+  if(cadYtP) return cadYtP;
+  cadYtP=new Promise((ok,erro)=>{
+    if(window.YT&&YT.Player) return ok();
+    const antes=window.onYouTubeIframeAPIReady; window.onYouTubeIframeAPIReady=()=>{ if(antes) try{ antes(); }catch(e){} ok(); };
+    const s=document.createElement('script'); s.src='https://www.youtube.com/iframe_api'; s.onerror=()=>{ cadYtP=null; erro(); }; document.head.appendChild(s);
+    setTimeout(()=>{ if(!(window.YT&&YT.Player)){ cadYtP=null; erro(); } },15000);
+  });
+  return cadYtP;
+}
+const cadPlayerOk=()=>!!(cadPlayer&&cadPlayer.getCurrentTime&&cadPlayer.seekTo);
+function cadPararPlayer(){ clearInterval(cadTick); cadTick=null; if(cadPlayer){ cadParou(); try{ cadPlayer.destroy(); }catch(e){} cadPlayer=null; } }
+// guarda na ficha onde o vídeo parou
+function cadParou(){
+  if(!cadPlayerOk()) return; let t=0; try{ t=Math.floor(cadPlayer.getCurrentTime()||0); }catch(e){ return; }
+  const inp=$('#cad-f-fim',PGC); if(t>0&&inp&&cadSeg(inp.value)!==t){ inp.value=cadHms(t); cadSujar(); cadPintaResumo(); }
+}
+function cadDivAplica(){ const g=$('.cad-g',PGC); let v=58; try{ v=+localStorage.getItem(CAD_DIV)||58; }catch(e){} if(g) g.style.setProperty('--cad-v',Math.min(75,Math.max(30,v))+'%'); }
+function cadVideo(on,inicio){
+  const url=cadUrl(($('#cad-f-url',PGC)||{}).value||((cadNota(cadId)||{}).v||{}).url), id=cadYt(url);
+  if(on&&!id){ cadStatus('O vídeo aqui dentro funciona com links do YouTube. Os outros abrem no site.'); return; }
+  cadVideoOn=!!on;
+  const raiz=$('.cad-pag',PGC); if(!raiz) return;
+  raiz.classList.toggle('cad-estudo',cadVideoOn); document.body.classList.toggle('cad-em-estudo',cadVideoOn); cadPintaResumo();
+  if(!cadVideoOn){ cadPararPlayer(); const t=$('.cad-tela',PGC); if(t) t.innerHTML=''; return; }
+  cadDivAplica();
+  const fim=cadSeg(($('#cad-f-fim',PGC)||{}).value), ini=inicio!=null?inicio:(fim||0);
+  if(cadPlayerOk()&&cadPlayer._id===id){ try{ cadPlayer.seekTo(ini,true); cadPlayer.playVideo(); }catch(e){} return; }
+  cadPararPlayer();
+  const tela=$('.cad-tela',PGC); tela.innerHTML='<p class="cad-v-msg">Carregando o vídeo…</p>';
+  cadYTApi().then(()=>{
+    if(!cadVideoOn||!$('.cad-tela',PGC)) return;
+    const alvo=document.createElement('div'); $('.cad-tela',PGC).replaceChildren(alvo);
+    cadPlayer=new YT.Player(alvo,{width:'100%',height:'100%',videoId:id,host:'https://www.youtube-nocookie.com',
+      playerVars:{start:Math.floor(ini),rel:0,playsinline:1,modestbranding:1,autoplay:inicio!=null?1:0},
+      events:{onReady:()=>{ if(inicio!=null) try{ cadPlayer.playVideo(); }catch(e){} },
+        onStateChange:e=>{ const pp=$('[data-cadv="pp"]',PGC); if(pp) pp.innerHTML=e.data===1?CAD_ICO.pausa:CAD_ICO.play;
+          if(e.data===2) cadParou();
+          if(e.data===0){ cadParou(); const ok=$('#cad-f-ok',PGC); if(ok&&!ok.checked){ ok.checked=true; cadSujar(); cadPintaResumo(); cadStatus('Vídeo terminado: marquei como assistido.'); } } },
+        onError:()=>{ const t=$('.cad-tela',PGC); if(t) t.innerHTML='<p class="cad-v-msg">Este vídeo não pode ser exibido fora do YouTube. Use "Abrir no site".</p>'; cadPlayer=null; }}});
+    cadPlayer._id=id;
+    clearInterval(cadTick); cadTick=setInterval(()=>{ try{ if(cadPlayerOk()&&cadPlayer.getPlayerState()===1) cadParou(); }catch(e){} },5000);
+  }).catch(()=>{ const t=$('.cad-tela',PGC); if(t) t.innerHTML='<p class="cad-v-msg">Não consegui carregar o player do YouTube. Confira a internet ou use "Abrir no site".</p>'; });
+}
+function cadPlayPausa(){ if(!cadPlayerOk()){ if(cadYt(cadUrl(($('#cad-f-url',PGC)||{}).value))) cadVideo(true); return; } try{ if(cadPlayer.getPlayerState()===1) cadPlayer.pauseVideo(); else cadPlayer.playVideo(); }catch(e){} }
+function cadPula(d){ if(!cadPlayerOk()) return; try{ cadPlayer.seekTo(Math.max(0,cadPlayer.getCurrentTime()+d),true); }catch(e){} }
+// divisória: arrastar muda a proporção entre o vídeo e a anotação
+PGC.addEventListener('pointerdown',e=>{
+  const d=e.target.closest('.cad-div'); if(!d) return; e.preventDefault();
+  const g=$('.cad-g',PGC), r=g.getBoundingClientRect(); d.classList.add('arrastando'); d.setPointerCapture(e.pointerId);
+  const tela=$('.cad-tela',PGC); if(tela) tela.style.pointerEvents='none';
+  let v=null;
+  const mexe=ev=>{ v=Math.min(75,Math.max(30,(ev.clientX-r.left-18)/(r.width-50)*100)); g.style.setProperty('--cad-v',v.toFixed(1)+'%'); };
+  const solta=()=>{ d.classList.remove('arrastando'); if(tela) tela.style.pointerEvents=''; d.removeEventListener('pointermove',mexe); d.removeEventListener('pointerup',solta); d.removeEventListener('pointercancel',solta);
+    if(v!=null) try{ localStorage.setItem(CAD_DIV,v.toFixed(1)); }catch(x){} };
+  d.addEventListener('pointermove',mexe); d.addEventListener('pointerup',solta); d.addEventListener('pointercancel',solta);
+});
+
+/* ---------- criar, fixar, exportar, excluir ---------- */
+function cadNovo(){
+  if(!cadPronto()) return; if(cadSujo) cadCommit();
+  const ult=cadOrdem()[0], base=ult?ult[1]:{}, agora=Date.now(), id=agora.toString(36)+Math.random().toString(36).slice(2,6);
+  cadGrava(id,{t:'',m:base.m||'',ap:base.ap||'',v:base.v&&base.v.prof?{prof:base.v.prof}:{},h:'',c:agora,u:agora});
+  cadNovoId=id; location.hash='#/caderno/'+id;
+}
+function cadFixar(){ if(cadSujo) cadCommit(); const n=cadNota(cadId); if(!n) return; const x=Object.assign({},n); if(x.fix) delete x.fix; else x.fix=1; cadGrava(cadId,x); cadPopFecha(); cadPintaLista(); cadStatus(x.fix?'Fixada no topo da lista.':'Saiu do topo da lista.'); }
+const cadArquivo=t=>cadSemAcento(t||'anotacao').replace(/[^\w\- ]+/g,'').trim().replace(/\s+/g,'-').slice(0,60)||'anotacao';
+function cadWord(){
+  if(cadSujo) cadCommit(); const n=cadNota(cadId); if(!n) return; const v=n.v||{}, tit=n.t||v.tit||'Anotação', ap=apPorId(n.ap);
+  const cor=Object.fromEntries(CAD_MARCA.map(x=>[x[0],x[2]]));
+  const corpo=cadLimpa(n.h).replace(/<mark data-c="(\w+)">/g,(m,c)=>'<span style="background:'+(cor[c]||'#fff176')+'">').replace(/<\/mark>/g,'</span>')
+    .replace(/<span class="cad-tempo" data-s="(\d+)"[^>]*>([^<]*)<\/span>/g,(m,s,t)=>v.url?'<a href="'+esc(cadLinkT(v.url,+s))+'">['+t+']</a>':'['+t+']')
+    .replace(/<ul class="cad-tarefas">/g,'<ul>').replace(/<li class="cad-feito">/g,'<li>&#9745; ').replace(/<blockquote class="cad-imp">/g,'<blockquote style="border-left:4px solid #e0b100;background:#fff8e1">');
+  const ficha=[['Vídeo',v.tit],['Professor ou canal',v.prof],['Link',v.url],['Matéria',n.m],['Apostila',ap&&ap.nome],['Parou em',v.fim!=null?cadHms(v.fim):''],['Situação',v.ok?'assistido':'']].filter(x=>x[1]);
+  const html='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:w="urn:schemas-microsoft-com:office:word" xmlns="http://www.w3.org/TR/REC-html40"><head><meta charset="utf-8"><title>'+esc(tit)+'</title>'+
+    '<style>body{font-family:Calibri,Arial,sans-serif;font-size:12pt;line-height:1.5}h1{font-size:20pt}h2{font-size:15pt;color:#0b5d57}h3{font-size:13pt}h4{font-size:12pt}table{border-collapse:collapse}td,th{border:1px solid #999;padding:4px 8px;vertical-align:top}blockquote{border-left:4px solid #0f766e;margin:8px 0;padding:4px 12px}</style></head><body>'+
+    '<h1>'+esc(tit)+'</h1>'+(ficha.length?'<table>'+ficha.map(x=>'<tr><th align="left">'+x[0]+'</th><td>'+esc(x[1])+'</td></tr>').join('')+'</table><p></p>':'')+corpo+'</body></html>';
+  const b=new Blob(['﻿',html],{type:'application/msword'}), a=document.createElement('a');
+  a.href=URL.createObjectURL(b); a.download=cadArquivo(tit)+'.doc'; document.body.appendChild(a); a.click(); setTimeout(()=>{ URL.revokeObjectURL(a.href); a.remove(); },1500);
+  cadPopFecha(); cadStatus('Arquivo baixado. Abra no Word.');
+}
+function cadImprimir(){
+  if(cadSujo) cadCommit(); cadPopFecha();
+  document.body.classList.add('cad-imprime'); const fim=()=>{ document.body.classList.remove('cad-imprime'); removeEventListener('afterprint',fim); };
+  addEventListener('afterprint',fim); window.print();
+}
+function cadApagar(b){
+  if(!b.classList.contains('confirma')){ b.classList.add('confirma'); $('span',b).textContent='Excluir mesmo? Toque de novo'; return; }
+  cadSujo=false; clearTimeout(cadT1); clearTimeout(cadT2); cadPararPlayer(); cadVideoOn=false; document.body.classList.remove('cad-em-estudo');
+  cadGrava(cadId,null); try{ localStorage.removeItem(CAD_RASC); }catch(e){}
+  cadId=null; location.hash='#/caderno';
+}
+
+/* ---------- eventos (delegados na página) ---------- */
+PGC.addEventListener('mousedown',e=>{
+  // a barra e as janelinhas não tiram o cursor do texto
+  if(e.target.closest('.cad-bar button,.cad-pal button,.cad-menu button,.cad-v-bar button')) e.preventDefault();
+  if(!e.target.closest('#cad-pop,[aria-haspopup="true"]')) cadPopFecha();
+});
+PGC.addEventListener('click',e=>{
+  const t=e.target, chip=t.closest('.cad-tempo');
+  if(chip&&cadEd&&cadEd.contains(chip)){ e.preventDefault(); cadIrTempo(+chip.dataset.s); return; }
+  const li=t.closest('ul.cad-tarefas>li'); if(li&&cadEd&&cadEd.contains(li)&&e.offsetX<28&&t===li&&cadEd.getAttribute('contenteditable')==='true'){ li.classList.toggle('cad-feito'); cadSujar(); return; }
+  const a=t.closest('#cad-ed a[href]'); if(a&&(e.ctrlKey||e.metaKey)){ e.preventDefault(); window.open(a.href,'_blank','noopener'); return; }
+  const b=t.closest('button'); if(!b) return;
+  if(b.dataset.cc){ const ins=b.closest('#cad-pop'); if(ins&&b.dataset.cc!=='link'&&b.dataset.cc!=='tempo') cadPopFecha(); cadCmd(b.dataset.cc,ins?$('.cad-ins-b',PGC):b); return; }
+  if(b.dataset.cadmk!==undefined){ cadPopFecha(); cadMarca(b.dataset.cadmk); return; }
+  if(b.dataset.cadcor){ cadPopFecha(); cadCor(b.dataset.cadcor); return; }
+  if(b.dataset.cadmod){ const m=CAD_MODELOS[b.dataset.cadmod]; cadEd.innerHTML=m[1]; cadEd.focus(); const p=$('p,li',cadEd); if(p) cadCaret(p,true); cadSujar(); cadVazio(); return; }
+  if(b.dataset.cadir!==undefined){ const x=$$('h2,h3,h4,.cad-tempo',cadEd)[+b.dataset.cadir]; if(x) x.scrollIntoView({behavior:'smooth',block:'center'}); return; }
+  if(b.dataset.cadv){ const v=b.dataset.cadv; if(v==='pp') cadPlayPausa(); else if(v==='marca') cadTempo(); else if(v==='sair') cadVideo(false); else cadPula(+v); if(cadEd&&v!=='sair'){ cadEd.focus(); cadRestaura(); } return; }
+  const c=b.dataset.cad; if(!c) return;
+  if(c==='novo') cadNovo();
+  else if(c==='video') cadVideo(true);
+  else if(c==='ficha'){ const f=$('#cad-campos',PGC); f.hidden=!f.hidden; b.setAttribute('aria-expanded',String(!f.hidden)); if(!f.hidden) $('#cad-f-vt',PGC).focus(); }
+  else if(c==='mais') cadPopAbre('mais',b);
+  else if(c==='popx') cadPopFecha(true);
+  else if(c==='fixar') cadFixar();
+  else if(c==='word') cadWord();
+  else if(c==='imprimir') cadImprimir();
+  else if(c==='apagar') cadApagar(b);
+  else if(c==='unlink'){ const bo=$('.cad-bolha',PGC), l=bo._a; if(l&&cadEd.contains(l)){ const p=l.parentNode; while(l.firstChild) p.insertBefore(l.firstChild,l); l.remove(); cadSujar(); } bo.hidden=true; cadEd.focus(); }
+});
+PGC.addEventListener('submit',e=>{ const f=e.target.closest('.cad-form'); if(f){ e.preventDefault(); cadPopSubmete(f); } });
+PGC.addEventListener('input',e=>{
+  const t=e.target;
+  if(t.id==='cad-q'){ cadQ=t.value; cadPintaLista(); return; }
+  if(t===cadEd){ if(e.inputType==='insertText'&&(e.data===' '||e.data===' ')) cadAtalhoMd(); cadSujar(); return; }
+  if(t.closest('.cad-doc')&&!t.closest('#cad-pop')){ cadSujar(); if(t.id==='cad-t') cadTrilha(); }
+});
+PGC.addEventListener('change',e=>{
+  const t=e.target;
+  if(t.id==='cad-mat'){ cadMat=t.value; cadPintaLista(); return; }
+  if(t.id==='cad-bloco'){ cadBloco(t.value); return; }
+  if(t.id==='cad-f-mat'){ const ap=$('#cad-f-ap',PGC); ap.innerHTML=cadOpAp(t.value,ap.value); }
+  if(t.id==='cad-f-fim'){ const s=cadSeg(t.value); if(s!=null) t.value=cadHms(s); }
+  if(t.id==='cad-f-url'){ const u=cadUrl(t.value); if(u) t.value=u; if(cadVideoOn&&!cadYt(u)) cadVideo(false); }
+  if(t.closest('.cad-campos')){ cadSujar(); cadPintaResumo(); }
+});
+PGC.addEventListener('focusin',e=>{ if(e.target===cadEd){ try{ document.execCommand('defaultParagraphSeparator',false,'p'); }catch(x){} } });
+PGC.addEventListener('focusout',e=>{
+  const doc=$('.cad-doc',PGC); if(!doc||!cadSujo) return;
+  if(e.relatedTarget&&doc.contains(e.relatedTarget)) return;
+  setTimeout(()=>{ if(cadSujo&&!doc.contains(document.activeElement)) cadCommit(); },0);
+});
+PGC.addEventListener('paste',e=>{
+  if(e.target!==cadEd&&!(cadEd&&cadEd.contains(e.target))) return;
+  const d=e.clipboardData; if(!d) return; e.preventDefault();
+  const h=d.getData('text/html'), tx=d.getData('text/plain');
+  if(h){ const l=cadLimpa(h); if(/<img/i.test(h)) cadStatus('As imagens ficam de fora: o caderno guarda só o texto.'); if(l) cadExec('insertHTML',l); }
+  else if(tx){ const ls=tx.replace(/\r/g,'').split('\n'); if(ls.length===1) cadExec('insertText',tx); else cadExec('insertHTML',ls.map(x=>'<p>'+(esc(x)||'<br>')+'</p>').join('')); }
+  cadSujar();
+});
+PGC.addEventListener('drop',e=>{ if(cadEd&&cadEd.contains(e.target)&&e.dataTransfer&&e.dataTransfer.files&&e.dataTransfer.files.length){ e.preventDefault(); cadStatus('Arquivos e imagens não entram no caderno.'); } });
+PGC.addEventListener('keydown',e=>{
+  const k=e.key, ed=cadEd&&(e.target===cadEd||cadEd.contains(e.target));
+  if(k==='Escape'){ const p=$('#cad-pop',PGC); if(p&&!p.hidden){ e.preventDefault(); cadPopFecha(true); } return; }
+  if((e.ctrlKey||e.metaKey)&&!e.altKey&&k.toLowerCase()==='s'){ e.preventDefault(); if(cadSujo) cadCommit(); else cadStatus('Tudo salvo.'); return; }
+  if(e.altKey&&!e.ctrlKey&&!e.metaKey&&cadEd){ const c=k.toLowerCase();
+    if(c==='t'){ e.preventDefault(); cadTempo(); return; } if(c==='k'){ e.preventDefault(); cadPlayPausa(); return; }
+    if(c==='j'){ e.preventDefault(); cadPula(-10); return; } if(c==='l'){ e.preventDefault(); cadPula(10); return; } }
+  if(!ed) return;
+  if((e.ctrlKey||e.metaKey)&&!e.altKey&&k.toLowerCase()==='k'){ e.preventDefault(); cadPopAbre('link',$('.cad-ins-b',PGC)); return; }
+  if((e.ctrlKey||e.metaKey)&&e.altKey&&/^[0-3]$/.test(k)){ e.preventDefault(); cadBloco(['p','h2','h3','h4'][+k]); return; }
+  if(k==='Tab'){
+    if(cadCelula()){ e.preventDefault(); cadTabPula(e.shiftKey); return; }
+    const el=cadAncora(); if(el&&el.closest('li')){ e.preventDefault(); cadExec(e.shiftKey?'outdent':'indent'); cadSujar(); return; }
+  }
+});
+
 
 /* =========================================================
    Questão (aulas, salvas e modo foco)
@@ -52333,7 +53246,7 @@ function pintarProgressoAula(id){
 /* =========================================================
    Páginas
    ========================================================= */
-const PAGINAS=['hoje','biblioteca','aula','revisao','estatisticas','salvas','edital'];
+const PAGINAS=['hoje','biblioteca','aula','revisao','estatisticas','salvas','edital','caderno'];
 function mostrarPagina(p){
   PAGINAS.forEach(x=>{const el=$('#pg-'+x); if(el) el.hidden=x!==p;});
   const nav=p==='aula'?'biblioteca':p;
@@ -52865,7 +53778,7 @@ campo.addEventListener('keydown',e=>{
 resB.addEventListener('keydown',e=>{ const l=$$('a',resB), i=l.indexOf(document.activeElement); if(e.key==='ArrowDown'&&l[i+1]){e.preventDefault();l[i+1].focus();} if(e.key==='ArrowUp'){e.preventDefault();(l[i-1]||campo).focus();} if(e.key==='Escape'){resB.hidden=true;campo.focus();} });
 document.addEventListener('click',e=>{ if(!e.target.closest('.busca')) resB.hidden=true; });
 resB.addEventListener('click',e=>{ if(e.target.closest('a')){ resB.hidden=true; campo.value=''; } });
-document.addEventListener('keydown',e=>{ if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&foco.hidden){ e.preventDefault(); campo.focus(); } });
+document.addEventListener('keydown',e=>{ if(e.key==='/'&&!/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)&&!e.target.isContentEditable&&foco.hidden){ e.preventDefault(); campo.focus(); } });
 
 /* =========================================================
    Edital: o conteúdo do concurso, tópico por tópico
@@ -53251,6 +54164,7 @@ function rota(semRolar){
   else if(p==='estatisticas'){ mostrarPagina('estatisticas'); renderEstat(); }
   else if(p==='salvas'){ mostrarPagina('salvas'); renderSalvas(); }
   else if(p==='edital'){ mostrarPagina('edital'); renderEdital(partes[1]); }
+  else if(p==='caderno'){ mostrarPagina('caderno'); renderCaderno(partes[1]); }
   else { mostrarPagina('hoje'); renderHoje(); }
   if(!semRolar&&p!=='aula') window.scrollTo(0,0);
   if(!semRolar){ const h=$('#pg-'+(p==='aula'?'aula':PAGINAS.includes(p)?p:'hoje')+' h1'); if(h&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.side,.nav-baixo')){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); } }
@@ -53494,7 +54408,8 @@ if(fala&&window.SpeechSynthesisUtterance){
     const ib=blocosAtuais.findIndex(b=>b.el&&b.el.contains(e.target));
     if(ib>=0) tocar(ib);
   });
-  new MutationObserver(()=>botoesSecoes(document)).observe(document.body,{childList:true,subtree:true});
+  // o que muda dentro do caderno e do painel de anotações (cada tecla digitada) não precisa de nova varredura
+  new MutationObserver(ms=>{ if(ms.some(m=>!(m.target.closest&&m.target.closest('#pg-caderno,#nota')))) botoesSecoes(document); }).observe(document.body,{childList:true,subtree:true});
   botoesSecoes(document);
 
   /* ---------- trecho selecionado: "só o trecho" ou "daqui em diante" ---------- */
