@@ -51672,10 +51672,15 @@ function escutar(){
     let recuperou=false;
     TRAVADAS.forEach(k=>{ if(remoto[k]&&remoto[k].v!=null){ try{ ultimoRemoto[k]=JSON.parse(remoto[k].v); }catch(e){} } });
     let mudouLocal=false;
+    const logAntes=local.log;
     Object.entries(remoto).forEach(([k,x])=>{
+      // revisão e salvas: as questões que você tirou (ver tiradas). Versão sem o campo fora foi gravada
+      // pelo site de antes de 07/11 (uma aba que ficou aberta), que devolvia questões tiradas: nela,
+      // questão tirada que só a nuvem tem sai sempre (tNuvem 0)
+      const T=COM_TIRADAS.includes(k)?tiradas(k,logAntes,x.fora):null, tNuvem=x.fora===undefined?0:x.t;
       if((tempos[k]===1||(!sincronizado&&antes.has(k)))&&k in local&&x.v!=null){
         // parte que este aparelho nunca sincronizou: junta as duas versões em vez de escolher uma
-        const junto=juntar(local[k],JSON.parse(x.v));
+        const rj=JSON.parse(x.v), junto=T?semTiradas(juntar(local[k],rj),local[k],rj,tNuvem,T):juntar(local[k],rj);
         tempos[k]=Date.now(); pendentes.add(k);
         if(JSON.stringify(junto)!==JSON.stringify(local[k])){ local[k]=junto; mudouLocal=true; }
       }
@@ -51686,8 +51691,10 @@ function escutar(){
         // fechado enquanto a nuvem perdeu dados), junta em vez de trocar: histórico, revisão,
         // salvas, respostas, edital… Nada que este aparelho guarda some ao sincronizar.
         if(x.v!=null&&k in local){
-          const r=JSON.parse(x.v), junto=recuperar(k,local[k],r);
-          if(junto!==null){ local[k]=junto; tempos[k]=Date.now(); pendentes.add(k); mudouLocal=true; recuperou=true; return; }
+          const r=JSON.parse(x.v); let junto=recuperar(k,local[k],r,T), limpou=false;
+          if(T&&!tNuvem){ const v=junto===null?r:junto, sem=semTiradas(v,local[k],r,0,T);
+            if(JSON.stringify(sem)!==JSON.stringify(v)){ if(junto===null) limpou=true; junto=sem; } }
+          if(junto!==null){ local[k]=junto; tempos[k]=Date.now(); pendentes.add(k); mudouLocal=true; if(!limpou) recuperou=true; return; }
         }
         if(x.v==null) delete local[k]; else local[k]=JSON.parse(x.v);
         tempos[k]=x.t; mudouLocal=true;
@@ -51730,15 +51737,17 @@ function montar(snap){
   Object.entries(principais).forEach(([k,x])=>{
     if(!x.n){ r[k]=x; return; }
     const ps=(pedacos[k]||[]).filter(p=>p.t===x.t).sort((a,b)=>a.i-b.i);
-    if(ps.length===x.n) r[k]={k,t:x.t,v:ps.map(p=>p.v).join('')};
+    if(ps.length===x.n) r[k]={k,t:x.t,v:ps.map(p=>p.v).join(''),fora:x.fora};
   });
   return r;
 }
 
 /* Recuperação de um aparelho antigo: devolve a versão juntada quando o aparelho tem itens que a
    nuvem não tem; senão null (aí vale a nuvem, como sempre). Na revisão, para a mesma questão,
-   fica a caixa mais alta (a nuvem pode ter uma versão reconstruída, que recomeça na caixa 1). */
-function recuperar(k,loc,rem){
+   fica a caixa mais alta (a nuvem pode ter uma versão reconstruída, que recomeça na caixa 1).
+   Questão que você tirou não conta como "item que a nuvem não tem" (ver tiradas). */
+function recuperar(k,loc,rem,T){
+  if(T) loc=semTiradas(loc,loc,rem,0,T);
   if(Array.isArray(loc)&&Array.isArray(rem)){
     const tem=new Set(rem.map(x=>JSON.stringify(x)));
     if(!loc.some(x=>!tem.has(JSON.stringify(x)))) return null;
@@ -51754,6 +51763,45 @@ function recuperar(k,loc,rem){
     return r;
   }
   return null;
+}
+
+/* QUESTÕES TIRADAS (2026-11-07). Você tirava uma questão da revisão num aparelho e ela voltava: o outro
+   aparelho, que ainda a tinha, achava que a nuvem tinha perdido a questão e a "recuperava" (acima).
+   Agora quem decide é o histórico: para cada questão vale o último "entrou" ou "saiu". Se o último é
+   "saiu", você a tirou, e uma versão que ainda a tem não a traz de volta. Se você salvar de novo, o
+   "entrou" é mais novo e ela volta normalmente.
+   - O histórico vem dos dois lados (deste aparelho e da nuvem) e também vai junto, numa lista curta
+     (campo fora), no mesmo documento da revisão e das salvas: assim a informação chega junto com a
+     revisão, mesmo quando o histórico demora um pouco mais para chegar.
+   - Na revisão, "saiu" com fica (você desmarcou Salvar numa questão que tinha errado) não tira a
+     questão de lá: ela fica guardada, só não aparece. Nas salvas, todo "saiu" tira. */
+const COM_TIRADAS=['rev','salvas'];
+function marcos(L,k,m){
+  if(!Array.isArray(L)) return m;
+  L.forEach(e=>{ if(!e||typeof e.k!=='string') return; let lado=null;
+    if(e.tipo==='saiu') lado=k==='rev'&&e.fica?'e':'s';
+    else if(e.tipo==='entrou'&&(k==='rev'||e.motivo==='s')) lado='e';
+    if(!lado) return;
+    const x=m[e.k]=m[e.k]||{e:-1,s:-1}, t=e.t||0; if(t>x[lado]) x[lado]=t; });
+  return m;
+}
+const foraDe=m=>{ const r={}; Object.keys(m).forEach(c=>{ if(m[c].s>m[c].e) r[c]=m[c].s; }); return r; };
+// questões tiradas desta parte (k), com a hora em que saíram: histórico deste aparelho + da nuvem + campo fora
+function tiradas(k,logLocal,fora){
+  const m={}; marcos(logLocal,k,m); marcos(ultimoRemoto.log,k,m);
+  let f=null; try{ f=fora?JSON.parse(fora):null; }catch(e){}
+  if(f&&typeof f==='object') Object.keys(f).forEach(c=>{ const x=m[c]=m[c]||{e:-1,s:-1}; if(+f[c]>x.s) x.s=+f[c]; });
+  return foraDe(m);
+}
+/* Tira de v as questões tiradas que faltam numa das duas versões (a deste aparelho, loc, e a da nuvem,
+   rem). A que só este aparelho tem sai sempre. A que só a nuvem tem sai quando a versão da nuvem
+   (gravada em tNuvem) é mais velha que a saída. A que as duas têm fica. */
+function semTiradas(v,loc,rem,tNuvem,T){
+  if(!v||typeof v!=='object'||!Object.keys(T).length) return v;
+  const tem=(x,c)=>Array.isArray(x)?x.includes(c):!!(x&&typeof x==='object'&&Object.prototype.hasOwnProperty.call(x,c));
+  const sai=c=>{ if(!(c in T)) return false; const l=tem(loc,c), r=tem(rem,c); if(l&&r) return false; return l?true:T[c]>(tNuvem||0); };
+  if(Array.isArray(v)) return v.filter(c=>typeof c!=='string'||!sai(c));
+  const r={}; Object.keys(v).forEach(c=>{ if(!sai(c)) r[c]=v[c]; }); return r;
 }
 
 /* Junta duas versões de uma parte do progresso (só na primeira sincronização de um aparelho):
@@ -51780,10 +51828,12 @@ function gravarParte(k,local){
   const t=tempos[k]||Date.now(), doc=colecao().doc(idDe(k));
   if(!(k in local)) return doc.set({k,t,n:0,v:null});
   const s=JSON.stringify(local[k]);
-  if(s.length<=PEDACO) return doc.set({k,t,n:0,v:s});
+  // revisão e salvas levam junto as questões que você tirou (ver tiradas)
+  const x=COM_TIRADAS.includes(k)?{fora:JSON.stringify(foraDe(marcos(local.log,k,{})))}:{};
+  if(s.length<=PEDACO) return doc.set(Object.assign({k,t,n:0,v:s},x));
   const n=Math.ceil(s.length/PEDACO), ps=[];
   for(let i=0;i<n;i++) ps.push(colecao().doc(idDe(k)+'~'+i).set({pk:k,t,i,v:s.slice(i*PEDACO,(i+1)*PEDACO)}));
-  return Promise.all(ps).then(()=>doc.set({k,t,n,v:null}));
+  return Promise.all(ps).then(()=>doc.set(Object.assign({k,t,n,v:null},x)));
 }
 function enviar(){
   clearTimeout(timer);
@@ -51796,7 +51846,11 @@ function enviar(){
     TRAVADAS.forEach(k=>{
       const r=ultimoRemoto[k]; if(!lista.includes(k)||r==null) return;
       const tr=tamanho(r), tl=k in local?tamanho(local[k]):0;
-      if(tr>=20&&tl<tr*0.5){ local[k]=juntar(k in local?local[k]:(Array.isArray(r)?[]:{}),r); juntou=true; }
+      if(tr>=20&&tl<tr*0.5){
+        const loc=k in local?local[k]:(Array.isArray(r)?[]:{});
+        // o que você tirou daqui não volta da nuvem
+        local[k]=COM_TIRADAS.includes(k)?semTiradas(juntar(loc,r),loc,r,0,tiradas(k,local.log,null)):juntar(loc,r); juntou=true;
+      }
     });
     if(juntou){
       setOrig.call(localStorage,CHAVE,JSON.stringify(local));
@@ -52007,14 +52061,16 @@ const ONDE={aula:'na aula',salvas:'em Salvas',revisao:'na revisão',simulado:'no
 function entrar(k,motivo,onde,prox){
   const r=rev(), h=hoje(); let it=r[k]; const novo=!it;
   if(novo) it=r[k]={cx:1,prox:prox||somaDias(h,1),s:0,e:0,c:0,desde:h};
-  const cxA=novo?null:it.cx, proxA=novo?null:it.prox;
+  const cxA=novo?null:it.cx, proxA=novo?null:it.prox, salvaA=!novo&&!!it.s;
   if(motivo==='s') it.s=1;
   if(motivo==='e'||motivo==='c'){it[motivo]=1; if(!novo){it.cx=1; it.prox=prox||somaDias(h,1);}}
-  if(novo||motivo==='e'||motivo==='c') evento({k,tipo:'entrou',motivo,onde,cxA,cxD:it.cx,proxA,prox:it.prox});
+  // salvar de novo uma questão que estava guardada sem Salva também fica no histórico: a nuvem usa o
+  // último "entrou"/"saiu" para saber se você tirou a questão (nuvem.js, tiradas)
+  if(novo||motivo==='e'||motivo==='c'||(motivo==='s'&&!salvaA)) evento({k,tipo:'entrou',motivo,onde,cxA,cxD:it.cx,proxA,prox:it.prox});
 }
 function sair(k,porque){ if(rev()[k]){ delete rev()[k]; evento({k,tipo:'saiu',motivo:porque}); } }
 // tirar da revisão também desmarca "Salva": a revisão é feita só das salvas
-function tirarRev(k,porque){ sair(k,porque); const l=salvas(), i=l.indexOf(k); if(i>=0) l.splice(i,1); $$('.questao').forEach(o=>{ if(o.dataset.k!==k) return; const x=$('.salvar-q',o); if(x){ x.setAttribute('aria-pressed','false'); $('span',x).textContent='Salvar'; } }); }
+function tirarRev(k,porque){ const so=!rev()[k]; sair(k,porque); const l=salvas(), i=l.indexOf(k); if(i>=0){ l.splice(i,1); if(so) evento({k,tipo:'saiu',motivo:porque}); } $$('.questao').forEach(o=>{ if(o.dataset.k!==k) return; const x=$('.salvar-q',o); if(x){ x.setAttribute('aria-pressed','false'); $('span',x).textContent='Salvar'; } }); }
 if(!est.revV){
   const h=hoje();
   (est.salvas||[]).forEach(k=>{ if(valida(k)) entrar(k,'s','sistema',h); });
@@ -53685,7 +53741,7 @@ function questao(caixa,id,n,depois,fresca,opts){
   bs.onclick=()=>{
     const l=salvas(),i=l.indexOf(k);
     if(i<0){ l.push(k); entrar(k,'s',opts.onde||(opts.rev?'revisao':'aula')); }
-    else{ l.splice(i,1); const it=rev()[k]; if(it){ if(!it.e&&!it.c) sair(k,'você desmarcou Salvar'); else it.s=0; } }
+    else{ l.splice(i,1); const it=rev()[k]; if(it){ if(!it.e&&!it.c) sair(k,'você desmarcou Salvar'); else{ it.s=0; evento({k,tipo:'saiu',motivo:'você desmarcou Salvar',fica:1}); } } else evento({k,tipo:'saiu',motivo:'você desmarcou Salvar'}); }
     salvar(); pintarSalva(); atualizarContadores();
   };
   if(salvas().includes(k)){bs.setAttribute('aria-pressed','true');$('span',bs).textContent='Salva';}
