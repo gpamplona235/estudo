@@ -2741,6 +2741,9 @@ a.aula:hover{background:var(--campo)}
 .texto-base figcaption b{font:600 17px/1.3 var(--f-tit)}
 .tb-corpo{padding:16px 22px 6px;font:400 18px/1.75 Georgia,"Iowan Old Style","Times New Roman",serif;color:var(--tx);max-width:75ch}
 .tb-corpo p{margin:0 0 12px;text-wrap:pretty}
+.tb-lista{margin:0 0 12px;padding-left:1.4em}
+.tb-lista li{margin:0 0 6px;text-wrap:pretty}
+.tb-lista li::marker{color:var(--mut)}
 .texto-base.colapsado .tb-corpo{max-height:330px;overflow:hidden;-webkit-mask-image:linear-gradient(#000 70%,transparent);mask-image:linear-gradient(#000 70%,transparent)}
 .tb-mais{margin:6px 18px 14px}
 /* aulas de gramática: o texto do caderno fica fechado (o trecho já vem no enunciado) */
@@ -2787,6 +2790,14 @@ mark.dest{background:var(--dest);color:inherit;padding:1px 2px;border-radius:3px
 .e-cx{flex:none;width:34px;height:26px;margin-top:1px;border:2px solid var(--mut);border-radius:13px}
 .e-n{flex:none;min-width:30px;font:600 15px/1.7 var(--f-mono);color:var(--pri-forte)}
 .e-cmd{font-weight:600;margin-top:18px!important;padding-top:14px;border-top:1px dashed var(--lin-forte)}
+/* tabela do enunciado (linhas "célula | célula" do caderno); .e-plan = grade de planilha, com os títulos de linha e coluna como no Excel */
+.e-tab-wrap{overflow-x:auto;max-width:100%;margin:2px 0 14px}
+.e-tab{border-collapse:collapse;font-size:.94em;line-height:1.45}
+.e-tab td,.e-tab th{border:1px solid var(--lin-forte);padding:6px 12px;text-align:left;vertical-align:top;overflow-wrap:break-word}
+.e-plan{font-variant-numeric:tabular-nums}
+.e-plan th{background:var(--campo);color:var(--tx2);font:600 14px/1.2 var(--f-mono);text-align:center;vertical-align:middle;padding:5px 10px}
+.e-plan td{min-width:5.5em;height:2.1em;vertical-align:middle}
+.e-plan td.n{text-align:right}
 .enun mark{background:var(--hl);color:inherit;border-bottom:2px solid var(--hl-forte);padding:0 2px}
 .q-img{display:block;max-width:100%;background:#ffffff;border:1px solid var(--lin);border-radius:6px;padding:8px;margin:0 0 14px}
 .alts{display:flex;flex-direction:column;gap:8px}
@@ -55418,26 +55429,53 @@ function imgAlt(q,a){ const t=(a[1]||'').trim(), img='<img class="alt-img" loadi
   return /(^|\s)(e|ou)$/i.test(t)?tx+img:img+tx; }
 const semMarcas=s=>String(s).replace(/⟦\/?[bumi]⟧/g,'');
 function realcar(h,marcas){ (marcas||[]).forEach(m=>{ const e=esc(m), i=h.indexOf(e); if(i>=0) h=h.slice(0,i)+'<mark class="dest">'+e+'</mark>'+h.slice(i+e.length); }); return h; }
+/* Lista no texto-base: "•" sozinho numa linha junta com a frase de baixo, e as linhas "• ..." seguidas viram lista
+   (pedido do usuário, 2026-11-07: no texto da questão 2998 cada "•" ficava numa linha, longe da frase) */
+const MARC=/^[•●▪◦]\s*/, MARC_TX=/^[•●▪◦]\s*\S/;
+function corpoTexto(ls,marcas){
+  let h='', ul=false;
+  for(let i=0;i<ls.length;i++){ let l=ls[i];
+    if(/^[•●▪◦]$/.test(l.trim())&&i+1<ls.length&&ls[i+1].trim()&&!MARC.test(ls[i+1].trim())) l='• '+ls[++i].trim();
+    const it=MARC_TX.test(l.trim());
+    if(it!==ul){ h+=it?'<ul class="tb-lista">':'</ul>'; ul=it; }
+    h+=it?'<li>'+realcar(esc(l.trim().replace(MARC,'')),marcas)+'</li>':'<p>'+realcar(esc(l),marcas)+'</p>';
+  }
+  return h+(ul?'</ul>':'');
+}
 /* Texto-base: textos longos compartilhados por várias questões (Curso IBGP) */
 function textoHTML(T,tid,colapsar,idBloco,marcas){
   return '<figure class="texto-base'+(colapsar?' colapsado':'')+(colapsar==='fechado'?' fechado':'')+'"'+(idBloco?' id="'+idBloco+'"':'')+' data-tid="'+esc(tid)+'"><figcaption><span class="ct">Texto</span><b>'+esc(T.titulo||'Texto para as questões')+'</b></figcaption>'+
-    '<div class="tb-corpo">'+T.linhas.map(l=>'<p>'+realcar(esc(l),marcas)+'</p>').join('')+'</div>'+
+    '<div class="tb-corpo">'+corpoTexto(T.linhas,marcas)+'</div>'+
     (colapsar?'<button type="button" class="btn out mini tb-mais" aria-expanded="false">'+(colapsar==='fechado'?'Ler o texto':'Ler o texto inteiro')+'</button>':'')+'</figure>';
 }
 document.addEventListener('click',e=>{
   const b=e.target.closest('.tb-mais'); if(b){ const f=b.closest('.texto-base'); const ab=f.classList.toggle('colapsado'); b.setAttribute('aria-expanded',!ab); b.textContent=ab?(f.classList.contains('fechado')?'Ler o texto':'Ler o texto inteiro'):'Recolher o texto'; if(ab) f.scrollIntoView({block:'nearest'}); return; }
   const r=e.target.closest('.tb-ref'); if(r){ e.preventDefault(); const f=document.getElementById(r.dataset.bloco); if(f){ f.scrollIntoView({block:'start'}); f.classList.remove('colapsado'); const bt=$('.tb-mais',f); if(bt){bt.setAttribute('aria-expanded','true');bt.textContent='Recolher o texto';} } }
 });
+/* Tabela no enunciado: o caderno guardou cada linha da tabela como "célula | célula"; duas ou mais linhas assim
+   seguidas viram tabela de verdade ("—" sozinho = célula vazia; a barra dentro de chaves, {x | x > 2}, não conta).
+   A grade de planilha (A, B, C em cima e 1, 2, 3 do lado) ganha a cara do Excel
+   (pedido do usuário, 2026-11-07: a questão 50077 aparecia como texto com barras) */
+const ehLinhaTab=l=>/ \| /.test(l.replace(/\{[^{}]*\}/g,''));
+function tabEnun(ls,x){
+  const rs=ls.map(l=>l.split(' | ').map(c=>c.trim())), n=Math.max(...rs.map(r=>r.length)), vazia=c=>/^[—–]?$/.test(c);
+  const plan=vazia(rs[0][0])&&rs[0].length>1&&rs[0].slice(1).every((c,j)=>c===String.fromCharCode(65+j))&&rs.slice(1).every(r=>/^\d+$/.test(r[0]));
+  return '<div class="e-tab-wrap"><table class="e-tab'+(plan?' e-plan':'')+'">'+rs.map((r,i)=>{ const sp=r.length<n&&n%r.length===0?n/r.length:1;
+    return '<tr>'+r.map((c,j)=>{ const cab=plan&&(i===0||j===0), tg=cab?'th':'td', num=plan&&!cab&&/^-?[\d.,]+%?$/.test(c);
+      return '<'+tg+(cab?' scope="'+(i===0?'col':'row')+'"':'')+(sp>1?' colspan="'+sp+'"':'')+(num?' class="n"':'')+'>'+(vazia(c)?'':x(c))+'</'+tg+'>'; }).join('')+
+      (sp===1&&r.length<n?'<td></td>'.repeat(n-r.length):'')+'</tr>'; }).join('')+'</table></div>';
+}
 /* Enunciado em blocos: itens "( )" viram lista de V/F, "I, II, III" viram lista numerada e a pergunta final ganha destaque */
 function fmtEnun(t,hl){
-  const linhas=String(t).split('\n').map(l=>l.trim()).filter(Boolean).reduce((a,l)=>{ const u=a[a.length-1]; if(u&&u.length>=40&&l.length>=25&&/[a-zà-ú,]$/.test(u)&&/^[a-zà-ú]+ [a-zà-ú]/.test(l)&&!/[;{}=←<>]/.test(u+l)) a[a.length-1]=u+' '+l; else a.push(l); return a; },[]), x=l=>{const e=esc(l);return comMarcas(hl?e.replace(PERIGO,'<mark>$1</mark>'):e);};
+  const linhas=String(t).split('\n').map(l=>l.trim()).filter(Boolean).reduce((a,l)=>{ const u=a[a.length-1]; if(u&&u.length>=40&&l.length>=25&&/[a-zà-ú,]$/.test(u)&&/^[a-zà-ú]+ [a-zà-ú]/.test(l)&&!/[;{}=←<>]/.test(u+l)&&!(ehLinhaTab(u)&&ehLinhaTab(l))) a[a.length-1]=u+' '+l; else a.push(l); return a; },[]), x=l=>{const e=esc(l);return comMarcas(hl?e.replace(PERIGO,'<mark>$1</mark>'):e);};
   let h='', lista=null; const fecha=()=>{ if(lista){ h+='</ol>'; lista=null; } };
-  linhas.forEach((l,i)=>{
-    let m;
-    if((m=l.match(/^\(\s*\)\s*(.*)$/))){ if(lista!=='vf'){ fecha(); h+='<ol class="e-lista e-vf">'; lista='vf'; } h+='<li><span class="e-cx" aria-hidden="true"></span><span>'+x(m[1])+'</span></li>'; }
+  for(let i=0;i<linhas.length;i++){
+    const l=linhas[i]; let m;
+    if(ehLinhaTab(l)&&ehLinhaTab(linhas[i+1]||'')){ fecha(); let j=i; while(j<linhas.length&&ehLinhaTab(linhas[j])) j++; h+=tabEnun(linhas.slice(i,j),x); i=j-1; }
+    else if((m=l.match(/^\(\s*\)\s*(.*)$/))){ if(lista!=='vf'){ fecha(); h+='<ol class="e-lista e-vf">'; lista='vf'; } h+='<li><span class="e-cx" aria-hidden="true"></span><span>'+x(m[1])+'</span></li>'; }
     else if((m=l.match(/^([IVX][IVXl]{0,4})\s*[.\-–—):]\s*(.+)$/))){ if(lista!=='rom'){ fecha(); h+='<ol class="e-lista e-rom">'; lista='rom'; } h+='<li><span class="e-n">'+m[1].replace(/l/g,'I')+'</span><span>'+x(m[2])+'</span></li>'; }
     else{ fecha(); const cmd=linhas.length>1&&i===linhas.length-1&&(/\?$/.test(l)||/^(assinale|marque|indique|qual|quais|julgue|identifique|está correto|estão corretas|é correto)/i.test(l)); h+='<p'+(cmd?' class="e-cmd"':'')+'>'+x(l)+'</p>'; }
-  });
+  }
   fecha(); return h;
 }
 /* Alternativas embaralhadas no modo foco (pedido do usuário, 2026-10-22: estava decorando a posição da certa).
