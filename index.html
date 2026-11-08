@@ -1732,6 +1732,47 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .of-passo b mark{padding:0 3px;border-radius:4px;background:var(--amarelo-fundo);color:var(--tinta);box-shadow:inset 0 -3px 0 var(--coral)}
 .of-passo span{font:500 14.5px/1.35 var(--texto);color:var(--tinta-2)}
 .of-passo:last-child{border-color:var(--marinho);background:var(--marinho-fundo)}
+/* Excel: a grade de células desenhada (antes e depois) e a folha impressa. Desenho de ideia, parado; não imita a janela (2026-11-07) */
+.of-grades{display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px}
+.of-gbox{display:flex;flex-direction:column;gap:6px;max-width:100%;overflow-x:auto}
+.of-gtit{font:700 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--tinta-3)}
+.of-gbar{display:flex;align-items:baseline;gap:10px;padding:5px 10px;border:1.5px solid var(--linha);border-radius:6px;background:var(--folha)}
+.of-gbar small{font:600 12.5px/1.2 var(--texto);color:var(--tinta-3)}
+.of-gbar b{font:600 16px/1.3 var(--mono);color:var(--tinta)}
+.of-g{border-collapse:collapse;font:500 16px/1.3 var(--texto);color:var(--tinta);background:var(--folha)}
+.of-g th{background:var(--fundo);color:var(--tinta-2);font:600 13px/1 var(--mono);text-align:center;padding:5px 8px;border:1px solid var(--linha);min-width:30px}
+.of-g td{border:1px solid var(--linha);padding:6px 10px;min-width:84px;height:36px;white-space:nowrap;text-align:left}
+.of-g td.d{text-align:right}
+.of-g td.c{text-align:center}
+.of-g td.n{font-weight:800}
+.of-g td.i{font-style:italic}
+.of-g td.s{text-decoration:underline;text-underline-offset:3px}
+.of-g td.sel{outline:2.5px solid var(--verde);outline-offset:-2px}
+.of-g td.mk{background:var(--amarelo-fundo);box-shadow:inset 0 -3px 0 var(--coral)}
+.of-g td.es{min-width:46px}
+.of-g td.gi{height:112px;min-width:46px;text-align:center;vertical-align:bottom;padding:8px 4px}
+.of-g td.gi span{display:inline-block;writing-mode:vertical-rl;transform:rotate(180deg)}
+.of-g tr.pula th{border-top:6px double var(--coral);color:var(--coral)}
+.of-g tr.pula td{border-top:2px solid var(--coral)}
+.of-g tr.cong>*{border-bottom:3px solid var(--tinta-2)}
+.of-acao{display:flex;flex-direction:column;align-items:center;gap:2px;color:var(--marinho);text-align:center}
+.of-acao span{font:600 14px/1.3 var(--texto);max-width:130px}
+.of-acao b{font:700 28px/1 var(--texto)}
+.of-grades.vert{flex-direction:column;align-items:flex-start}
+.of-grades.vert .of-acao{flex-direction:row;gap:8px}
+.of-grades.vert .of-acao b{transform:rotate(90deg)}
+@media (max-width:600px){.of-grades{flex-direction:column;align-items:flex-start}.of-acao{flex-direction:row;gap:8px}.of-acao b{transform:rotate(90deg)}}
+.of-folhas{display:flex;flex-wrap:wrap;align-items:flex-end;gap:14px 28px}
+.of-fl-box{display:flex;flex-direction:column;align-items:center;gap:8px}
+.of-fl-box>small{font:600 14px/1.3 var(--texto);color:var(--tinta-2)}
+.of-fl{display:flex;flex-direction:column;gap:10px;padding:16px 14px;background:var(--folha);border:1.5px solid var(--tinta-3);border-radius:3px;box-shadow:4px 4px 0 var(--linha)}
+.of-fl.retrato{width:150px;height:200px}
+.of-fl.paisagem{width:230px;height:165px}
+.of-fl.larga{width:min(320px,100%);height:150px}
+.of-fl-cab{display:flex;justify-content:space-between;gap:8px;padding-bottom:6px;border-bottom:1px dashed var(--tinta-3);font:600 12px/1.2 var(--texto);color:var(--marinho)}
+.of-fl-t{border-collapse:collapse;font:500 11.5px/1.2 var(--mono);color:var(--tinta)}
+.of-fl-t td{border:1px solid var(--tinta-3);padding:3px 6px;text-align:right}
+.of-fl-t.sem td{border-color:transparent}
 
 /* Anotações do raciocínio: botão na questão, painel ao lado (ou embaixo) e aba na Revisão */
 :root{--nota-l:clamp(340px,31vw,440px);--nc-1:#c62828;--nc-2:#b85c00;--nc-3:#1b7f4b;--nc-4:#1f5fbf;--nc-5:#7b3fc4}
@@ -33771,9 +33812,10 @@ Documentos  Fotos  notas.txt
 <nav class="sumario" aria-label="Nesta aula">
   <a href="#s1"><span>1</span>A tela do Excel e a célula</a>
   <a href="#s2"><span>2</span>A fórmula e a ordem das contas</a>
-  <a href="#s3"><span>3</span>A aparência da célula</a>
-  <a href="#s4"><span>4</span>As guias, a visão e a impressão</a>
-  <a href="#s5"><span>5</span>Treino</a>
+  <a href="#s3"><span>3</span>O que a célula mostra</a>
+  <a href="#s4"><span>4</span>Os botões e os atalhos de formato</a>
+  <a href="#s5"><span>5</span>Rolar, ver e imprimir</a>
+  <a href="#s6"><span>6</span>Treino</a>
 </nav>
 
 <!-- 1 -->
@@ -33925,126 +33967,173 @@ Documentos  Fotos  notas.txt
 <!-- 3 -->
 <section class="sec" id="s3">
   <div class="sec-main">
-    <h2><span class="n">3.</span><span class="t">A aparência da célula</span></h2>
-    <p>Formatar a célula muda só a aparência: a cor, a letra, as casas decimais, o R$ na frente. O número guardado continua o mesmo. E cada célula tem a sua formatação: A2 pode estar em negrito e A3 não, mesmo sendo da mesma coluna.</p>
-    <p>Quase tudo isso fica na guia Página Inicial do Excel, que tem estes grupos:</p>
-    <div class="tabela-rolagem"><table class="instancias compacta">
-      <thead><tr><th>Grupo da Página Inicial</th><th>Botões</th></tr></thead>
-      <tbody>
-        <tr><td>Área de Transferência</td><td>Colar, Recortar, Copiar, Pincel de Formatação</td></tr>
-        <tr><td>Fonte</td><td>fonte, tamanho, negrito, itálico, sublinhado, bordas, cor de preenchimento, cor da fonte</td></tr>
-        <tr><td>Alinhamento</td><td>alinhar em cima, no meio e embaixo; à esquerda, ao centro e à direita; Orientação; Quebrar Texto Automaticamente; Mesclar e Centralizar</td></tr>
-        <tr><td>Número</td><td>Geral, Moeda, Porcentagem, separador de milhares, aumentar e diminuir casas decimais</td></tr>
-        <tr><td>Estilos</td><td>Formatação Condicional, Formatar como Tabela, Estilos de Célula</td></tr>
-        <tr><td>Células</td><td>Inserir, Excluir, Formatar</td></tr>
-        <tr><td>Edição</td><td>AutoSoma, Preencher, Limpar, Classificar e Filtrar, Localizar e Selecionar</td></tr>
-      </tbody>
-    </table></div>
-    <p>No grupo Alinhamento, o botão <b>Orientação</b> gira o texto na diagonal ou em pé, bom para colunas estreitas, e <b>Mesclar e Centralizar</b> junta várias células numa só. Formatação Condicional e Formatar como Tabela pintam e organizam os dados, e ficam para a Aula 4.</p>
-    <h3>Número à direita, texto à esquerda</h3>
-    <p>Sem formatação nenhuma, o Excel alinha números à direita e textos à esquerda. É assim que você descobre o que ele entendeu. No Excel em português, a vírgula separa os decimais: 12,5 é número e vai para a direita. Com ponto, 12.5 não é número em português, e o Excel guarda como texto, à esquerda.</p>
-    <div class="tabela-rolagem"><table class="instancias compacta">
-      <thead><tr><th>Digitado</th><th>O Excel entende</th><th>Fica</th></tr></thead>
-      <tbody>
-        <tr><td>1250</td><td>número</td><td>à direita</td></tr>
-        <tr><td>12,5</td><td>número, com vírgula decimal</td><td>à direita</td></tr>
-        <tr><td>12.5</td><td>texto: em português, ponto não é decimal</td><td>à esquerda</td></tr>
-        <tr><td>Gastos</td><td>texto</td><td>à esquerda</td></tr>
-      </tbody>
-    </table></div>
-    <h3>Porcentagem e a janela Formatar Células</h3>
-    <p>O botão de porcentagem (%), no grupo Número, multiplica por 100 o número guardado e mostra o sinal, sem casas decimais: 0,25 vira 25%, e 0,125 vira 13%. Para ver casas decimais, use o botão de aumentar casas.</p>
-    <p>Todas as opções de aparência ficam juntas na janela <b>Formatar Células</b>, aberta com Ctrl + 1 ou com o botão direito do mouse, em Formatar Células. Ela tem as abas Número, Alinhamento (com a orientação do texto), Fonte, Borda, Preenchimento (a cor de fundo) e Proteção.</p>
-    <h3>Atalhos de formatação e de linhas</h3>
-    <div class="tabela-rolagem"><table class="instancias compacta">
-      <thead><tr><th>Atalho</th><th>Faz</th></tr></thead>
-      <tbody>
-        <tr><td>Ctrl + N, ou Ctrl + 2</td><td>negrito</td></tr>
-        <tr><td>Ctrl + I, ou Ctrl + 3</td><td>itálico</td></tr>
-        <tr><td>Ctrl + S, ou Ctrl + 4</td><td>sublinhado</td></tr>
-        <tr><td>Ctrl + 1</td><td>abre Formatar Células</td></tr>
-        <tr><td>Ctrl + Shift + $</td><td>formato de moeda</td></tr>
-        <tr><td>Ctrl + Shift + %</td><td>formato de porcentagem</td></tr>
-        <tr><td>Ctrl + Shift + ^</td><td>formato científico, com duas casas</td></tr>
-        <tr><td>Ctrl + Shift + #</td><td>formato de data, com dia, mês e ano</td></tr>
-        <tr><td>Ctrl + 9 e Ctrl + 0</td><td>ocultam a linha e a coluna</td></tr>
-        <tr><td>Ctrl + B, Ctrl + Z</td><td>salvar e desfazer, como no Word</td></tr>
-        <tr><td>Ctrl + L, Ctrl + U</td><td>localizar e substituir, como no Word</td></tr>
-      </tbody>
-    </table></div>
-    <p>No alto da janela, o disquete e a seta curva da barra de acesso rápido são o Salvar e o Desfazer, iguais aos do Word.</p>
-    <p>Linha oculta não some: só fica escondida. Dá para perceber pelos números da lateral, que pulam. Se aparece o 3 e depois o 6, as linhas 4 e 5 estão ocultas. Para mostrar de novo, selecione as linhas em volta e use Reexibir, no botão direito.</p>
-    <div class="cilada"><span class="rot">O que a banca troca</span>A banca diz que número com ponto vai para a direita, que o botão % mostra duas casas ou que 0,02 vira 0,02%. Também troca os atalhos: Ctrl + U como sublinhado (em português é o S) e Ctrl + 1 como outra coisa.</div>
-    <div class="definicao"><span class="rot">Como usar na questão</span>Número à direita, texto à esquerda. O botão % multiplica por 100, sem casas. Tudo de aparência: Ctrl + 1.</div>
+    <h2><span class="n">3.</span><span class="t">O que a célula mostra</span></h2>
+    <p>Quando você digita 1250 numa célula e aperta Enter, o número vai para o lado direito da célula. Quando digita Aluguel na célula do lado, a palavra fica encostada no lado esquerdo.</p>
+    <p>Ninguém pediu isso. O Excel faz sozinho, para mostrar o que entendeu: <b>número vai para a direita, texto vai para a esquerda</b>. E a diferença importa, porque número entra em conta e texto não. Só de olhar para que lado a coisa foi, você já sabe se o Excel vai conseguir somar.</p>
+    <p>Agora a pegadinha. No Brasil, a vírgula separa os decimais: doze e meio se escreve 12,5. O Excel em português segue essa regra, e o ponto não faz o papel da vírgula:</p>
+    <ul class="ex-lista">
+      <li><span class="ex-c">12,5</span> é número: vai para a direita.</li>
+      <li><span class="ex-e">12.5</span> com ponto, não é número em português. O Excel guarda como texto, à esquerda. <small>E, como texto, fica fora das contas.</small></li>
+    </ul>
+    <figure class="ed-fig"><div class="of-grades ico" role="img" aria-label="Grade de planilha com as colunas A e B e as linhas 1 a 4. Na coluna A, as palavras Gasto, Aluguel, Luz e Água, encostadas na esquerda. Na coluna B, a palavra Valor; depois 1250 e 12,5 encostados na direita; e 12.5, com ponto, marcado e encostado na esquerda."><div class="of-gbox"><table class="of-g"><tr><th></th><th>A</th><th>B</th></tr><tr><th>1</th><td>Gasto</td><td>Valor</td></tr><tr><th>2</th><td>Aluguel</td><td class="d">1250</td></tr><tr><th>3</th><td>Luz</td><td class="d">12,5</td></tr><tr><th>4</th><td>Água</td><td class="mk">12.5</td></tr></table></div></div><figcaption>A planilha de gastos. As palavras ficam à esquerda. Os números 1250 e 12,5 ficam à direita. O 12.5, com ponto, marcado, foi para a esquerda: o Excel entendeu como texto.</figcaption></figure>
+    <h3>A aparência muda, o número não</h3>
+    <p>Formatar a célula é mudar a aparência dela: pôr R$ na frente, o sinal de porcentagem, mais ou menos casas decimais, outra cor. O número guardado lá dentro continua o mesmo. Para ver o número guardado, clique na célula e olhe a barra de fórmulas, a faixa em cima da grade, que era o número 2 do print da seção 1.</p>
+    <p>O exemplo que mais cai é o botão de porcentagem. Ele fica na guia Página Inicial, no grupo Número, e tem o desenho do sinal %. Ao clicar nele, o Excel faz duas coisas: multiplica o número por 100 e põe o sinal. E mostra o resultado sem casas decimais.</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">0,25</span> vira 25%. <small>0,25 × 100 = 25.</small></li>
+      <li><span class="ex-t">0,03</span> vira 3%. <small>0,03 × 100 = 3.</small></li>
+      <li><span class="ex-t">0,125</span> vira 13%. <small>0,125 × 100 = 12,5. Sem casas decimais, a tela arredonda para 13.</small></li>
+    </ul>
+    <figure class="ed-fig"><div class="of-grades ico" role="img" aria-label="Duas grades lado a lado, antes e depois do botão de porcentagem. Antes: A1 com 0,25 e A2 com 0,125, selecionada; a barra de fórmulas mostra 0,125. Depois: A1 com 25% e A2 com 13%, selecionada; a barra de fórmulas continua mostrando 0,125."><div class="of-gbox"><div class="of-gtit">Antes</div><div class="of-gbar"><small>barra de fórmulas</small><b>0,125</b></div><table class="of-g"><tr><th></th><th>A</th></tr><tr><th>1</th><td class="d">0,25</td></tr><tr><th>2</th><td class="d sel">0,125</td></tr></table></div><div class="of-acao"><span>clique no botão %</span><b aria-hidden="true">→</b></div><div class="of-gbox"><div class="of-gtit">Depois</div><div class="of-gbar"><small>barra de fórmulas</small><b>0,125</b></div><table class="of-g"><tr><th></th><th>A</th></tr><tr><th>1</th><td class="d">25%</td></tr><tr><th>2</th><td class="d sel">13%</td></tr></table></div></div><figcaption>Antes e depois do botão %. A1 passou de 0,25 para 25%, e A2, de 0,125 para 13%. Com A2 selecionada, a barra de fórmulas continua mostrando 0,125: o número guardado não mudou.</figcaption></figure>
+    <p>Para ver o 12,5% inteiro, use o botão de aumentar casas decimais, ao lado do %, no mesmo grupo Número. Ele também só muda a aparência.</p>
+    <p>E cada célula tem a sua própria formatação. Formatar uma célula não mexe na de baixo, mesmo as duas estando na mesma coluna:</p>
+    <figure class="ed-fig"><div class="of-grades ico" role="img" aria-label="Grade com a coluna A e as linhas 1 a 4: a palavra Valor, depois R$ 1.250,00, depois 12,5, depois 50%, todos encostados na direita."><div class="of-gbox"><table class="of-g"><tr><th></th><th>A</th></tr><tr><th>1</th><td>Valor</td></tr><tr><th>2</th><td class="d">R$ 1.250,00</td></tr><tr><th>3</th><td class="d">12,5</td></tr><tr><th>4</th><td class="d">50%</td></tr></table></div></div><figcaption>Uma coluna, três formatações: A2 em moeda, com R$; A3 do jeito que foi digitado; A4 em porcentagem.</figcaption></figure>
+    <h3>Quando os números das linhas pulam</h3>
+    <p>Olhe agora para a lateral da grade, onde ficam os números das linhas. Eles sempre vêm em sequência: 1, 2, 3, 4. Se a sequência pula, por exemplo do 2 para o 5, é porque as linhas 3 e 4 estão <b>ocultas</b>.</p>
+    <figure class="ed-fig"><div class="of-grades ico" role="img" aria-label="Grade com as colunas A e B. Os números das linhas na lateral são 1, 2, 5 e 6: entre o 2 e o 5 há um traço vermelho, onde estão as linhas 3 e 4, ocultas."><div class="of-gbox"><table class="of-g"><tr><th></th><th>A</th><th>B</th></tr><tr><th>1</th><td>Gasto</td><td>Valor</td></tr><tr><th>2</th><td>Aluguel</td><td class="d">1250</td></tr><tr class="pula"><th>5</th><td>Internet</td><td class="d">99,90</td></tr><tr><th>6</th><td>Gás</td><td class="d">110</td></tr></table></div></div><figcaption>Depois da linha 2 vem a linha 5: as linhas 3 e 4 estão ocultas. O traço vermelho entre o 2 e o 5 marca o lugar delas.</figcaption></figure>
+    <p>Ocultar é esconder sem apagar. As linhas continuam lá, com tudo o que tinham, e as contas continuam usando os valores delas. Para ocultar, clique com o botão direito no número da linha e escolha Ocultar. Para mostrar de novo, selecione a linha de antes e a de depois (no desenho, a 2 e a 5), clique com o botão direito e escolha Reexibir.</p>
+    <p>Excluir é outra coisa. A linha excluída some de verdade, e as de baixo sobem para ocupar o lugar dela. Por isso, depois de excluir, os números continuam em sequência, sem pular.</p>
+    <ul class="ex-lista">
+      <li><span class="ex-c">Números pulando:</span> linhas ocultas, escondidas, mas ainda lá.</li>
+      <li><span class="ex-t">Números em sequência:</span> nada oculto. Se uma linha foi excluída, as de baixo subiram, e os números não mostram nada.</li>
+    </ul>
+    <div class="cilada"><span class="rot">O que a banca troca</span>A banca diz que o número com ponto vai para a direita; que o botão % mostra duas casas, ou só põe o sinal sem multiplicar (0,5 virando 0,5%); e chama de excluídas as linhas que estão só ocultas, com os números pulando.</div>
+    <div class="definicao"><span class="rot">Como usar na questão</span>Número à direita, texto à esquerda; com ponto no lugar da vírgula, vira texto. O botão % multiplica por 100 e mostra sem casas. Números das linhas pulando: linhas ocultas.</div>
     <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">A célula tem 0,5. Depois de clicar no botão %, ela mostra:</p><div class="dq-op"><button type="button" data-ok="1">50%</button><button type="button">0,5%</button></div><p class="dq-exp" hidden>O botão % multiplica por 100 e põe o sinal: 0,5 vira 50%. O número guardado continua 0,5.</p></div>
+      <div class="dq"><p class="dq-frase">A célula tem 0,5. Depois de clicar no botão %, ela mostra:</p><div class="dq-op"><button type="button" data-ok="1">50%</button><button type="button">0,5%</button></div><p class="dq-exp" hidden>O botão multiplica por 100 e põe o sinal: 0,5 × 100 = 50. A célula mostra 50%, e a barra de fórmulas continua mostrando 0,5.</p></div>
     </div>
     <div data-questao="13115"></div>
     <div data-questao="50085"></div>
     <div data-questao="2595"></div>
-    <div data-questao="2537"></div>
-    <div data-questao="2391"></div>
     <div data-questao="12753"></div>
-    <div data-questao="2762"></div>
-    <div data-questao="2407"></div>
-    <div data-questao="2919"></div>
     <div data-questao="12489"></div>
-    <p class="ponte">Por último, o mapa das guias do Excel, os modos de ver a planilha e a impressão.</p>
+    <p class="ponte">Você já sabe ler o que a célula mostra. Agora é mudar a aparência dela: os botões, a janela do Ctrl + 1 e os atalhos.</p>
   </div>
   <aside class="sec-lado">
     <div class="mao">Número à direita, texto à esquerda.</div>
-    <div class="mao aten">% multiplica por 100; Ctrl + 1 formata.</div>
-    <div class="carimbo"><b>Já caiu</b>IVIN 2020<br>IBFC 2018<br>RBO 2022<br>IDEAP 2023<br>FUNDATEC 2023<br>QUADRIX 2022</div>
+    <div class="mao aten">% multiplica por 100; números pulando = linhas ocultas.</div>
+    <div class="carimbo"><b>Já caiu</b>IVIN 2020<br>IBFC 2018<br>RBO 2022<br>QUADRIX 2022<br>FUNDATEC 2023</div>
   </aside>
 </section>
 
 <!-- 4 -->
 <section class="sec" id="s4">
   <div class="sec-main">
-    <h2><span class="n">4.</span><span class="t">As guias, a visão e a impressão</span></h2>
-    <p>As guias do Excel lembram as do Word, com três diferentes: Layout da Página, Fórmulas e Dados.</p>
-    <div class="tabela-rolagem"><table class="instancias compacta">
-      <thead><tr><th>Guia</th><th>O que tem lá</th></tr></thead>
-      <tbody>
-        <tr><td>Arquivo</td><td>salvar, abrir, imprimir</td></tr>
-        <tr><td>Página Inicial</td><td>fonte, alinhamento, número, estilos, células, AutoSoma, classificar, localizar</td></tr>
-        <tr><td>Inserir</td><td>tabela dinâmica, tabela, imagens, gráficos, cabeçalho e rodapé, símbolos</td></tr>
-        <tr><td>Layout da Página</td><td>temas, margens, orientação, tamanho do papel, área de impressão, linhas de grade para imprimir</td></tr>
-        <tr><td>Fórmulas</td><td>inserir função, biblioteca de funções, conferir fórmulas</td></tr>
-        <tr><td>Dados</td><td>classificar, filtrar, validação de dados, teste de hipóteses</td></tr>
-        <tr><td>Revisão</td><td>ortografia, ideias, comentários, proteger a planilha</td></tr>
-        <tr><td>Exibir</td><td>modos de exibição, linhas de grade na tela, zoom, congelar painéis, macros</td></tr>
-      </tbody>
-    </table></div>
-    <p>Na guia Exibir, os modos de exibição são Normal, Layout da Página e Visualização da Quebra de Página. Ali também ficam os <b>Modos de Exibição Personalizados</b>, que guardam um jeito de ver a planilha, com colunas ocultas e zoom, para usar de novo.</p>
-    <p><b>Congelar Painéis</b>, também na Exibir, prende as primeiras linhas ou colunas na tela: você desce até a linha 500 e o título das colunas continua à vista. Assim dá para ver partes diferentes da planilha ao mesmo tempo.</p>
-    <h3>Imprimir a planilha</h3>
-    <p>A impressão se prepara na guia Layout da Página: margens, orientação (Retrato, em pé, ou Paisagem, deitada), tamanho do papel (A4, Carta) e, no grupo Opções de Planilha, as Linhas de Grade com a caixa Imprimir. Sem essa caixa marcada, as linhas cinza da grade aparecem na tela, mas não saem no papel.</p>
-    <p>Cabeçalho e rodapé se inserem pela guia Inserir. Ao clicar no cabeçalho, aparece a guia Design, com botões que preenchem sozinhos: número da página, número de páginas, data atual, hora atual, caminho do arquivo, nome do arquivo e nome da planilha.</p>
-    <div class="cilada"><span class="rot">O que a banca troca</span>A banca põe Temas na guia Revisão, imprime as linhas de grade pela guia Exibir (lá elas só aparecem ou somem da tela) e chama a orientação de "horizontal" ou de "A4", que é tamanho de papel.</div>
-    <div class="definicao"><span class="rot">Como usar na questão</span>Imprimir: Layout da Página. Ver a planilha de outro jeito: Exibir. Título preso na tela ao rolar: Congelar Painéis.</div>
+    <h2><span class="n">4.</span><span class="t">Os botões e os atalhos de formato</span></h2>
+    <p>Agora é arrumar a planilha de gastos. Os títulos, Gasto e Valor, ficariam melhores em negrito. Selecione as duas células e procure, na guia Página Inicial, o grupo Fonte. Lá estão três botões com letras: <b>N</b> de negrito, <b>I</b> de itálico, a letra deitada, e <b>S</b> de sublinhado, o traço embaixo.</p>
+    <p>No teclado, o atalho é o Ctrl com a mesma letra do botão. São os atalhos do Office em português, iguais aos do Word:</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Ctrl + N</span> negrito.</li>
+      <li><span class="ex-t">Ctrl + I</span> itálico.</li>
+      <li><span class="ex-t">Ctrl + S</span> sublinhado.</li>
+    </ul>
+    <p>O Excel tem ainda um segundo jeito, com números: Ctrl + 2, Ctrl + 3 e Ctrl + 4, na mesma ordem das letras. N, I, S viram 2, 3, 4. Negrito é o 2, itálico é o 3, sublinhado é o 4.</p>
+    <figure class="ed-fig"><div class="of-grades ico" role="img" aria-label="Grade com uma linha e as colunas A, B e C. Em A1, a palavra Gasto em negrito; em B1, em itálico; em C1, sublinhada."><div class="of-gbox"><table class="of-g"><tr><th></th><th>A</th><th>B</th><th>C</th></tr><tr><th>1</th><td class="n">Gasto</td><td class="i">Gasto</td><td class="s">Gasto</td></tr></table></div></div><figcaption>A mesma palavra três vezes: em negrito, com Ctrl + N ou Ctrl + 2; em itálico, com Ctrl + I ou Ctrl + 3; e sublinhada, com Ctrl + S ou Ctrl + 4.</figcaption></figure>
+    <p>Cuidado com o U. Em inglês, sublinhado é <i>underline</i>, e lá o atalho é Ctrl + U. No Excel em português, não: Ctrl + U abre o <b>Substituir</b>, que troca uma palavra por outra na planilha inteira. Junto dele, como no Word:</p>
+    <ul class="ex-lista">
+      <li><span class="ex-e">Ctrl + U</span> não sublinha: abre o Substituir. <small>Sublinhado, em português, é Ctrl + S.</small></li>
+      <li><span class="ex-t">Ctrl + L</span> abre o Localizar, que só procura, sem trocar.</li>
+      <li><span class="ex-t">Ctrl + B e Ctrl + Z</span> salvam e desfazem. <small>No alto da janela, são o disquete e a seta curva.</small></li>
+    </ul>
+    <h3>Ctrl + 1: a janela com tudo</h3>
+    <p>E o Ctrl + 1? Ele abre a janela <b>Formatar Células</b>, que junta num lugar só todas as opções de aparência da célula. Ela também abre pelo botão direito do mouse, na opção Formatar Células. A janela tem seis abas, e cada uma cuida de uma parte:</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Número:</span> como o número aparece: moeda, porcentagem, data, casas decimais.</li>
+      <li><span class="ex-t">Alinhamento:</span> para que lado o conteúdo encosta, e a orientação, que gira o texto.</li>
+      <li><span class="ex-t">Fonte:</span> a letra: tipo, tamanho, negrito, cor.</li>
+      <li><span class="ex-t">Borda:</span> as linhas em volta da célula.</li>
+      <li><span class="ex-t">Preenchimento:</span> a cor de fundo da célula.</li>
+      <li><span class="ex-t">Proteção:</span> trava a célula, para ninguém mudar quando a planilha estiver protegida.</li>
+    </ul>
+    <p>Duas coisas do Alinhamento caem muito. As duas também têm botão próprio no grupo Alinhamento da Página Inicial.</p>
+    <p>A primeira é a <b>Orientação</b>, que gira o texto: na diagonal ou em pé. Serve para coluna estreita com título comprido. Os meses ficam em pé, e a coluna não precisa crescer:</p>
+    <figure class="ed-fig"><div class="of-grades ico" role="img" aria-label="Grade com as colunas A, B e C, estreitas. Na linha 1, Janeiro, Fevereiro e Março escritos em pé, de baixo para cima. Na linha 2, 120, 95 e 130."><div class="of-gbox"><table class="of-g"><tr><th></th><th>A</th><th>B</th><th>C</th></tr><tr><th>1</th><td class="gi"><span>Janeiro</span></td><td class="gi"><span>Fevereiro</span></td><td class="gi"><span>Março</span></td></tr><tr><th>2</th><td class="d es">120</td><td class="d es">95</td><td class="d es">130</td></tr></table></div></div><figcaption>Três colunas estreitas com os nomes dos meses em pé, girados pela Orientação. Embaixo, os gastos de cada mês.</figcaption></figure>
+    <p>A segunda é <b>Mesclar e Centralizar</b>, que junta várias células numa só e põe o conteúdo no meio. Serve para um título em cima da tabela:</p>
+    <figure class="ed-fig"><div class="of-grades vert ico" role="img" aria-label="Duas grades, antes e depois. Antes: na linha 1, Gastos de março em A1, e B1 e C1 vazias; na linha 2, Aluguel, Luz e Água. Depois: na linha 1, uma célula só ocupando A, B e C, com Gastos de março no centro; a linha 2 igual."><div class="of-gbox"><div class="of-gtit">Antes</div><table class="of-g"><tr><th></th><th>A</th><th>B</th><th>C</th></tr><tr><th>1</th><td>Gastos de março</td><td></td><td></td></tr><tr><th>2</th><td>Aluguel</td><td>Luz</td><td>Água</td></tr></table></div><div class="of-acao"><span>Mesclar e Centralizar</span><b aria-hidden="true">→</b></div><div class="of-gbox"><div class="of-gtit">Depois</div><table class="of-g"><tr><th></th><th>A</th><th>B</th><th>C</th></tr><tr><th>1</th><td class="c" colspan="3">Gastos de março</td></tr><tr><th>2</th><td>Aluguel</td><td>Luz</td><td>Água</td></tr></table></div></div><figcaption>Antes, o título está só em A1, e B1 e C1 estão vazias. Depois de Mesclar e Centralizar, A1, B1 e C1 viraram uma célula só, com o título no meio.</figcaption></figure>
+    <p>Não confunda com o botão Alinhar no Meio: ele só põe o texto no meio da altura da célula, sem girar e sem juntar nada. E Formatação Condicional e Formatar como Tabela, que pintam os dados, ficam para a Aula 4.</p>
+    <h3>Ctrl + Shift + um símbolo: o formato do número</h3>
+    <p>Para mudar o formato do número sem abrir janela nenhuma, há atalhos com Ctrl + Shift e um símbolo. Em quase todos, o símbolo lembra o formato:</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Ctrl + Shift + $</span> moeda. <small>O cifrão é o símbolo do dinheiro.</small></li>
+      <li><span class="ex-t">Ctrl + Shift + %</span> porcentagem. <small>O próprio sinal.</small></li>
+      <li><span class="ex-t">Ctrl + Shift + ^</span> científico, com duas casas. <small>O ^ é a potência da seção 2, e o formato científico escreve o número com potência de 10: 1250 vira 1,25E+03, que quer dizer 1,25 vezes 10 elevado a 3.</small></li>
+      <li><span class="ex-t">Ctrl + Shift + #</span> data, com dia, mês e ano. <small>O # parece a grade de um calendário.</small></li>
+      <li><span class="ex-t">Ctrl + Shift + @</span> hora. <small>O @ dos e-mails, em inglês, se lê "at", que quer dizer "às", como em "às 10 horas".</small></li>
+      <li><span class="ex-t">Ctrl + Shift + !</span> número com duas casas e o ponto do milhar. <small>1250 vira 1.250,00.</small></li>
+    </ul>
+    <div class="cilada"><span class="rot">O que a banca troca</span>A banca troca as letras e os números: Ctrl + U como sublinhado (em português é Ctrl + S), Ctrl + 2 como itálico, Ctrl + 1 como outra coisa. Embaralha os símbolos do Ctrl + Shift, como # para porcentagem. E chama de Mesclar o botão que gira o texto, que é a Orientação.</div>
+    <div class="definicao"><span class="rot">Como usar na questão</span>N, I, S viram 2, 3, 4. Ctrl + 1 abre Formatar Células. Ctrl + U substitui. Ctrl + Shift: $ moeda, % porcentagem, ^ científico, # data.</div>
     <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Você rola a planilha até a linha 300 e quer continuar vendo a linha 1, com os títulos. Qual recurso usar?</p><div class="dq-op"><button type="button" data-ok="1">Congelar Painéis, na guia Exibir</button><button type="button">Quebra de Página, na guia Layout da Página</button></div><p class="dq-exp" hidden>Congelar Painéis prende as primeiras linhas na tela enquanto você rola. Quebra de Página só divide a planilha na hora de imprimir.</p></div>
+      <div class="dq"><p class="dq-frase">Além de Ctrl + S, qual atalho sublinha a célula?</p><div class="dq-op"><button type="button" data-ok="1">Ctrl + 4</button><button type="button">Ctrl + U</button></div><p class="dq-exp" hidden>N, I, S viram 2, 3, 4: o sublinhado é o 4. Ctrl + U, no Excel em português, abre o Substituir.</p></div>
     </div>
-    <div data-questao="2207"></div>
-    <div data-questao="12792"></div>
-    <div data-questao="50046"></div>
-    <div data-questao="2988"></div>
-    <div data-questao="3058"></div>
-    <div data-questao="2611"></div>
-    <p class="ponte">Agora é juntar. O treino mistura tudo o que você viu nesta aula.</p>
+    <div data-questao="2537"></div>
+    <div data-questao="2762"></div>
+    <div data-questao="2407"></div>
+    <div data-questao="2391"></div>
+    <div data-questao="2919"></div>
+    <p class="ponte">Com a planilha arrumada, falta o que acontece quando ela cresce: rolar, ver de outro jeito e imprimir.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">Imprimir: Layout da Página.</div>
-    <div class="mao aten">Título fixo ao rolar: Congelar Painéis.</div>
-    <div class="carimbo"><b>Já caiu</b>JMS 2024<br>Legalle 2022<br>IBGP 2023<br>Legalle 2020<br>FCM 2020<br>FGV 2022</div>
+    <div class="mao">N, I, S = 2, 3, 4.</div>
+    <div class="mao aten">Ctrl + U substitui; Ctrl + 1 formata tudo.</div>
+    <div class="carimbo"><b>Já caiu</b>IDEAP 2023<br>Consulplan 2022<br>VUNESP 2023<br>FUNDATEC 2023<br>Consulplan 2021</div>
   </aside>
 </section>
 
 <!-- 5 -->
 <section class="sec" id="s5">
   <div class="sec-main">
-    <h2><span class="n">5.</span><span class="t">Treino</span></h2>
+    <h2><span class="n">5.</span><span class="t">Rolar, ver e imprimir</span></h2>
+    <p>A planilha de gastos cresceu: um ano inteiro, quinhentas linhas. Aparecem três problemas novos. O título some quando você rola. Você quer ver a planilha de outro jeito. E chega a hora de imprimir.</p>
+    <p>Primeiro, o título. Desça até a linha 500, e a linha 1, com Data, Gasto e Valor, ficou lá em cima, fora da tela. Você não sabe mais o que é cada coluna. A solução é <b>Congelar Painéis</b>, na guia Exibir: ele prende a primeira linha, ou a primeira coluna, na tela. Você rola, e o título fica parado no alto, enquanto o resto passa por baixo.</p>
+    <figure class="ed-fig"><div class="of-grades ico" role="img" aria-label="Grade com as colunas A, B e C. Na linha 1, em negrito, Data, Gasto e Valor, com um traço grosso embaixo. Logo abaixo vêm as linhas 498, 499 e 500, com gastos do fim de dezembro."><div class="of-gbox"><table class="of-g"><tr><th></th><th>A</th><th>B</th><th>C</th></tr><tr class="cong"><th>1</th><td class="n">Data</td><td class="n">Gasto</td><td class="n">Valor</td></tr><tr><th>498</th><td class="d">29/12</td><td>Mercado</td><td class="d">230,40</td></tr><tr><th>499</th><td class="d">30/12</td><td>Farmácia</td><td class="d">42,00</td></tr><tr><th>500</th><td class="d">31/12</td><td>Padaria</td><td class="d">18,50</td></tr></table></div></div><figcaption>A linha 1 congelada: os títulos continuam no alto, logo acima da linha 498. O traço grosso embaixo da linha 1 marca onde o painel foi congelado.</figcaption></figure>
+    <p>A guia Exibir é a guia de olhar. Nada do que está nela muda os dados; muda só o jeito de ver. Além do Congelar Painéis, ficam lá:</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Modos de exibição:</span> Normal, o de sempre; Layout da Página, que mostra a planilha já dividida em folhas, como vai sair impressa; e Visualização da Quebra de Página, que mostra onde cada página termina.</li>
+      <li><span class="ex-t">Modos de Exibição Personalizados:</span> guardam um jeito de ver, com o zoom e as linhas e colunas ocultas, para voltar a ele depois.</li>
+      <li><span class="ex-t">Linhas de Grade:</span> uma caixinha que mostra ou esconde, só na tela, as linhas cinza entre as células.</li>
+    </ul>
+    <h3>Imprimir: a guia Layout da Página</h3>
+    <p>Para imprimir, a guia é outra: <b>Layout da Página</b>. Tudo nela pensa na folha de papel:</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Orientação:</span> Retrato, a folha em pé, ou Paisagem, a folha deitada. <small>Na deitada cabem mais colunas.</small></li>
+      <li><span class="ex-t">Tamanho:</span> o tamanho do papel, como A4 ou Carta.</li>
+      <li><span class="ex-t">Margens:</span> o espaço em branco nas bordas da folha.</li>
+      <li><span class="ex-t">Temas:</span> as cores e as letras da planilha inteira, trocadas de uma vez.</li>
+    </ul>
+    <figure class="ed-fig"><div class="of-folhas ico" role="img" aria-label="Duas folhas de papel desenhadas. A primeira, em pé, com duas colunas de números. A segunda, deitada, com quatro colunas de números."><div class="of-fl-box"><div class="of-fl retrato"><table class="of-fl-t"><tr><td>120,00</td><td>95,40</td></tr><tr><td>130,00</td><td>18,50</td></tr><tr><td>42,00</td><td>99,90</td></tr><tr><td>230,40</td><td>61,50</td></tr><tr><td>110,00</td><td>75,00</td></tr></table></div><small>Retrato</small></div><div class="of-fl-box"><div class="of-fl paisagem"><table class="of-fl-t"><tr><td>120,00</td><td>95,40</td><td>130,00</td><td>18,50</td></tr><tr><td>42,00</td><td>99,90</td><td>230,40</td><td>61,50</td></tr><tr><td>110,00</td><td>75,00</td><td>12,90</td><td>88,00</td></tr></table></div><small>Paisagem</small></div></div><figcaption>A planilha impressa em Retrato, com a folha em pé, e em Paisagem, com a folha deitada, onde cabem mais colunas.</figcaption></figure>
+    <p>Agora uma pegadinha clássica. As linhas cinza entre as células aparecem na tela, mas não saem no papel: impressa, a planilha vira números soltos. Para as linhas saírem, marque a caixa <b>Imprimir</b>, embaixo de Linhas de Grade, no grupo Opções de Planilha da guia Layout da Página.</p>
+    <figure class="ed-fig"><div class="of-folhas ico" role="img" aria-label="Duas folhas em pé com os mesmos números. Na primeira, os números estão soltos, sem linhas. Na segunda, cada número está dentro de uma célula com linhas em volta."><div class="of-fl-box"><div class="of-fl retrato"><table class="of-fl-t sem"><tr><td>120,00</td><td>95,40</td></tr><tr><td>130,00</td><td>18,50</td></tr><tr><td>42,00</td><td>99,90</td></tr><tr><td>230,40</td><td>61,50</td></tr><tr><td>110,00</td><td>75,00</td></tr></table></div><small>Sem marcar Imprimir</small></div><div class="of-fl-box"><div class="of-fl retrato"><table class="of-fl-t"><tr><td>120,00</td><td>95,40</td></tr><tr><td>130,00</td><td>18,50</td></tr><tr><td>42,00</td><td>99,90</td></tr><tr><td>230,40</td><td>61,50</td></tr><tr><td>110,00</td><td>75,00</td></tr></table></div><small>Com Imprimir marcado</small></div></div><figcaption>A mesma planilha impressa duas vezes. Sem a caixa Imprimir, saem só os números soltos. Com ela marcada, saem também as linhas da grade.</figcaption></figure>
+    <p>A caixa Linhas de Grade da guia Exibir, que apareceu acima, não serve para isso: ela só mostra ou esconde as linhas na tela.</p>
+    <h3>Cabeçalho e rodapé</h3>
+    <p>O cabeçalho é a faixa do alto de cada folha impressa, e o rodapé, a faixa de baixo. Eles entram pela guia <b>Inserir</b>, que é a guia de pôr coisas novas na planilha: gráfico, imagem, tabela, cabeçalho e rodapé.</p>
+    <p>Ao clicar no cabeçalho, aparece uma guia nova, <b>Design</b>, com botões que escrevem sozinhos e se atualizam: Número da Página, Número de Páginas, Data Atual, Hora Atual, Caminho do Arquivo, Nome do Arquivo e Nome da Planilha.</p>
+    <figure class="ed-fig"><div class="of-folhas ico" role="img" aria-label="Uma folha deitada com uma faixa no alto: à esquerda, gastos.xlsx; no meio, Página 1 de 3; à direita, a data 07/11/2026. Embaixo da faixa, os números da planilha."><div class="of-fl-box"><div class="of-fl larga"><div class="of-fl-cab"><span>gastos.xlsx</span><span>Página 1 de 3</span><span>07/11/2026</span></div><table class="of-fl-t"><tr><td>120,00</td><td>95,40</td><td>130,00</td><td>18,50</td></tr><tr><td>42,00</td><td>99,90</td><td>230,40</td><td>61,50</td></tr></table></div><small>O cabeçalho no alto da folha</small></div></div><figcaption>O cabeçalho preenchido por três botões da guia Design: Nome do Arquivo (gastos.xlsx), Número da Página com o Número de Páginas (Página 1 de 3) e Data Atual.</figcaption></figure>
+    <p>Por fim, a guia <b>Revisão</b> é a de conferir e comentar. Os grupos dela são Revisão de Texto, com a ortografia; Ideias; Idioma; Comentários; e Alterações, onde fica a proteção da planilha. Nenhum deles muda a aparência: os Temas, que trocam cores e letras, ficam na Layout da Página.</p>
+    <div class="cilada"><span class="rot">O que a banca troca</span>A banca põe Temas na guia Revisão, manda imprimir as linhas de grade pela guia Exibir (lá elas só aparecem ou somem da tela) e chama a folha deitada de "horizontal" ou de "A4", que é tamanho de papel. Também inventa guias, como Visualizar e Impressão.</div>
+    <div class="definicao"><span class="rot">Como usar na questão</span>Ver de outro jeito: Exibir. Papel: Layout da Página. Pôr algo novo, como gráfico e cabeçalho: Inserir. Conferir e comentar: Revisão.</div>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">A planilha tem muitas colunas e não cabe na folha em pé. O que mudar?</p><div class="dq-op"><button type="button" data-ok="1">A orientação, para Paisagem</button><button type="button">O tamanho, para A4</button></div><p class="dq-exp" hidden>Paisagem deita a folha, e cabem mais colunas. A4 é tamanho de papel: a folha continuaria em pé.</p></div>
+    </div>
+    <div data-questao="50046"></div>
+    <div data-questao="12792"></div>
+    <div data-questao="3058"></div>
+    <div data-questao="2988"></div>
+    <div data-questao="2611"></div>
+    <div data-questao="2207"></div>
+    <p class="ponte">Agora é juntar. O treino mistura tudo o que você viu nesta aula.</p>
+  </div>
+  <aside class="sec-lado">
+    <div class="mao">Ver: Exibir. Papel: Layout da Página.</div>
+    <div class="mao aten">Linhas no papel: Layout da Página, caixa Imprimir.</div>
+    <div class="carimbo"><b>Já caiu</b>IBGP 2023<br>Legalle 2022<br>FCM 2020<br>Legalle 2020<br>FGV 2022<br>JMS 2024</div>
+  </aside>
+</section>
+
+<!-- 6 -->
+<section class="sec" id="s6">
+  <div class="sec-main">
+    <h2><span class="n">6.</span><span class="t">Treino</span></h2>
     <p>13 questões misturadas. Ache cada célula pela letra e pelo número, e faça as contas na ordem.</p>
     <div class="treino-barra">
       <span class="filtros"><button type="button" data-f="todas" aria-pressed="true">Todas</button><button type="button" data-f="pendentes" aria-pressed="false">Não respondidas</button><button type="button" data-f="erradas" aria-pressed="false">Erradas</button></span>
