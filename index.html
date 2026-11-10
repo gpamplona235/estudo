@@ -59223,7 +59223,8 @@ document.addEventListener('change',e=>{
    Relógio (pedido do usuário, 2026-11-03): estímulo para revisar. Cada questão certa dá corda:
    3 minutos com certeza, 1 minuto no chute. O relógio desce o tempo todo, também com o site fechado,
    e o jogo é não deixar zerar. Vale em toda tela de questões em foco (revisão, simulado, desafio,
-   salvas, as que faltam); a mesma questão só rende uma vez por dia. Erro não tira tempo.
+   salvas, as que faltam) e, desde 2026-11-10 (pedido do usuário), nas questões dentro das aulas;
+   a mesma questão só rende uma vez por dia. Erro não tira tempo.
    Discreto (pedido do mesmo dia): na tela fica só o ícone e os minutos ("2" = 2 minutos);
    o tempo exato, correndo, aparece ao clicar, junto com os números do dia.
    est.relogio = { fim:ms, rec:s, dias:{'2026-11-03':{c,s,m,k:[chaves]}} }
@@ -59289,7 +59290,7 @@ function relPopPinta(){
     '<p class="rel-regra">Cada questão certa dá corda: 3 minutos com certeza, 1 no chute. O relógio desce o tempo todo, e a mesma questão rende uma vez por dia.</p>'+
     (g&&g.c?lin('Hoje',g.c+(g.c===1?' certa':' certas')+' · '+Math.round(g.s/60)+' min')+lin('Maior saldo hoje',relFmt(g.m)):'')+
     (R.rec?lin('Recorde',relFmt(R.rec)):'')+(seq>1?lin('Sequência',seq+' dias'):'')+
-    (R.fim?'':'<p class="rel-regra">Acerte uma questão na revisão para dar a primeira corda.</p>');
+    (R.fim?'':'<p class="rel-regra">Acerte uma questão, numa aula ou na revisão, para dar a primeira corda.</p>');
 }
 function relPop(abrir,botao){
   const p=$('#rel-pop'); if(!p) return;
@@ -60376,6 +60377,9 @@ function questao(caixa,id,n,depois,fresca,opts){
         // a questão lá; se ela já é salva e você errou, volta para a caixa 1
         if(rev()[k]&&rev()[k].s){ if(!ok) entrar(k,'e',onde); else if(ch) entrar(k,'c',onde); }
         salvar(); irmas().forEach(o=>o._mostrar&&o._mostrar(letra)); atualizarContadores();
+        // relógio (pedido do usuário, 2026-11-10): questão certa dentro da aula também dá corda;
+        // no foco, atualizarBarra chama de novo, mas relGanha só conta a mesma questão uma vez por dia
+        if(ok) relGanha(k,ch);
       }
     }
     avisar({ok,ch,letra,novo:!!novo});
