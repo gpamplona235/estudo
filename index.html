@@ -1693,6 +1693,16 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .prl-cart small{font:700 12px/1.3 var(--texto);letter-spacing:.05em;text-transform:uppercase;color:var(--tinta-3)}
 .prl-cart b{font:700 20px/1.2 var(--texto);color:var(--coral)}
 .prl-cart span{font:500 15px/1.45 var(--texto);color:var(--tinta)}
+.prl-cart b{display:block}
+/* Pronomes Relativos: exemplo resolvido passo a passo (resolvido em pr_util.py), lido pelo leitor linha a linha */
+.prl-res{display:grid;gap:6px;max-width:720px;padding:12px 14px;border:1.5px solid var(--linha);border-radius:12px}
+.sec .prl-res p{margin:0}
+.prl-res .prl-rot{display:inline-block;min-width:6.2em;margin-right:8px;font:700 12px/1.6 var(--texto);letter-spacing:.05em;text-transform:uppercase;color:var(--tinta-3)}
+.prl-res-tit .prl-fr{font:600 18px/1.5 var(--texto);color:var(--tinta)}
+.sec .prl-res-p{list-style:none;margin:0;padding:0;display:grid;gap:5px}
+.sec .prl-res-p li{margin:0;padding:7px 12px;border-radius:8px;background:var(--codigo);font:500 16.5px/1.5 var(--texto);color:var(--tinta)}
+.prl-teste{display:block;margin-top:3px;font-weight:600;color:var(--marinho)}
+.sec .prl-res-fim{padding:7px 12px;border-left:4px solid var(--certo);border-radius:6px;background:var(--certo-fundo);font:600 16.5px/1.5 var(--texto);color:var(--tinta)}
 /* Word (prefixo wd-): a janela do Word, a faixa de opções, o Salvar como, o painel Imprimir e o cursor entre duas letras */
 .wd-jan{max-width:700px;border:2px solid var(--linha);border-radius:12px;overflow:hidden;background:var(--folha)}
 .wd-n{display:inline-grid;place-items:center;flex:none;width:22px;height:22px;margin-right:6px;border-radius:50%;background:var(--coral);color:var(--folha);font:800 13px/1 var(--texto);font-style:normal}
@@ -43444,8 +43454,8 @@ Documentos  Fotos  notas.txt
     <h2><span class="n">1.</span><span class="t">O "que" no lugar de um nome</span></h2>
     <p>Leia estas duas frases:</p>
     <ul class="ex-lista">
-      <li><span class="ex-t">Frase 1:</span> O Banco Central apresentou um documento.</li>
-      <li><span class="ex-t">Frase 2:</span> O documento estabelece os temas da pesquisa.</li>
+      <li><span class="ex-t">Frase 1:</span> <span class="cel">O Banco Central apresentou um documento.</span></li>
+      <li><span class="ex-t">Frase 2:</span> <span class="cel">O documento estabelece os temas da pesquisa.</span></li>
     </ul>
     <p>O nome "documento" aparece nas duas. Para não repetir, a gente junta as frases e troca o segundo "o documento" por uma palavra pequena: "que".</p>
     <figure class="ed-fig"><div class="prl-tira ico" role="img" aria-label="As duas frases separadas e depois juntas, com o que no lugar do nome repetido"><span class="prl-linha"><small>Separadas</small><b>O Banco Central apresentou um <span class="prl-ant">documento</span>. <span class="prl-corta">O documento</span> estabelece os temas.</b><em>O nome aparece duas vezes.</em></span><span class="prl-linha"><small>Juntas</small><b>O Banco Central apresentou um <span class="prl-ant">documento</span> <span class="prl-rel">que</span> estabelece os temas.</b><em>O "que" ficou no lugar de "o documento".</em></span></div><figcaption>Duas faixas. Na de cima, as duas frases separadas: o segundo "o documento" aparece riscado, porque vai sair. Na de baixo, as frases viraram uma só, e no lugar do nome riscado entrou o "que", em destaque. "Documento", sublinhado em azul, é o nome que o "que" retoma.</figcaption></figure>
@@ -43493,8 +43503,8 @@ Documentos  Fotos  notas.txt
     <h3>Pista 1: o verbo depois do "que"</h3>
     <p>O verbo da oração do "que" concorda com o antecedente quando o "que" é o sujeito. Verbo no plural pede antecedente no plural; no singular, antecedente no singular.</p>
     <ul class="ex-lista">
-      <li><span class="ex-t">Plural:</span> uma geração de leitores que só <b>buscam</b> histórias <small>Quem busca são os leitores, e não a geração.</small></li>
-      <li><span class="ex-t">Singular:</span> um conjunto de diretrizes que <b>oriente</b> os usuários <small>Quem orienta é o conjunto, e não as diretrizes.</small></li>
+      <li><span class="ex-t">Plural:</span> <span class="cel">uma geração de leitores que só <b>buscam</b> histórias</span> <small class="cel">Quem busca são os leitores, e não a geração.</small></li>
+      <li><span class="ex-t">Singular:</span> <span class="cel">um conjunto de diretrizes que <b>oriente</b> os usuários</span> <small class="cel">Quem orienta é o conjunto, e não as diretrizes.</small></li>
     </ul>
     <h3>Pista 2: o sentido</h3>
     <p>Quando o verbo não decide, troque e veja se a frase faz sentido no mundo real. Perna não late; pântano não se casa; o mapa não chama ninguém de nada.</p>
@@ -43535,30 +43545,42 @@ Documentos  Fotos  notas.txt
 <section class="sec" id="s3">
   <div class="sec-main">
     <h2><span class="n">3.</span><span class="t">A troca por "o qual"</span></h2>
-    <p>Todo "que" relativo pode ser trocado por outra palavra: "o qual". Só que o "que" nunca muda, e o "o qual" muda conforme o antecedente. Ele fica no masculino ou no feminino, no singular ou no plural.</p>
-    <figure class="ed-fig"><div class="prl-quadro ico" role="img" aria-label="As quatro formas: o qual, a qual, os quais, as quais"><div class="prl-cart"><small>masculino, singular</small><b>o qual</b><span>um <span class="prl-ant">aparelho</span> que tem um reservatório</span></div><div class="prl-cart"><small>feminino, singular</small><b>a qual</b><span>uma <span class="prl-ant">pesquisa</span> que sustenta a tese</span></div><div class="prl-cart"><small>masculino, plural</small><b>os quais</b><span>os <span class="prl-ant">leitores</span> que buscam histórias</span></div><div class="prl-cart"><small>feminino, plural</small><b>as quais</b><span>as <span class="prl-ant">viagens</span> que duram meses</span></div></div><figcaption>Quatro cartões. Cada um tem o gênero e o número no alto, a forma em letras grandes e um exemplo com o antecedente sublinhado. Masculino singular: o qual, como em "um aparelho que tem um reservatório". Feminino singular: a qual, "uma pesquisa que sustenta a tese". Masculino plural: os quais, "os leitores que buscam histórias". Feminino plural: as quais, "as viagens que duram meses".</figcaption></figure>
+    <p>Como cai na prova: a banca destaca um <b>que</b> no texto e pergunta por qual forma ele pode ser trocado sem erro. As alternativas trazem formas parecidas, e só uma combina com a frase.</p>
+    <p>No lugar do pronome relativo <b>que</b>, pode entrar a forma <b>o qual</b>. Ela muda conforme o antecedente, que é o nome retomado. Se o antecedente é masculino, a forma é masculina. Se é feminino, a forma é feminina. E se ele está no plural, a forma também vai para o plural. São quatro formas:</p>
+    <figure class="ed-fig"><div class="prl-quadro"><div class="prl-cart ler"><small class="cel">Masculino, singular</small><b class="cel">o qual</b><span class="cel">Exemplo: um aparelho que mede.</span><span class="cel">Troca: um aparelho o qual mede.</span></div><div class="prl-cart ler"><small class="cel">Feminino, singular</small><b class="cel">a qual</b><span class="cel">Exemplo: uma pesquisa que mostra.</span><span class="cel">Troca: uma pesquisa a qual mostra.</span></div><div class="prl-cart ler"><small class="cel">Masculino, plural</small><b class="cel">os quais</b><span class="cel">Exemplo: os leitores que buscam.</span><span class="cel">Troca: os leitores os quais buscam.</span></div><div class="prl-cart ler"><small class="cel">Feminino, plural</small><b class="cel">as quais</b><span class="cel">Exemplo: as viagens que duram.</span><span class="cel">Troca: as viagens as quais duram.</span></div></div></figure>
+    <h3>O método</h3>
     <ol class="passos">
-      <li>Ache o antecedente, como na seção 2.</li>
-      <li>Veja se ele é masculino ou feminino, singular ou plural.</li>
-      <li>Escolha a forma: o qual, a qual, os quais ou as quais.</li>
+      <li>Ache o antecedente: ponha cada nome que vem antes do relativo no lugar dele e fique com o nome que faz sentido. Se dois servirem, o verbo depois do relativo decide: singular ou plural.</li>
+      <li>Descubra o gênero do antecedente: ponha <b>o</b> ou <b>a</b> antes dele. Com <b>o</b>, é masculino. Com <b>a</b>, é feminino.</li>
+      <li>Descubra o número: um só é singular; mais de um é plural.</li>
+      <li>Escolha a forma que combina com os dois: o qual, a qual, os quais ou as quais.</li>
     </ol>
+    <p>Veja o método em três frases, da mais simples para a mais difícil.</p>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo 1</span><span class="cel prl-fr">A loja vendeu um aparelho que mede a pressão no braço.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">Os nomes antes do relativo são loja e aparelho. Troque e leia.</span><span class="cel prl-teste">A loja mede a pressão no braço: não faz sentido. O aparelho mede a pressão no braço: faz sentido.</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">O antecedente é aparelho. Ponha o ou a antes dele.</span><span class="cel prl-teste">O aparelho: masculino.</span></li><li class="ler"><span class="cel prl-rot">Passo 3</span><span class="cel">Quantos são?</span><span class="cel prl-teste">Um aparelho: singular.</span></li><li class="ler"><span class="cel prl-rot">Passo 4</span><span class="cel">Masculino e singular pedem o qual.</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">A loja vendeu um aparelho o qual mede a pressão no braço.</span></p></figure>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo 2</span><span class="cel prl-fr">Conversei com a turma de alunos que chegaram atrasados.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">Os nomes antes do relativo são turma e alunos. Os dois poderiam chegar atrasados, então olhe o verbo: chegaram, no plural.</span><span class="cel prl-teste">A turma chegaram: não combina. Os alunos chegaram: combina.</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">O antecedente é alunos. Ponha o ou a antes dele.</span><span class="cel prl-teste">Os alunos: masculino.</span></li><li class="ler"><span class="cel prl-rot">Passo 3</span><span class="cel">Quantos são?</span><span class="cel prl-teste">Alunos, mais de um: plural.</span></li><li class="ler"><span class="cel prl-rot">Passo 4</span><span class="cel">Masculino e plural pedem os quais.</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Conversei com a turma de alunos os quais chegaram atrasados.</span></p></figure>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo 3</span><span class="cel prl-fr">Elogiei o pai e a mãe que vieram à reunião.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">Quem veio à reunião? Os dois: o verbo vieram está no plural.</span><span class="cel prl-teste">O pai e a mãe vieram à reunião: faz sentido.</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">São dois antecedentes: pai é masculino, mãe é feminino.</span></li><li class="ler"><span class="cel prl-rot">Passo 3</span><span class="cel">Quando há um masculino e um feminino juntos, a forma fica no masculino plural.</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Elogiei o pai e a mãe os quais vieram à reunião.</span></p></figure>
+    <h3>A forma com uma preposição grudada</h3>
+    <p>Muitas alternativas trazem a forma com uma preposição grudada antes. Preposição é uma palavra pequena que liga outras palavras. A tabela mostra como cada preposição fica quando gruda na forma:</p>
+    <div class="tabela-rolagem"><table class="instancias compacta">
+      <thead><tr><th>Preposição</th><th>Com o qual</th><th>Com a qual</th></tr></thead>
+      <tbody>
+        <tr><td>de</td><td>do qual, dos quais</td><td>da qual, das quais</td></tr>
+        <tr><td>em</td><td>no qual, nos quais</td><td>na qual, nas quais</td></tr>
+        <tr><td>a</td><td>ao qual, aos quais</td><td>à qual, às quais</td></tr>
+        <tr><td>por</td><td>pelo qual, pelos quais</td><td>pela qual, pelas quais</td></tr>
+      </tbody>
+    </table></div>
+    <p>A preposição só entra quando alguma palavra da frase pede por ela. Como descobrir isso é o assunto da Aula 3. Nesta aula, a regra é simples. Se, no texto, o relativo estava sozinho, a forma também fica sozinha. Se havia uma preposição antes dele, ela continua, grudada na forma.</p>
     <ul class="ex-lista">
-      <li><span class="ex-c">Certo:</span> informações públicas que podem ser utilizadas → as quais podem ser utilizadas</li>
-      <li><span class="ex-e">Errado:</span> informações públicas a qual podem ser utilizadas <small>"Informações" está no plural.</small></li>
+      <li><span class="ex-c">Certo:</span> <span class="cel">um aparelho que mede a pressão. Troca: um aparelho o qual mede a pressão.</span> <small class="cel">O relativo estava sozinho, e a forma ficou sozinha.</small></li>
+      <li><span class="ex-e">Errado:</span> <span class="cel">um aparelho que mede a pressão. Troca: um aparelho no qual mede a pressão.</span> <small class="cel">Apareceu a preposição em, grudada, e nada na frase pede essa preposição.</small></li>
+      <li><span class="ex-c">Certo:</span> <span class="cel">a casa de que gosto. Troca: a casa da qual gosto.</span> <small class="cel">A preposição de estava antes do relativo, e continua, grudada na forma.</small></li>
     </ul>
-    <h3>Dois antecedentes</h3>
-    <p>Quando o "que" retoma dois nomes ao mesmo tempo, a forma vai para o plural. Se um nome for masculino e o outro feminino, ganha o masculino:</p>
-    <ul class="ex-lista">
-      <li><span class="ex-c">Certo:</span> um professor e uma biblioteca que o haviam ajudado → os quais o haviam ajudado</li>
-    </ul>
-    <h3>Sozinho troca por sozinho</h3>
-    <p>Nas questões de troca aparecem formas com uma preposição grudada: "no qual", "da qual", "à qual", "ao qual", "pelo qual". A preposição só entra quando alguma palavra da oração pede por ela. Em "a sobrevivência da qual depende a nossa", o "de" está ali porque quem depende, depende de alguma coisa. A Aula 3 mostra como descobrir isso.</p>
-    <p>Por enquanto, guarde a regra mais simples: se o "que" do texto está sozinho, sem preposição antes, a troca também fica sozinha. Uma alternativa com "no", "da", "à" ou "ao" grudado está errada.</p>
-    <p>Essa troca também é o teste para reconhecer o relativo. Se o "que" aceita virar "o qual" e a frase continua fazendo sentido, ele é pronome relativo. Na seção 4, os outros "que" não aceitam.</p>
-    <div class="cilada"><span class="rot">O que a banca troca</span>A banca dá a forma no gênero ou no número de um nome vizinho, e não do antecedente ("a qual" para "leitores", "os quais" para "pesquisas" quando quem age são as pesquisas). E põe preposição grudada onde o "que" estava sozinho: "nas quais", "à qual", "dos quais".</div>
-    <div class="definicao"><span class="rot">Como usar na questão</span>Na questão de troca, ache o antecedente primeiro. Depois corte as alternativas com preposição grudada (se o "que" estava sozinho) e as do gênero ou número errado.</div>
+    <p>Essa troca também serve para reconhecer o relativo. Se a troca por <b>o qual</b> funciona e a frase continua fazendo sentido, a palavra é pronome relativo. A próxima seção usa esse teste.</p>
+    <div class="cilada"><span class="rot">O que a banca troca</span>A banca dá a forma que combina com um nome vizinho, e não com o antecedente. Também gruda uma preposição na forma quando o relativo, no texto, estava sozinho.</div>
+    <div class="definicao"><span class="rot">Como usar na questão</span>Faça o passo 1 antes de olhar as alternativas. Depois corte as formas com preposição grudada, se o relativo estava sozinho, e as de gênero ou número errado.</div>
     <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">"As cartas que chegaram ontem". Troque o "que":</p><div class="dq-op"><button type="button" data-ok="1">as quais chegaram</button><button type="button">os quais chegaram</button></div><p class="dq-exp" hidden>"Cartas" é feminino e plural: "as quais". E o "que" estava sozinho, então a troca também fica sozinha.</p></div>
+      <div class="dq"><p class="dq-frase">Qual troca está certa? <span class="cel">Frase: as cartas que chegaram ontem.</span></p><div class="dq-op"><button type="button" data-ok="1">as cartas as quais chegaram ontem</button><button type="button">as cartas os quais chegaram ontem</button></div><p class="dq-exp" hidden>Cartas é feminino, as cartas, e está no plural. A forma é as quais. E o relativo estava sozinho, então a forma também fica sozinha.</p></div>
     </div>
     <div data-questao="36"></div>
     <div data-questao="134"></div>
@@ -43567,11 +43589,11 @@ Documentos  Fotos  notas.txt
     <div data-questao="156"></div>
     <div data-questao="160"></div>
     <div data-questao="112"></div>
-    <p class="ponte">A troca por "o qual" é também o teste do relativo. Agora você vai ver os "que" que não aceitam essa troca.</p>
+    <p class="ponte">A troca por o qual também é o teste do relativo. Na próxima seção, você usa esse teste para separar o relativo dos outros tipos de que.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">o qual, a qual, os quais, as quais: concordam com o antecedente.</div>
-    <div class="mao aten">"Que" sozinho troca por "qual" sozinho.</div>
+    <div class="mao">A forma acompanha o antecedente: masculino ou feminino, singular ou plural.</div>
+    <div class="mao aten">Que sozinho, forma sozinha.</div>
     <div class="carimbo"><b>Já caiu</b>QUADRIX 2026<br>VUNESP 2024<br>VUNESP 2025<br>FAUEL 2024<br>AVANÇASP 2025</div>
   </aside>
 </section>
@@ -43580,41 +43602,49 @@ Documentos  Fotos  notas.txt
 <section class="sec" id="s4">
   <div class="sec-main">
     <h2><span class="n">4.</span><span class="t">O "que" que não é relativo</span></h2>
-    <p>O "que" é a palavra mais versátil da língua. Ele aparece em muitos papéis, e só um deles é o relativo. Compare:</p>
-    <figure class="ed-fig"><div class="prl-tira ico" role="img" aria-label="Três tipos de que: relativo, integrante e de realce"><span class="prl-linha"><small>Relativo</small><b>Comprei o <span class="prl-ant">livro</span> <span class="prl-rel">que</span> você indicou.</b><em>Troca por "o qual": "o livro o qual você indicou". Funciona.</em></span><span class="prl-linha"><small>Integrante</small><b>Ele disse <span class="prl-rel">que</span> vem amanhã.</b><em>Não há nome para retomar. "Que vem amanhã" vira "isso": "Ele disse isso".</em></span><span class="prl-linha"><small>Realce</small><b>Foi aqui <span class="prl-rel">que</span> eu nasci.</b><em>Tire "foi" e "que": "Aqui eu nasci". A frase continua inteira.</em></span></div><figcaption>Três faixas, cada uma com um "que" em destaque. Na primeira, o relativo, com o antecedente "livro" sublinhado: aceita a troca por "o qual". Na segunda, o integrante: não há nome para retomar, e o trecho vira "isso". Na terceira, o "que" de realce: "foi" e "que" saem, e a frase continua inteira.</figcaption></figure>
+    <p>Como cai na prova: a banca destaca um <b>que</b> e pergunta a classe dele. Nas alternativas aparecem nomes como pronome relativo, conjunção integrante, preposição e partícula expletiva. Só o pronome relativo retoma um nome. Para separar um do outro, faça dois testes, nesta ordem:</p>
+    <ol class="passos">
+      <li>Teste 1: no lugar da palavra <b>que</b>, ponha o qual, a qual, os quais ou as quais. Se a frase continuar fazendo sentido, é pronome relativo.</li>
+      <li>Teste 2: se o teste 1 falhar, apague a palavra <b>que</b> e o resto da oração dela, e ponha no lugar a palavra <b>isso</b>. Se a frase fizer sentido, é conjunção integrante.</li>
+      <li>Se os dois testes falharem, procure o tipo na tabela dos outros tipos de <b>que</b>, mais abaixo.</li>
+    </ol>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo 1</span><span class="cel prl-fr">Comprei o livro que você indicou.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Teste 1</span><span class="cel">Troque por o qual.</span><span class="cel prl-teste">Comprei o livro o qual você indicou: faz sentido.</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Pronome relativo. Ele retoma livro.</span></p></figure>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo 2</span><span class="cel prl-fr">Ele disse que vem amanhã.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Teste 1</span><span class="cel">Troque por o qual.</span><span class="cel prl-teste">Ele disse o qual vem amanhã: não faz sentido. O teste falhou.</span></li><li class="ler"><span class="cel prl-rot">Teste 2</span><span class="cel">Ponha isso no lugar da palavra que e do resto da oração.</span><span class="cel prl-teste">Ele disse isso: faz sentido.</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Conjunção integrante. Ela não retoma nome nenhum.</span></p></figure>
+    <p>Cuidado: um nome logo antes da palavra <b>que</b> não prova que ela é relativo. Faça o teste mesmo assim. Veja duas frases com o mesmo começo:</p>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo 3</span><span class="cel prl-fr">Convenci a moça que estava na fila.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Teste 1</span><span class="cel">Troque por a qual.</span><span class="cel prl-teste">Convenci a moça a qual estava na fila: faz sentido. A moça estava na fila.</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Pronome relativo. Ele retoma moça.</span></p></figure>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo 4</span><span class="cel prl-fr">Convenci a moça que era melhor esperar.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Teste 1</span><span class="cel">Troque por a qual.</span><span class="cel prl-teste">Convenci a moça a qual era melhor esperar: não faz sentido. O teste falhou.</span></li><li class="ler"><span class="cel prl-rot">Teste 2</span><span class="cel">Ponha isso no lugar da palavra que e do resto da oração. Com o verbo convencer, o isso vem com a preposição de: disso.</span><span class="cel prl-teste">Convenci a moça disso: faz sentido. Ela foi convencida de uma ideia.</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Conjunção integrante.</span></p></figure>
     <h3>A conjunção integrante</h3>
-    <p>Depois de verbos como "dizer", "saber", "achar", "ver", "esperar", o "que" abre uma ideia inteira: "Ele disse que vem amanhã". Ele não retoma nome nenhum. O teste é trocar o "que" e tudo o que vem depois por "isso": "Ele disse isso". Esse "que" é a <b>conjunção integrante</b>.</p>
-    <p><b>Conjunção</b> é a palavra que só liga, sem ficar no lugar de nada. A oração aberta pela integrante faz papel de nome, como o "isso": é a <b>oração subordinada substantiva</b>. Ela tem vários tipos, conforme o que completa. Completa um verbo: objetiva direta, "Ele disse que vem". Completa um nome: completiva nominal, "Tenho certeza de que vem". O termo que completa um nome, como "de que vem" em "certeza de que vem", é o <b>complemento nominal</b>.</p>
-    <p>Cuidado com o nome antes do "que". Ele sozinho não prova nada:</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Relativo:</span> Convenci a moça que estava na fila. <small>A moça estava na fila: "a moça a qual estava na fila".</small></li>
-      <li><span class="ex-t">Integrante:</span> Convenci a moça que era melhor esperar. <small>"A moça a qual era melhor esperar" não faz sentido. Ela foi convencida disso, de uma ideia.</small></li>
-    </ul>
-    <h3>Os outros "que"</h3>
+    <p>Conjunção é a palavra que só liga partes da frase. Ela não fica no lugar de nome nenhum. A integrante aparece depois de verbos como dizer, saber, achar, ver e esperar. Ela abre uma ideia inteira, e essa ideia faz o papel de um nome. Por isso a palavra <b>isso</b> cabe no lugar dela.</p>
+    <p>O trecho que a integrante abre se chama oração subordinada substantiva. As alternativas também usam os nomes dos tipos dela:</p>
+    <div class="tabela-rolagem"><table class="instancias compacta">
+      <thead><tr><th>Nome</th><th>O que é</th><th>Exemplo</th></tr></thead>
+      <tbody>
+        <tr><td>oração subordinada substantiva objetiva direta</td><td>completa um verbo</td><td>Ele disse que vem.</td></tr>
+        <tr><td>oração subordinada substantiva completiva nominal</td><td>completa um nome, com preposição antes</td><td>Tenho certeza de que ele vem.</td></tr>
+        <tr><td>complemento nominal</td><td>qualquer termo que completa um nome, com preposição</td><td>a certeza de que ele vem; a confiança no futuro</td></tr>
+      </tbody>
+    </table></div>
+    <h3>Os outros tipos de que</h3>
+    <p>Quando os dois testes falham, a palavra é de um destes tipos. Cada um tem um jeito próprio de reconhecer:</p>
     <div class="tabela-rolagem"><table class="instancias compacta">
       <thead><tr><th>Tipo</th><th>Exemplo</th><th>Como reconhecer</th></tr></thead>
       <tbody>
-        <tr><td>pronome relativo</td><td>o livro que você indicou</td><td>retoma um nome; troca por "o qual"</td></tr>
-        <tr><td>conjunção integrante</td><td>Ele disse que vem.</td><td>o trecho vira "isso"</td></tr>
-        <tr><td>conjunção final</td><td>Falou alto para que todos ouvissem.</td><td>"para que" = "a fim de que": dá um objetivo</td></tr>
-        <tr><td>conjunção comparativa</td><td>O trem é mais rápido do que o carro.</td><td>vem depois de "mais", "menos", "melhor"</td></tr>
-        <tr><td>expletivo ou de realce</td><td>Foi aqui que eu nasci.</td><td>tire "foi" e "que" e a frase fica inteira</td></tr>
-        <tr><td>exclamativo e interrogativo</td><td>Que peixe enorme! Que horas são?</td><td>abre exclamação ou pergunta; não retoma nada</td></tr>
-        <tr><td>preposição</td><td>Tenho que sair.</td><td>troca por "de": "Tenho de sair"</td></tr>
+        <tr><td>conjunção final</td><td>Falou alto para que todos ouvissem.</td><td>para que tem o sentido de a fim de que: dá um objetivo</td></tr>
+        <tr><td>conjunção comparativa</td><td>O trem é mais rápido do que o carro.</td><td>vem numa comparação, depois de mais, menos ou melhor</td></tr>
+        <tr><td>partícula expletiva, ou de realce</td><td>Foi aqui que eu nasci.</td><td>tire as palavras foi e que: aqui eu nasci. A frase fica inteira</td></tr>
+        <tr><td>pronome exclamativo ou interrogativo</td><td>Que peixe enorme! Que horas são?</td><td>abre uma exclamação ou uma pergunta, e não retoma nada</td></tr>
+        <tr><td>preposição</td><td>Tenho que sair.</td><td>dá para trocar por de: tenho de sair</td></tr>
       </tbody>
     </table></div>
-    <p>A integrante, a final e a comparativa fazem uma oração depender de outra. Por isso as três são <b>conjunções subordinativas</b>, e a banca às vezes usa só esse nome.</p>
-    <p>O relativo também liga duas orações. A diferença é que a conjunção só liga, e o relativo liga e ainda retoma um nome, com um papel dentro da oração dele. Quando a alternativa disser que o "que" serve apenas para ligar, ela está descrevendo a conjunção.</p>
-    <p>E uma palavra sozinha não é oração. Oração precisa de verbo. Se a alternativa chamar o "que" de "oração subordinada", ela confundiu a palavra com o trecho que ela abre.</p>
-    <ol class="passos">
-      <li>Há um nome antes que cabe no lugar do "que"? Troque e leia.</li>
-      <li>Troque o "que" por "o qual", "a qual": se funcionar, é relativo.</li>
-      <li>Se não funcionar, teste o "isso" (integrante), o "a fim de que" (final), o "mais do que" (comparativa) e o tirar "é... que" (realce).</li>
-    </ol>
-    <div class="cilada"><span class="rot">O que a banca troca</span>A banca põe um nome antes de um "que" integrante ("convencer a rapariga que..."), chama o relativo de conjunção porque ele liga orações, troca a classe por uma função ("sujeito") e chama a palavra de oração.</div>
-    <div class="definicao"><span class="rot">Como usar na questão</span>Na questão de classificar, faça primeiro a troca por "o qual". Se não der, o "isso". São dois testes, e quase sempre um deles decide.</div>
+    <h3>Quatro nomes que confundem</h3>
+    <p><b>Conjunção subordinativa.</b> A integrante, a final e a comparativa fazem uma oração depender de outra. Por isso as três são conjunções subordinativas, e algumas alternativas usam só esse nome.</p>
+    <p><b>Só para ligar.</b> O relativo também liga duas orações. A diferença é que a conjunção só liga, e o relativo liga e ainda fica no lugar de um nome. Se a alternativa disser que a palavra serve apenas para ligar, ela está descrevendo uma conjunção.</p>
+    <p><b>Oração.</b> Oração é um trecho com verbo. Uma palavra sozinha não é oração. Se a alternativa chamar a palavra de oração, ela está errada.</p>
+    <p><b>Classe e função.</b> Classe é o que a palavra é: pronome relativo, conjunção. Função é o papel que ela faz na frase: sujeito, por exemplo. Quando o comando diz morfologicamente, ele pede a classe.</p>
+    <div class="cilada"><span class="rot">O que a banca troca</span>A banca põe um nome antes de um que integrante, para parecer relativo. Chama o relativo de conjunção, porque ele também liga. Dá uma função, como sujeito, quando o comando pede a classe. E chama a palavra de oração.</div>
+    <div class="definicao"><span class="rot">Como usar na questão</span>Faça o teste 1 e o teste 2 antes de ler as alternativas. Quase sempre um dos dois decide.</div>
     <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Em "Percebi que a porta estava aberta", o "que" é:</p><div class="dq-op"><button type="button" data-ok="1">conjunção integrante</button><button type="button">pronome relativo</button></div><p class="dq-exp" hidden>"Percebi isso": o trecho vira "isso", e não há nome para retomar. "Porta" vem depois do "que", dentro da oração dele.</p></div>
+      <div class="dq"><p class="dq-frase">Qual é a classe da palavra que? <span class="cel">Frase: percebi que a porta estava aberta.</span></p><div class="dq-op"><button type="button" data-ok="1">conjunção integrante</button><button type="button">pronome relativo</button></div><p class="dq-exp" hidden>Teste 1: percebi a qual a porta estava aberta não faz sentido. Teste 2: percebi isso faz sentido. É conjunção integrante.</p></div>
     </div>
     <div data-questao="102"></div>
     <div data-questao="50007"></div>
@@ -43624,11 +43654,11 @@ Documentos  Fotos  notas.txt
     <div data-questao="106"></div>
     <div data-questao="186"></div>
     <div data-questao="50006"></div>
-    <p class="ponte">Você já separa o relativo dos outros "que". Falta conhecer os nomes das outras classes que a banca põe nas alternativas.</p>
+    <p class="ponte">Falta conhecer os nomes das outras classes que aparecem nas alternativas.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">Troca por "o qual": relativo.</div>
-    <div class="mao aten">Vira "isso": integrante.</div>
+    <div class="mao">Teste 1: o qual. Teste 2: isso.</div>
+    <div class="mao aten">Passou no teste 1: relativo. Passou no teste 2: integrante.</div>
     <div class="carimbo"><b>Já caiu</b>Fênix Instituto 2025<br>IBGP 2021<br>FCPC 2026<br>Ápice 2026<br>IBFC 2023<br>AOCP 2025</div>
   </aside>
 </section>
@@ -43637,35 +43667,56 @@ Documentos  Fotos  notas.txt
 <section class="sec" id="s5">
   <div class="sec-main">
     <h2><span class="n">5.</span><span class="t">Os outros nomes das alternativas</span></h2>
-    <p>Nas questões de classificar, as alternativas erradas trazem nomes de outras classes. Para saber quando a alternativa erra, você precisa saber o que cada nome quer dizer. Aqui estão os que aparecem nestas questões:</p>
+    <p>Como cai na prova: algumas questões pedem a classe de várias palavras de uma vez. Outras trazem, nas alternativas erradas, nomes de outras classes. Para eliminar essas alternativas, você precisa saber o que cada nome quer dizer. A tabela traz os que aparecem nestas questões:</p>
     <div class="tabela-rolagem"><table class="instancias compacta">
       <thead><tr><th>Classe</th><th>O que é</th><th>Exemplo</th></tr></thead>
       <tbody>
-        <tr><td>substantivo</td><td>o nome de pessoa, coisa, lugar ou ideia</td><td>professor, praça, documento</td></tr>
-        <tr><td>adjetivo</td><td>a característica do nome</td><td>barato, didático, superior</td></tr>
-        <tr><td>artigo</td><td>"o, a, os, as" (definido) e "um, uma" (indefinido), antes do nome</td><td>o quadro, um insumo</td></tr>
-        <tr><td>advérbio</td><td>diz quando, onde, como; "mais" e "muito" dão intensidade</td><td>ontem, aqui, mais barato</td></tr>
-        <tr><td>locução adverbial</td><td>um grupo de palavras com papel de advérbio</td><td>na varanda, à noite</td></tr>
-        <tr><td>pronome pessoal</td><td>quem fala ou de quem se fala</td><td>eu, você, ele, ela</td></tr>
-        <tr><td>pronome oblíquo</td><td>"o, a, lhe, me, se, nos" ligados ao verbo; antes do verbo, é a próclise</td><td>me ajuda, publicou-o</td></tr>
-        <tr><td>pronome demonstrativo</td><td>aponta: "este, esse, aquele, isso, aquilo"</td><td>aquele livro, aqueles que</td></tr>
-        <tr><td>pronome possessivo</td><td>indica de quem é</td><td>meu, seu, nosso</td></tr>
+        <tr><td>substantivo</td><td>nome de pessoa, coisa, lugar ou ideia</td><td>professor, praça, documento</td></tr>
+        <tr><td>adjetivo</td><td>característica de um nome</td><td>barato, didático, superior</td></tr>
+        <tr><td>artigo definido</td><td>o, a, os, as, logo antes de um nome</td><td>o quadro, a casa</td></tr>
+        <tr><td>artigo indefinido</td><td>um, uma, uns, umas, logo antes de um nome</td><td>um insumo, uma ideia</td></tr>
+        <tr><td>advérbio</td><td>diz quando, onde ou como. Mais e muito dão intensidade</td><td>ontem, aqui, mais barato</td></tr>
+        <tr><td>locução adverbial</td><td>grupo de palavras com papel de advérbio</td><td>na varanda, à noite</td></tr>
+        <tr><td>pronome pessoal</td><td>a pessoa de quem se fala</td><td>eu, você, ele, ela</td></tr>
+        <tr><td>pronome oblíquo</td><td>o, a, lhe, me, se, ligados a um verbo. Antes do verbo, essa posição se chama próclise</td><td>me ajuda, publicou-o</td></tr>
+        <tr><td>pronome demonstrativo</td><td>aponta para algo</td><td>este, esse, aquele, isso, aquilo</td></tr>
+        <tr><td>pronome possessivo</td><td>diz de quem é</td><td>meu, seu, nosso</td></tr>
         <tr><td>pronome indefinido</td><td>fala de modo vago</td><td>alguém, algum, alguns, todo</td></tr>
-        <tr><td>pronome interrogativo</td><td>"que, quem, qual" numa pergunta</td><td>Que horas são?</td></tr>
-        <tr><td>pronome de tratamento</td><td>a forma de se dirigir a alguém</td><td>você, senhor</td></tr>
-        <tr><td>preposição</td><td>liga palavras; as essenciais só funcionam como preposição</td><td>de, em, com, por, para</td></tr>
-        <tr><td>conjunção coordenativa</td><td>liga orações que se sustentam sozinhas; "mas" é a adversativa, de oposição</td><td>e, mas, ou, portanto</td></tr>
+        <tr><td>pronome interrogativo</td><td>abre uma pergunta</td><td>que, quem, qual, numa pergunta</td></tr>
+        <tr><td>pronome de tratamento</td><td>forma de se dirigir a alguém</td><td>você, senhor</td></tr>
+        <tr><td>preposição</td><td>palavra pequena que liga outras. As essenciais só funcionam como preposição</td><td>de, em, com, por, para</td></tr>
+        <tr><td>conjunção coordenativa</td><td>liga orações que se sustentam sozinhas. Mas é a adversativa, de oposição</td><td>e, mas, ou, portanto</td></tr>
+        <tr><td>conjunção subordinativa</td><td>liga uma oração que depende de outra</td><td>que integrante, para que, se (condição), quando, porque</td></tr>
       </tbody>
     </table></div>
-    <h3>O "o" de três jeitos</h3>
-    <p>O "o" é a palavra que mais engana nessas questões, porque tem três papéis:</p>
-    <figure class="ed-fig"><div class="prl-tira ico" role="img" aria-label="O o como artigo, como demonstrativo e como pronome oblíquo"><span class="prl-linha"><small>Artigo</small><b><span class="prl-rel">O</span> quadro ficou pronto.</b><em>Vem antes do nome, colado nele.</em></span><span class="prl-linha"><small>Demonstrativo</small><b>Leve <span class="prl-rel">o</span> que quiser.</b><em>Vale "aquilo": "Leve aquilo que quiser".</em></span><span class="prl-linha"><small>Oblíquo</small><b>O autor publicou-<span class="prl-rel">o</span> em 1943.</b><em>Está ligado ao verbo, no lugar de um nome: "publicou o mapa".</em></span></div><figcaption>Três faixas com o "o" em destaque. Na primeira, artigo: vem antes do nome "quadro". Na segunda, demonstrativo: vale "aquilo", antes de "que". Na terceira, oblíquo: está ligado ao verbo "publicou", no lugar de um nome.</figcaption></figure>
-    <p>Quando o "o" vale "aquilo", o "que" depois dele é relativo e retoma esse "o": "aquilo que quiser". O mesmo vale para "aquele que", "aqueles que", "você que": o antecedente pode ser um pronome, e não só um substantivo.</p>
-    <p>E repare em "alguns dos quais": "alguns" é pronome indefinido, e o relativo é "os quais", que vem depois.</p>
-    <div class="cilada"><span class="rot">O que a banca troca</span>A banca chama o substantivo de adjetivo ("o adjetivo documento"), o "o" que vale "aquilo" de artigo, e destaca a palavra vizinha do relativo ("alguns", em "alguns dos quais"). Também chama o relativo de conjunção.</div>
-    <div class="definicao"><span class="rot">Como usar na questão</span>Na questão de várias palavras, classifique cada uma antes de olhar as alternativas, e corte a primeira alternativa que errar uma delas.</div>
+    <h3>A palavra o tem três classes</h3>
+    <p>A palavra <b>o</b> é a que mais engana nessas questões. Ela pode ser artigo, pronome demonstrativo ou pronome oblíquo. Para saber, olhe o que vem logo depois dela.</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Artigo:</span> <span class="cel">O quadro ficou pronto.</span> <small class="cel">Vem logo antes de um nome.</small></li>
+      <li><span class="ex-t">Demonstrativo:</span> <span class="cel">Leve o que quiser.</span> <small class="cel">Vem antes de que e vale aquilo: leve aquilo que quiser.</small></li>
+      <li><span class="ex-t">Oblíquo:</span> <span class="cel">O autor publicou-o em 1943.</span> <small class="cel">Vem ligado a um verbo e fica no lugar de um nome: publicou o mapa.</small></li>
+    </ul>
+    <h3>O antecedente pode ser um pronome</h3>
+    <p>O relativo também retoma pronomes, e não só substantivos. O teste é o mesmo: troque e leia.</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Exemplo:</span> <span class="cel">Aqueles que consumiam carne processada.</span> <small class="cel">O relativo retoma aqueles, um pronome demonstrativo. Aqueles consumiam.</small></li>
+      <li><span class="ex-t">Exemplo:</span> <span class="cel">Você que me lê, preste atenção.</span> <small class="cel">O relativo retoma você, um pronome de tratamento. Você me lê.</small></li>
+      <li><span class="ex-t">Exemplo:</span> <span class="cel">Leve o que quiser.</span> <small class="cel">O relativo retoma a palavra o, que vale aquilo. Você quer aquilo.</small></li>
+    </ul>
+    <h3>Alguns dos quais</h3>
+    <p>Quando aparece alguns dos quais, ou muitos dos quais, são duas palavras com classes diferentes. Alguns é pronome indefinido. O relativo é a forma que vem depois: os quais.</p>
+    <ul class="ex-lista">
+      <li><span class="ex-t">Exemplo:</span> <span class="cel">Construíram templos, alguns dos quais seguem de pé.</span> <small class="cel">Os quais retoma templos. Alguns é pronome indefinido.</small></li>
+    </ul>
+    <ol class="passos">
+      <li>Antes de ler as alternativas, classifique cada palavra destacada.</li>
+      <li>Na palavra o, olhe a palavra seguinte: um nome, a palavra que, ou um verbo.</li>
+      <li>Corte a primeira alternativa que errar uma das palavras.</li>
+    </ol>
+    <div class="cilada"><span class="rot">O que a banca troca</span>A banca chama um substantivo de adjetivo, chama de artigo a palavra o que vale aquilo, e destaca a palavra vizinha do relativo, como alguns, para parecer que ela é o relativo.</div>
+    <div class="definicao"><span class="rot">Como usar na questão</span>Classifique cada palavra antes de olhar as alternativas.</div>
     <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Em "Leve o que quiser", o "o" é:</p><div class="dq-op"><button type="button" data-ok="1">pronome demonstrativo</button><button type="button">artigo</button></div><p class="dq-exp" hidden>O "o" vale "aquilo": "Leve aquilo que quiser". Não vem antes de nome nenhum, então não é artigo. E o "que" depois dele é relativo, retomando o "o".</p></div>
+      <div class="dq"><p class="dq-frase">Qual é a classe da palavra o? <span class="cel">Frase: leve o que quiser.</span></p><div class="dq-op"><button type="button" data-ok="1">pronome demonstrativo</button><button type="button">artigo</button></div><p class="dq-exp" hidden>A palavra o vem antes de que e vale aquilo: leve aquilo que quiser. Ele não vem antes de um nome, então não é artigo.</p></div>
     </div>
     <div data-questao="14"></div>
     <div data-questao="74"></div>
@@ -43675,11 +43726,11 @@ Documentos  Fotos  notas.txt
     <div data-questao="159"></div>
     <div data-questao="197"></div>
     <div data-questao="26"></div>
-    <p class="ponte">Agora é juntar. O treino mistura tudo o que você viu nesta aula.</p>
+    <p class="ponte">Agora é praticar. O treino mistura tudo o que você viu nesta aula.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">O "o" que vale "aquilo" é demonstrativo.</div>
-    <div class="mao aten">Classifique cada palavra antes de ler as alternativas.</div>
+    <div class="mao">Classifique cada palavra antes de ler as alternativas.</div>
+    <div class="mao aten">O antes de que vale aquilo: demonstrativo.</div>
     <div class="carimbo"><b>Já caiu</b>FADESP 2026<br>IDESG 2025<br>IBFC 2017<br>Fronte 2025<br>IEL 2025<br>CETAP 2024</div>
   </aside>
 </section>
