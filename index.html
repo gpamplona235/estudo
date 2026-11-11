@@ -59217,6 +59217,11 @@ const salvas=()=>est.salvas=est.salvas||[];
 // continuam guardadas, mas não aparecem nem contam
 const itens=()=>Object.entries(rev()).filter(([k,it])=>valida(k)&&it&&it.s);
 function devidas(set){const h=hoje();return itens().filter(([k,it])=>(!set||noSet(set,k))&&it.prox<=h).sort((a,b)=>a[1].prox.localeCompare(b[1].prox)||a[1].cx-b[1].cx).map(([k])=>k);}
+// quantas questões diferentes já foram respondidas na revisão hoje (pedido do usuário, 2026-11-11: o "8 de 711" segue o dia
+// inteiro, em vez de zerar a cada sessão). Sai do histórico (est.log), então não grava nada novo. Quem responde some da fila
+// de hoje (a próxima data é amanhã ou depois), e por isso base + fila é o total do dia.
+function revFeitasHoje(set){const d=new Date();d.setHours(0,0,0,0);const ini=d.getTime(),s=new Set();
+  LOG().forEach(e=>{if(e.tipo==='resp'&&e.onde==='revisao'&&e.t>=ini&&(!set||noSet(set,e.k)))s.add(e.k);});return s.size;}
 function motivoTxt(it){const m=[];if(it.s)m.push('salva');if(it.e)m.push('errou');if(it.c)m.push('chute');return m.join(' + ')||'—';}
 function descEvento(e){
   if(e.tipo==='resp'){
@@ -61238,7 +61243,7 @@ function vidHtml(){
 function renderRevisao(){
   const pg=$('#pg-revisao'), h=hoje(), set=capsDoEscopo(escRev), cf=conferencia(set), its=cf.its, dev=devidas(set);
   let html='<header class="pg-cab peq"><h1>Revisão espaçada</h1><p class="sub">As questões que você salvou voltam no dia certo, uma por vez. Tudo fica registrado.</p></header>';
-  if(sessao&&sessao.ativa) html+='<div class="aviso">'+ic('i-rev')+'<span>Você tem uma sessão em andamento: questão '+(sessao.i+1)+' de '+sessao.fila.length+'.</span><button class="btn pri" data-acao="retomar">Continuar sessão</button></div>';
+  if(sessao&&sessao.ativa) html+='<div class="aviso">'+ic('i-rev')+'<span>Você tem uma sessão em andamento: questão '+((sessao.base||0)+sessao.i+1)+' de '+((sessao.base||0)+sessao.fila.length)+'.</span><button class="btn pri" data-acao="retomar">Continuar sessão</button></div>';
   html+='<div class="barra-esc"><label class="esc">Mostrar <select id="rev-esc">'+opcoesEscopo(escRev)+'</select></label></div>'+
     abas([['hoje','Hoje',dev.length],['fila','Fila',its.length],['hist','Histórico',null],['sim','Simulado',null],['vid','Vídeos',vidKeys().length],['nota','Anotações',notasTotal()],['conf','Conferência',cf.problemas?'⚠ '+cf.problemas:'✓',cf.problemas]],abaRev,'data-abarev')+'<div class="aba-corpo" role="tabpanel">';
   if(abaRev==='hoje'){
@@ -61505,9 +61510,9 @@ function retomarFoco(){ if(sessao&&sessao.ativa) mostrarFoco(); }
 function fecharFoco(){ notaFechar(); foco.hidden=true; document.body.classList.remove('em-foco'); rota(true); if(focoVoltar&&document.contains(focoVoltar)) focoVoltar.focus({preventScroll:true}); }
 function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
-  const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], tot=sessao.fila.length, feitas=Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
+  const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], base=sessao.base||0, tot=base+sessao.fila.length, feitas=base+Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
   const cx=res&&res.cxA?res.cxA:it.cx;
-  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+relPill(true)+(simModo||sessao.falta?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
+  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(base+sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+relPill(true)+(simModo||sessao.falta?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
     '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig">'+(r.video?'<span class="chip suave">Questões dos vídeos<span class="f-nome"> · '+esc(DADOS[id].questoes[n].assunto||'')+'</span></span>':'<span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+'<span class="f-nome"> · '+esc(r.nome)+'</span></span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula<span class="lab"> ↗</span></a>')+'</div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
     '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · N anota · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
@@ -61531,7 +61536,7 @@ function atualizarBarra(d,k){
     if(d.novo){ if(sessao.modo!=='rev') sessao.res[k]={ok:d.ok,ch:d.ch,letra:d.letra}; if(d.ok) relGanha(k,d.ch); mostrarRes(k); pintarPainel(k); }
     ok.disabled=false; ok.textContent=sessao.i+1<sessao.fila.length?'Próxima →':'Ver resumo →'; ok.dataset.modo='prox'; ch.disabled=true; pu.disabled=true;
     if(d.novo) setTimeout(()=>ok.focus({preventScroll:true}),0);
-    const b=$('.pg-bar i',foco); if(b) b.style.width=pct(Object.keys(sessao.res).length,sessao.fila.length)+'%';
+    const b=$('.pg-bar i',foco), base=sessao.base||0; if(b) b.style.width=pct(base+Object.keys(sessao.res).length,base+sessao.fila.length)+'%';
   }else{ ok.disabled=!d.marcada; ok.textContent='Confirmar'; ok.dataset.modo='conf'; ch.disabled=false; pu.disabled=false; ch.setAttribute('aria-pressed',d.chute?'true':'false'); }
 }
 function responderRev(k,letra,ok,ch){
@@ -61982,8 +61987,8 @@ document.addEventListener('click',e=>{
   const b=e.target.closest('button'); if(!b||b.closest('#foco')) return;
   const a=b.dataset.acao;
   if(a==='tema') alternarTema();
-  else if(a==='foco-hoje') abrirFoco(devidas(),'rev');
-  else if(a==='comecar') abrirFoco(devidas(capsDoEscopo(escRev)),'rev');
+  else if(a==='foco-hoje') abrirFoco(devidas(),'rev','',{base:revFeitasHoje()});
+  else if(a==='comecar'){ const set=capsDoEscopo(escRev); abrirFoco(devidas(set),'rev','',{base:revFeitasHoje(set)}); }
   else if(a==='retomar'||a==='voltar-rev') retomarFoco();
   else if(a==='adiantar'){ const h=hoje(),set=capsDoEscopo(escRev); abrirFoco(itens().filter(([k,it])=>noSet(set,k)&&it.prox>h).sort((x,y)=>x[1].prox.localeCompare(y[1].prox)).slice(0,10).map(([k])=>k),'rev'); }
   else if(a==='incluir-err'){ const removidas=new Set(LOG().filter(x=>x.tipo==='saiu').map(x=>x.k)); Object.keys(DADOS).forEach(id=>{const st=est['q:'+id]||{};Object.keys(st).forEach(n=>{const q=DADOS[id].questoes[n],k=id+'|'+n;if(q&&st[n]!==q.gab&&!rev()[k]&&!removidas.has(k)) entrar(k,'e','sistema',hoje());});}); salvar(); renderRevisao(); atualizarContadores(); }
