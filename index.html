@@ -2366,6 +2366,102 @@ body.cad-em-estudo #nv-selo{display:none}
   body.cad-imprime .cad-ed{min-height:0;padding:14px 0}
 }
 
+/* =========================================================
+   Painel (prefixo pn-, pedido do usuário, 2026-11-11): tabela em árvore, Matéria › Grupo › Apostila › Aula.
+   Cada matéria é um cartão; as linhas de dentro seguem as mesmas colunas, com guias tracejadas.
+   ========================================================= */
+.pn{container:painel/inline-size}
+.pn-l{--pn-g:minmax(0,1fr) 62px 104px 70px 66px 96px 100px}
+.pn-barra{display:flex;flex-wrap:wrap;gap:6px;margin:-10px 0 14px}
+.pn-l{display:grid;grid-template-columns:var(--pn-g);align-items:center;column-gap:10px;padding-right:14px;position:relative;min-height:42px}
+.pn-cab{min-height:0;padding:0 14px 8px;font:500 11px var(--f-mono);letter-spacing:.1em;text-transform:uppercase;color:var(--mut)}
+.pn-cab span{white-space:nowrap}
+
+/* cartão da matéria */
+.pn-mat{background:var(--card);border:1px solid var(--lin);border-radius:var(--r2);box-shadow:var(--som);margin:0 0 12px;overflow:hidden}
+.pn-mat>.pn-l{min-height:58px}
+.pn-mat>.pn-filhos{border-top:1px solid var(--lin);padding:2px 0 6px}
+.pn-l:not(.pn-cab){cursor:pointer}
+.pn-l:not(.pn-cab):hover{background:var(--campo)}
+.pn-filhos>.pn-no+.pn-no>.pn-l,.pn-filhos>.pn-l+.pn-l,.pn-filhos>.pn-no+.pn-l,.pn-filhos>.pn-l+.pn-no>.pn-l{border-top:1px solid var(--trilho)}
+
+/* nome, com recuo por nível */
+.pn-nm{display:flex;align-items:center;gap:8px;min-width:0;border:0;background:none;padding:9px 0 9px calc(14px + var(--i,0)*24px);font:inherit;color:var(--tx);text-align:left;cursor:pointer;text-decoration:none}
+.n1{--i:1}.n2{--i:2}.n3{--i:3}
+.pn-svg{width:16px;height:16px;flex:none;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.pn-nm>.pn-svg:first-child{color:var(--mut);transition:transform .15s}
+.pn-nm[aria-expanded="false"]>.pn-svg:first-child{transform:rotate(-90deg)}
+.pn-nm>.pn-svg+.pn-svg{width:18px;height:18px;color:var(--pri)}
+.pn-tx{min-width:0;line-height:1.3;overflow-wrap:anywhere;font-size:15px}
+.n0 .pn-tx{font:600 18px/1.25 var(--f-tit)}
+.t-g .pn-tx{font-weight:600}
+.t-a .pn-tx{font-weight:500}
+.pn-ok .ic{width:15px;height:15px;color:var(--pri);vertical-align:-2px;margin-left:6px}
+
+/* guias tracejadas: a linha embaixo da seta de cada nível de cima */
+.n2::before,.n3::before,.n3::after{content:"";position:absolute;top:0;bottom:0;border-left:1px dashed var(--lin-forte);pointer-events:none}
+.n2::before,.n3::before{left:46px}
+.n3::after{left:70px}
+
+/* aulas */
+.pn-aula .pn-nm{color:var(--tx2)}
+.pn-aula .pn-tx{font-size:14.5px}
+.pn-aula:hover .pn-tx{color:var(--pri);text-decoration:underline}
+.pn-an{flex:none;width:18px;text-align:right;font-size:12.5px;color:var(--mut)}
+.pn-aula.off{cursor:default}
+.pn-aula.off:hover{background:none}
+.pn-aula.off .pn-nm{cursor:default;color:var(--mut)}
+.pn-aula.off:hover .pn-tx{color:inherit;text-decoration:none}
+.pn-st{display:inline-grid;place-items:center;width:18px;height:18px;border-radius:50%;border:1.5px solid var(--lin-forte)}
+.pn-st.and{border-color:var(--pri);background:linear-gradient(90deg,var(--pri) 50%,transparent 50%)}
+.pn-st.feita{border-color:var(--pri);background:var(--pri);color:var(--pri-tx)}
+.pn-st.feita .ic{width:12px;height:12px;stroke-width:3}
+.pn-st.breve{width:auto;height:auto;border:0;border-radius:0;font:500 12px var(--f-mono);color:var(--mut);white-space:nowrap}
+.pn-vai{min-height:34px;text-decoration:none}
+.pn-vai:hover .pn-nm span{text-decoration:underline}
+.pn-vai .pn-nm{font-size:13px;font-weight:600;color:var(--pri);padding-top:6px;padding-bottom:6px}
+.pn-vai .pn-svg{color:var(--pri)!important;width:14px;height:14px}
+
+/* colunas */
+.pn-c{display:flex;flex-direction:column;align-items:flex-start;gap:4px;min-width:0;font-size:14px}
+.pn-num{font:500 13.5px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--tx);white-space:nowrap}
+.pn-bp{display:block;width:72px;height:4px;border-radius:999px;background:var(--trilho);overflow:hidden}
+.pn-bp i{display:block;height:100%;background:var(--pri);border-radius:999px}
+.pn-ac{font:600 13.5px var(--f-mono);font-variant-numeric:tabular-nums}
+.pn-ac.bom{color:var(--ok)}.pn-ac.medio{color:var(--chu)}.pn-ac.ruim{color:var(--err)}
+.pn-ac.pil{border-radius:999px;padding:3px 10px}
+.pn-ac.pil.bom{background:var(--ok-suave)}.pn-ac.pil.medio{background:var(--chu-suave)}.pn-ac.pil.ruim{background:var(--err-suave)}
+.pn-ib{font:600 13.5px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--alvo);white-space:nowrap}
+.pn-rv,.pn-q{display:inline-flex;align-items:center;gap:5px;font:500 13.5px var(--f-mono);font-variant-numeric:tabular-nums;color:var(--tx);white-space:nowrap}
+.pn-rv .pn-svg,.pn-q .pn-svg{width:14px;height:14px;color:var(--mut)}
+.pn-q{color:var(--tx2)}
+.pn-atr{font:600 12px var(--f-ui);color:var(--err);white-space:nowrap}
+.pn .mut{color:var(--mut)}
+
+/* as colunas saem conforme a largura da tabela (não da tela): primeiro o último estudo, depois as aulas, a revisão e o IBGP */
+@container painel (max-width:900px){
+  .pn-l{--pn-g:minmax(0,1fr) 62px 104px 70px 66px 96px}
+  .c-ul{display:none}
+}
+@container painel (max-width:780px){
+  .pn-l{--pn-g:minmax(0,1fr) 104px 70px 66px 96px}
+  .c-au{display:none}
+}
+@container painel (max-width:640px){
+  .pn-l{--pn-g:minmax(0,1fr) 96px 64px 62px}
+  .c-rv{display:none}
+}
+@container painel (max-width:500px){
+  .pn-l{--pn-g:minmax(0,1fr) 84px 58px}
+  .c-ib{display:none}
+  .pn-l{padding-right:10px;column-gap:8px}
+  .pn-nm{padding-left:calc(10px + var(--i,0)*16px)}
+  .n2::before,.n3::before{left:34px}
+  .n3::after{left:50px}
+  .pn-bp{width:60px}
+  .n0 .pn-tx{font-size:16.5px}
+}
+
 
 /* ---------- casca: barra lateral + topo ---------- */
 .app{display:grid;grid-template-columns:232px minmax(0,1fr);min-height:100vh}
@@ -3227,6 +3323,7 @@ body.em-foco{overflow:hidden}
     <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></symbol>
     <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 1.8"/><path d="M9.5 2.8h5"/></symbol>
     <symbol id="i-caderno" viewBox="0 0 24 24"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v15a1.5 1.5 0 0 1-1.5 1.5h-11z"/><path d="M6.5 3v18"/><path d="M4.5 7h3M4.5 12h3M4.5 17h3"/><path class="acs" d="M10.5 8h5M10.5 11.5h5"/></symbol>
+    <symbol id="i-painel" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8.5 9.5v10"/><path class="acs" d="M11.5 13h6M11.5 16.5h4"/></symbol>
     <symbol id="i-tema" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path class="fill" d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></symbol>
   </defs>
 </svg>
@@ -3239,6 +3336,7 @@ body.em-foco{overflow:hidden}
       <a class="nv" href="#/biblioteca" data-nav="biblioteca"><svg class="ic" aria-hidden="true"><use href="#i-bib"/></svg><span class="lab">Biblioteca</span></a>
       <a class="nv" href="#/revisao" data-nav="revisao"><svg class="ic" aria-hidden="true"><use href="#i-rev"/></svg><span class="lab">Revisão</span><span class="cnt rev" data-cont="rev" hidden></span></a>
       <a class="nv" href="#/estatisticas" data-nav="estatisticas"><svg class="ic" aria-hidden="true"><use href="#i-est"/></svg><span class="lab">Estatísticas</span></a>
+      <a class="nv" href="#/painel" data-nav="painel"><svg class="ic" aria-hidden="true"><use href="#i-painel"/></svg><span class="lab">Painel</span></a>
       <a class="nv" href="#/salvas" data-nav="salvas"><svg class="ic" aria-hidden="true"><use href="#i-sal"/></svg><span class="lab">Salvas</span><span class="cnt" data-cont="sal" hidden></span></a>
       <a class="nv" href="#/edital" data-nav="edital"><svg class="ic" aria-hidden="true"><use href="#i-edital"/></svg><span class="lab">Edital</span></a>
       <a class="nv" href="#/caderno" data-nav="caderno"><svg class="ic" aria-hidden="true"><use href="#i-caderno"/></svg><span class="lab">Caderno</span></a>
@@ -59032,6 +59130,7 @@ Documentos  Fotos  notas.txt
       <div class="pg" id="pg-salvas" hidden></div>
       <div class="pg" id="pg-edital" hidden></div>
       <div class="pg" id="pg-caderno" hidden></div>
+      <div class="pg" id="pg-painel" hidden></div>
     </main>
   </div>
 </div>
@@ -61090,6 +61189,123 @@ PGC.addEventListener('keydown',e=>{
   }
 });
 
+/* =========================================================
+   Painel (pedido do usuário, 2026-11-11): uma tabela só para consultar, no jeito de árvore:
+   Matéria › Grupo (a "subpasta") › Apostila › Aula. Cada linha abre e fecha a de baixo.
+   Colunas: aulas feitas, questões respondidas, acerto, IBGP, revisão (atrasadas em vermelho) e último estudo.
+   Não grava nada no progresso: o que fica aberto é preferência deste aparelho, numa chave própria.
+   Matérias e grupos começam abertos; apostilas começam fechadas.
+   ========================================================= */
+const PN_AB=CHAVE+'-painel-abertas';
+let pnAb=null; try{ const v=JSON.parse(localStorage.getItem(PN_AB)); if(v&&typeof v==='object') pnAb=v; }catch(e){}
+const pnAberta=k=>pnAb&&k in pnAb?!!pnAb[k]:k[0]!=='a';
+const pnGuarda=()=>{ try{ localStorage.setItem(PN_AB,JSON.stringify(pnAb||{})); }catch(e){} };
+const PN_IB=/^\s*IBGP(?![A-Za-z])/;
+const pnSvg=p=>'<svg class="pn-svg" viewBox="0 0 24 24" aria-hidden="true">'+p+'</svg>';
+const PN_SETA=pnSvg('<path d="m8 10 4 4 4-4"/>');
+const PN_PASTA=pnSvg('<path d="M3.5 7.5a2 2 0 0 1 2-2h4l2 2h7a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-13a2 2 0 0 1-2-2z"/>');
+const PN_REV=pnSvg('<path d="M4.4 12a7.6 7.6 0 1 0 2.2-5.4"/><path d="M4 3.8v3.6h3.6"/>');
+const PN_CAL=pnSvg('<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M8.5 3v4M15.5 3v4"/>');
+const PN_IR=pnSvg('<path d="M7 17 17 7"/><path d="M9 7h8v8"/>');
+
+// números de cada aula pronta, numa passada só pelo progresso, pela revisão e pelo histórico
+function pnNumeros(){
+  const h=hoje(), por={};
+  Object.keys(DADOS).filter(id=>!ehVid(id)).forEach(id=>{
+    const st=est['q:'+id]||{}, qs=DADOS[id].questoes, x={total:0,resp:0,certas:0,ib:0,ibResp:0,ibCertas:0,naRev:0,atras:0,ult:0};
+    Object.keys(qs).forEach(n=>{ const q=qs[n], r=st[n], ib=PN_IB.test(q.fonte||'');
+      x.total++; if(ib) x.ib++;
+      if(r){ x.resp++; if(r===q.gab){ x.certas++; if(ib) x.ibCertas++; } if(ib) x.ibResp++; } });
+    por[id]=x;
+  });
+  Object.entries(rev()).forEach(([k,it])=>{ if(!it||!it.s) return; const x=por[k.split('|')[0]]; if(!x) return; x.naRev++; if(it.prox<h) x.atras++; });
+  LOG().forEach(e=>{ if(e.tipo!=='resp'||!e.k) return; const x=por[e.k.split('|')[0]]; if(x&&e.t>x.ult) x.ult=e.t; });
+  return por;
+}
+function pnSoma(lista){
+  const s={aulas:0,prontas:0,feitas:0,total:0,resp:0,certas:0,ib:0,ibResp:0,ibCertas:0,naRev:0,atras:0,ult:0};
+  lista.forEach(x=>{ Object.keys(s).forEach(c=>{ if(c==='ult') s.ult=Math.max(s.ult,x.ult||0); else s[c]+=x[c]||0; }); });
+  return s;
+}
+// uma aula: os números dela mais a situação (feita, em andamento, nova, em breve)
+function pnAula(a,por){
+  const x=a.pronta&&por[a.cap];
+  if(!x) return {aulas:1,prontas:0,feitas:0,breve:true};
+  return Object.assign({aulas:1,prontas:1,feitas:x.total&&x.resp===x.total?1:0},x);
+}
+function pnQuando(t){
+  if(!t) return '<span class="mut">—</span>';
+  const d=dstr(new Date(t)), n=difDias(d,hoje());
+  const tx=n===0?'hoje':n===1?'ontem':n<7?'há '+n+' dias':d.slice(8)+'/'+d.slice(5,7)+(d.slice(0,4)===hoje().slice(0,4)?'':'/'+d.slice(2,4));
+  return '<span class="pn-q" title="'+fts(t)+'">'+PN_CAL+'<span>'+tx+'</span></span>';
+}
+const pnAcc=(s,pilula)=>{ const a=pct(s.certas,s.resp); if(a===null) return '<span class="mut">—</span>';
+  return '<span class="pn-ac '+(a>=75?'bom':a>=50?'medio':'ruim')+(pilula?' pil':'')+'" title="'+s.certas+' certas de '+s.resp+' respondidas">'+a+'%</span>'; };
+function pnCelulas(s,nivel){
+  const ib=s.ib?'<span class="pn-ib" title="'+s.ibResp+' de '+s.ib+' questões da IBGP respondidas'+(s.ibResp?', '+pct(s.ibCertas,s.ibResp)+'% de acerto':'')+'">'+s.ibResp+'/'+s.ib+'</span>':'<span class="mut">—</span>';
+  const rv=s.naRev?'<span class="pn-rv" title="'+s.naRev+(s.naRev===1?' questão':' questões')+' na revisão">'+PN_REV+'<span>'+s.naRev+'</span></span>'+(s.atras?'<small class="pn-atr">'+s.atras+(s.atras===1?' atrasada':' atrasadas')+'</small>':''):'<span class="mut">—</span>';
+  const qt=s.total?'<span class="pn-num">'+s.resp+'<span class="mut">/'+s.total+'</span></span><span class="pn-bp" aria-hidden="true"><i style="width:'+pct(s.resp,s.total)+'%"></i></span>':'<span class="mut">—</span>';
+  return '<span class="pn-c c-au">'+(nivel==='aula'?'':'<span class="pn-num" title="'+s.feitas+' de '+s.aulas+' aulas feitas · '+s.prontas+' prontas">'+s.feitas+'<span class="mut">/'+s.aulas+'</span></span>')+'</span>'+
+    '<span class="pn-c c-q">'+qt+'</span><span class="pn-c c-ac">'+pnAcc(s,nivel==='m')+'</span><span class="pn-c c-ib">'+ib+'</span><span class="pn-c c-rv">'+rv+'</span><span class="pn-c c-ul">'+pnQuando(s.ult)+'</span>';
+}
+// linha que abre e fecha: nível 0 matéria, 1 grupo (ou apostila sem grupo), 2 apostila, 3 aula
+function pnLinha(chave,nv,nome,s,tipo,filhos,extra){
+  const ab=pnAberta(chave), id='pn-'+chave.replace(/[^a-z0-9]/gi,'_');
+  return '<div class="pn-no'+(tipo==='m'?' pn-mat':'')+'"><div class="pn-l n'+nv+' t-'+tipo+'"><button type="button" class="pn-nm" data-pn="'+esc(chave)+'" aria-expanded="'+ab+'" aria-controls="'+id+'">'+PN_SETA+(tipo==='g'?PN_PASTA:'')+
+    '<span class="pn-tx">'+esc(nome)+(extra||'')+'</span></button>'+pnCelulas(s,tipo)+'</div>'+
+    '<div class="pn-filhos" id="'+id+'"'+(ab?'':' hidden')+'>'+filhos+'</div></div>';
+}
+function pnLinhaAula(a,s,nv){
+  const sit=s.breve?'':s.feitas?'feita':s.resp?'and':'nova';
+  const marca=s.breve?'<span class="pn-st breve">em breve</span>':'<span class="pn-st '+sit+'" title="'+(sit==='feita'?'concluída':sit==='and'?'em andamento':'não começada')+'">'+(sit==='feita'?ic('i-ok'):'')+'</span>';
+  const nome='<span class="pn-an mono">'+a.num+'</span><span class="pn-tx">'+esc(a.nome)+'</span>';
+  if(s.breve) return '<div class="pn-l n'+nv+' pn-aula off"><span class="pn-nm">'+nome+marca+'</span></div>';
+  return '<div class="pn-l n'+nv+' pn-aula"><a class="pn-nm" href="#/aula/'+a.cap+'">'+nome+'</a>'+
+    pnCelulas(s,'aula').replace('<span class="pn-c c-au"></span>','<span class="pn-c c-au">'+marca+'</span>')+'</div>';
+}
+function renderPainel(){
+  const pg=$('#pg-painel'), por=pnNumeros();
+  let html='', geral=[], nAp=0;
+  MAPA.forEach((m,mi)=>{
+    if(!m.apostilas.length) return;
+    const grupos=[...new Set(m.apostilas.map(ap=>ap.grupo||''))], somasM=[];
+    let corpoM='';
+    grupos.forEach(g=>{
+      const aps=m.apostilas.filter(ap=>(ap.grupo||'')===g), somasG=[], nvAp=g?2:1;
+      let corpoG='';
+      aps.forEach(ap=>{
+        nAp++;
+        const ss=ap.aulas.map(a=>pnAula(a,por)), s=pnSoma(ss);
+        const ok=apConcluida(ap.id)?'<span class="pn-ok" title="Apostila concluída">'+ic('i-ok')+'</span>':'';
+        const aulas=ap.aulas.map((a,i)=>pnLinhaAula(a,ss[i],nvAp+1)).join('');
+        corpoG+=pnLinha('a:'+ap.id,nvAp,ap.nome,s,'a',aulas+'<a class="pn-l n'+(nvAp+1)+' pn-vai" href="#/biblioteca/a/'+ap.id+'"><span class="pn-nm">'+PN_IR+'<span>Abrir a apostila</span></span></a>',ok);
+        somasG.push(s);
+      });
+      const sg=pnSoma(somasG); somasM.push(sg);
+      corpoM+=g?pnLinha('g:'+mi+':'+g,1,g,sg,'g',corpoG):corpoG;
+    });
+    const sm=pnSoma(somasM); geral.push(sm);
+    html+=pnLinha('m:'+mi,0,m.nome,sm,'m',corpoM);
+  });
+  const t=pnSoma(geral);
+  pg.innerHTML='<header class="pg-cab peq"><h1>Painel</h1><p class="sub">Todas as matérias, apostilas e aulas numa tabela, só para consultar. Clique numa linha para abrir ou fechar.</p>'+
+      '<p class="meta-l"><span>'+geral.length+' matérias</span><span>'+nAp+' apostilas</span><span>'+t.prontas+' de '+t.aulas+' aulas prontas</span><span>'+t.resp+' de '+t.total+' questões respondidas</span>'+(t.resp?'<span>'+pct(t.certas,t.resp)+'% de acerto</span>':'')+'</p></header>'+
+    '<div class="pn-barra"><button type="button" class="btn fant mini" data-pn-tudo="1">Abrir tudo</button><button type="button" class="btn fant mini" data-pn-tudo="0">Fechar tudo</button></div>'+
+    '<div class="pn"><div class="pn-l pn-cab" aria-hidden="true"><span>Matéria e apostila</span><span class="c-au">Aulas</span><span class="c-q">Questões</span><span class="c-ac">Acerto</span><span class="c-ib">IBGP</span><span class="c-rv">Revisão</span><span class="c-ul">Último estudo</span></div>'+html+'</div>';
+  trilhaTopo('');
+}
+// a linha inteira abre e fecha (menos os links das aulas)
+document.addEventListener('click',e=>{
+  let b=e.target.closest('#pg-painel [data-pn],#pg-painel [data-pn-tudo]');
+  if(!b){ const l=e.target.closest('#pg-painel .pn-l'); if(!l||e.target.closest('a')) return; b=l.querySelector('[data-pn]'); if(!b) return; }
+  pnAb=pnAb||{};
+  if(b.dataset.pnTudo){ const v=b.dataset.pnTudo==='1';
+    $$('#pg-painel [data-pn]').forEach(x=>{ pnAb[x.dataset.pn]=v; x.setAttribute('aria-expanded',v); const f=document.getElementById(x.getAttribute('aria-controls')); if(f) f.hidden=!v; });
+    pnGuarda(); return; }
+  const f=document.getElementById(b.getAttribute('aria-controls')), v=f.hidden;
+  f.hidden=!v; b.setAttribute('aria-expanded',v); pnAb[b.dataset.pn]=v; pnGuarda();
+});
+
 
 /* =========================================================
    Questão (aulas, salvas e modo foco)
@@ -61482,7 +61698,7 @@ function pintarProgressoAula(id){
 /* =========================================================
    Páginas
    ========================================================= */
-const PAGINAS=['hoje','biblioteca','aula','revisao','estatisticas','salvas','edital','caderno'];
+const PAGINAS=['hoje','biblioteca','aula','revisao','estatisticas','salvas','edital','caderno','painel'];
 function mostrarPagina(p){
   PAGINAS.forEach(x=>{const el=$('#pg-'+x); if(el) el.hidden=x!==p;});
   const nav=p==='aula'?'biblioteca':p;
@@ -62401,6 +62617,7 @@ function rota(semRolar){
   else if(p==='salvas'){ mostrarPagina('salvas'); renderSalvas(); }
   else if(p==='edital'){ mostrarPagina('edital'); renderEdital(partes[1]); }
   else if(p==='caderno'){ mostrarPagina('caderno'); renderCaderno(partes[1]); }
+  else if(p==='painel'){ mostrarPagina('painel'); renderPainel(); }
   else { mostrarPagina('hoje'); renderHoje(); }
   if(!semRolar&&p!=='aula') window.scrollTo(0,0);
   if(!semRolar){ const h=$('#pg-'+(p==='aula'?'aula':PAGINAS.includes(p)?p:'hoje')+' h1'); if(h&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.side,.nav-baixo')){ h.setAttribute('tabindex','-1'); h.focus({preventScroll:true}); } }
