@@ -3124,6 +3124,8 @@ mark.dest{background:var(--dest);color:inherit;padding:1px 2px;border-radius:3px
 .capitulo .aula-cab h1{font:700 36px/1.15 var(--f-tit);letter-spacing:-.015em;margin:12px 0 10px;color:var(--tx)}
 .capitulo .aula-cab p{color:var(--tx2);font-size:18.5px;max-width:75ch}
 .capitulo .aula-cab .meta{color:var(--mut);font:500 13px var(--f-mono)}
+.capitulo .aula-cab .meta .meta-ib{color:var(--alvo);font-weight:700}
+.capitulo .aula-cab .meta .meta-ib.zero{color:var(--mut);font-weight:500}
 .capitulo .sumario{display:none}
 .capitulo .sec{grid-template-columns:minmax(0,1fr) 230px;gap:10px 32px;padding:34px 36px 14px}
 .capitulo .sec h2{font-family:var(--f-tit);font-weight:700;color:var(--tx);letter-spacing:-.01em}
@@ -63330,11 +63332,22 @@ function sugestoes(set){
    ========================================================= */
 const artigos=$$('#pg-aula .capitulo');
 const iniciados=new Set();
+/* No cabeçalho da aula, só o número da IBGP (pedido do usuário, 2026-11-14: "IBGP que importa").
+   Conta nas questões da própria aula; tira o "N da IBFC/IBGP" e variantes que vêm no HTML gerado.
+   Aula feita só de IBGP (o primeiro número já diz "da IBGP") fica como está. */
+function metaIbgp(cap,id){
+  const m=$('.aula-cab .meta',cap); if(!m) return;
+  const sp=$$('span',m); if(sp[0]&&/IBGP|autorais/.test(sp[0].textContent)) return; // questões autorais (Lei Orgânica) não têm banca
+  const qs=DADOS[id].questoes, ib=Object.keys(qs).filter(n=>/^\s*IBGP(?![A-Za-z])/.test(qs[n].fonte||'')).length;
+  sp.slice(1).filter(s=>/IBGP|IBFC/.test(s.textContent)).forEach(s=>s.remove());
+  const s=document.createElement('span'); s.className='meta-ib'+(ib?'':' zero'); s.textContent=ib?ib+' da IBGP':'nenhuma da IBGP'; m.appendChild(s);
+}
 function iniciarCap(cap){
   if(!cap||iniciados.has(cap)||!DADOS[cap.dataset.cap]) return;
   iniciados.add(cap);
   try{
     const id=cap.dataset.cap, lista=$('.treino-lista',cap); let filtro='todas';
+    metaIbgp(cap,id);
     const txs=DADOS[id].textos||{};
     const pintarTexto=(el,tid)=>{ if(txs[tid]) el.innerHTML=textoHTML(txs[tid],tid,true,'tb-'+id+'-'+tid); };
     $$('[data-texto]',cap).forEach(el=>pintarTexto(el,el.dataset.texto));
