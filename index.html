@@ -2625,6 +2625,8 @@ body.cad-em-estudo #nv-selo{display:none}
 .kpi.destaque{border-color:var(--pri);background:var(--pri-suave)}
 .kpi.destaque b{color:var(--pri-forte)}
 .kpi.al{border-color:var(--err);background:var(--err-suave)}
+.kpi.alvo{border-color:var(--alvo-borda);background:var(--alvo-suave)}
+.kpi.alvo b{color:var(--alvo)}
 .sobe{color:var(--ok);font-weight:600}.desce{color:var(--err);font-weight:600}
 .vazio{display:flex;flex-direction:column;align-items:center;gap:8px;text-align:center;border:2px dashed var(--lin-forte);border-radius:var(--r2);padding:42px 20px;color:var(--mut)}
 .vazio .ic{width:36px;height:36px;color:var(--pri)}
@@ -2657,6 +2659,7 @@ body.cad-em-estudo #nv-selo{display:none}
 .ok-dia{display:inline-flex;align-items:center;gap:8px;color:var(--ok);font-weight:700;font-size:17px}
 /* simulado aleatório (página da apostila e aba Simulado da Revisão) */
 .sim{margin:4px 0 22px}
+.kpis+.sim{margin-top:16px}
 .sim .qtds{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 4px}
 .sim-chk{display:inline-flex;align-items:center;gap:8px;font-size:15px;margin-top:10px;cursor:pointer}
 .sim-chk input{width:18px;height:18px;accent-color:var(--pri)}
@@ -63258,7 +63261,7 @@ function renderRevisao(){
     html+='<p class="mut">Tudo o que aconteceu com as questões ('+evs.length+' eventos), do mais recente para o mais antigo.</p><div class="tab-wrap"><table class="tab"><thead><tr><th>Quando</th><th>Questão</th><th>De onde</th><th>O que aconteceu</th></tr></thead><tbody>'+
       (fatia.length?fatia.map(e=>{const [i,n]=e.k.split('|'),t=rotuloCap(i);return '<tr><td class="mono">'+fts(e.t)+'</td><td class="mono"><b>'+esc(n)+'</b></td><td>'+esc(rotTxt(t))+'</td><td>'+descEvento(e)+'</td></tr>';}).join(''):'<tr><td colspan="4" class="mut">Nenhum evento ainda.</td></tr>')+'</tbody></table></div>'+paginador(evs.length,POR,pag,'data-paghist');
   }else if(abaRev==='sim'){
-    html+=simCard(escRev,escRev?'do que está escolhido em "Mostrar"':'de todas as matérias');
+    html+=numerosKpis(set)+simCard(escRev,escRev?'do que está escolhido em "Mostrar"':'de todas as matérias');
   }else if(abaRev==='vid'){
     html+=vidHtml();
   }else if(abaRev==='nota'){
@@ -63465,6 +63468,23 @@ function abrirSimulado(escopo,qtd,soErr){
   const l=poolFeitas(capsDoEscopo(escopo),soErr);
   for(let i=l.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [l[i],l[j]]=[l[j],l[i]]; }
   abrirFoco(qtd?l.slice(0,qtd):l,'sim');
+}
+/* Feitas e inéditas (pedido do usuário, 2026-11-14): ele abria o Simulado só para ver quantas já fez.
+   Conta como o simulado (a mesma questão em duas aulas da mesma apostila vale uma) e separa as da IBGP.
+   Inédita = está numa aula pronta do escopo e ainda não foi respondida. */
+function numerosQ(set){
+  const vistos=new Map(), r={f:0,fIb:0,i:0,iIb:0};
+  Object.keys(DADOS).filter(id=>set.has(id)).forEach(id=>{ const st=est['q:'+id]||{}, ap=rotuloCap(id).apId, qs=DADOS[id].questoes;
+    Object.keys(qs).forEach(n=>{ const u=ap+'|'+n, v=vistos.get(u);
+      if(v){ if(st[n]) v.f=true; return; }
+      vistos.set(u,{f:!!st[n],ib:/^\s*IBGP(?![A-Za-z])/.test(qs[n].fonte||'')}); }); });
+  vistos.forEach(v=>{ if(v.f){ r.f++; if(v.ib) r.fIb++; } else { r.i++; if(v.ib) r.iIb++; } });
+  return r;
+}
+function numerosKpis(set){
+  const r=numerosQ(set), k=(v,t,c,tt)=>'<div class="kpi'+(c?' '+c:'')+'"'+(tt?' title="'+tt+'"':'')+'><b>'+v+'</b><span>'+t+'</span></div>';
+  return '<div class="kpis">'+k(r.f,'feitas','destaque','Questões que você já respondeu nas aulas')+k(r.fIb,'feitas da IBGP','alvo')+
+    k(r.i,'inéditas','','Questões que já estão nas aulas e você ainda não respondeu')+k(r.iIb,'inéditas da IBGP','alvo')+'</div>';
 }
 function simCard(escopo,onde){
   const set=capsDoEscopo(escopo), tot=poolFeitas(set,false).length, err=poolFeitas(set,true).length;
