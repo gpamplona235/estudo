@@ -2154,6 +2154,25 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
   .f-top .rel-f{margin-right:2px}
 }
 
+/* Pomodoro: igual ao relógio, só o ícone e os minutos, sem caixa; o resto ao clicar. Só no computador. */
+.pom-b{position:relative;display:inline-flex;align-items:center;gap:5px;min-height:36px;padding:4px 8px;border:0;border-radius:999px;background:none;color:var(--mut);font:600 13.5px var(--f-mono);font-variant-numeric:tabular-nums;cursor:pointer}
+.pom-b:hover{background:var(--campo);color:var(--tx2)}
+.pom-b[aria-expanded="true"]{background:var(--campo)}
+.pom-b .ic{width:16px;height:16px}
+.pom-t:empty{display:none}
+.pom-b.pom-foco{color:var(--tx2)}
+.pom-b.pom-pausa{color:var(--ok)}
+.pom-b.pom-parado .pom-t{opacity:.6}
+.pom-b.pom-fim{color:var(--chu)}
+.pom-bts{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}
+.pom-msg{font:600 18px/1.3 var(--f-ui)!important}
+.pom-som{border:0;background:none;padding:0;font:600 14px var(--f-ui);color:var(--pri-forte);cursor:pointer}
+.pom-som[aria-pressed="false"]{color:var(--mut)}
+.pom-som:hover{text-decoration:underline}
+@media (max-width:767px),(hover:none) and (pointer:coarse){
+  .pom-b,.pom-pop{display:none!important}
+}
+
 /* Caderno das videoaulas: lista discreta à esquerda e uma folha limpa; a ficha do vídeo é uma linha que abre ao clicar.
    Com o vídeo aberto, o caderno ocupa a janela inteira: vídeo de um lado, anotação do outro, com divisória que se arrasta. */
 :root{--cm-am:#fff3a3;--cm-vd:#c9f0d3;--cm-az:#d3e5ff;--cm-rs:#ffd9e8}
@@ -3393,6 +3412,7 @@ body.em-foco{overflow:hidden}
     <symbol id="i-sair" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
     <symbol id="i-raio" viewBox="0 0 24 24"><path d="M13 3 5 14h6l-1 7 8-11h-6z"/></symbol>
     <symbol id="i-relogio" viewBox="0 0 24 24"><circle cx="12" cy="13.5" r="7.5"/><path d="M12 9.5v4l2.6 1.8"/><path d="M9.5 2.8h5"/></symbol>
+    <symbol id="i-pomo" viewBox="0 0 24 24"><circle cx="12" cy="14" r="7.2"/><path d="M12 6.8V3.6"/><path d="M12 6.8c-1.3-1.5-3.1-1.9-4.7-1.3M12 6.8c1.3-1.5 3.1-1.9 4.7-1.3"/></symbol>
     <symbol id="i-caderno" viewBox="0 0 24 24"><path d="M6.5 3h11A1.5 1.5 0 0 1 19 4.5v15a1.5 1.5 0 0 1-1.5 1.5h-11z"/><path d="M6.5 3v18"/><path d="M4.5 7h3M4.5 12h3M4.5 17h3"/><path class="acs" d="M10.5 8h5M10.5 11.5h5"/></symbol>
     <symbol id="i-painel" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="2"/><path d="M3.5 9.5h17"/><path d="M8.5 9.5v10"/><path class="acs" d="M11.5 13h6M11.5 16.5h4"/></symbol>
     <symbol id="i-tema" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path class="fill" d="M12 3.5a8.5 8.5 0 0 1 0 17z"/></symbol>
@@ -3428,6 +3448,7 @@ body.em-foco{overflow:hidden}
       </div>
       <div class="topo-dir">
         <button id="pill-rel" class="rel-b" type="button" data-rel="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="rel-pop" aria-label="Relógio"><svg class="ic" aria-hidden="true"><use href="#i-relogio"/></svg><span class="rel-t">0</span><span class="rel-mais" aria-hidden="true"></span></button>
+        <button id="pill-pom" class="pom-b pom-livre" type="button" data-pom="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="pom-pop" aria-label="Pomodoro"><svg class="ic" aria-hidden="true"><use href="#i-pomo"/></svg><span class="pom-t"></span></button>
         <button id="pill-des" class="pill" type="button" data-des="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="des-pop" aria-label="Desafio"><svg class="ic" aria-hidden="true"><use href="#i-raio"/></svg><span class="txt">Desafio</span><span class="bol" aria-hidden="true"></span></button>
         <button id="pill-voltar" class="pill voltar" type="button" data-acao="voltar-rev" hidden><svg class="ic" aria-hidden="true"><use href="#i-rev"/></svg><span class="txt">Voltar à revisão</span></button>
         <a id="pill-rev" class="pill" href="#/revisao" hidden><span class="bol" aria-hidden="true"></span><span class="txt">0 para revisar</span></a>
@@ -62199,6 +62220,7 @@ Documentos  Fotos  notas.txt
 
 <div id="des-pop" class="des-pop" role="dialog" aria-label="Desafio" hidden></div>
 <div id="rel-pop" class="rel-pop" role="dialog" aria-label="Relógio" hidden></div>
+<div id="pom-pop" class="rel-pop pom-pop" role="dialog" aria-label="Pomodoro" hidden></div>
 
 <div id="foco" class="foco" role="dialog" aria-modal="true" aria-label="Modo foco" hidden></div>
 
@@ -63332,6 +63354,122 @@ document.addEventListener('keydown',e=>{ const p=$('#rel-pop'); if(e.key==='Esca
 setInterval(relPinta,1000);
 document.addEventListener('visibilitychange',()=>{ if(!document.hidden) relPinta(true); });
 addEventListener('nuvem-pronta',()=>relPinta(true));
+
+/* =========================================================
+   Pomodoro (pedido do usuário, 2026-11-15): só no computador; no celular e no tablet o CSS esconde.
+   Discreto como o relógio: no cabeçalho fica só o ícone e, com o tempo correndo, os minutos que
+   faltam (o número muda uma vez por minuto). O tempo exato e os botões aparecem ao clicar.
+   Foco de 25 minutos, pausa de 5 ou de 15. No fim, um toque baixo de três notas, e o ícone fica
+   colorido até o quadro ser aberto e fechado. O tempo corre mesmo trocando de página ou fechando o site.
+   O estado fica só neste aparelho (localStorage 'caderno-pomodoro'), FORA do progresso (est) e da nuvem.
+   pom = { modo:'foco'|'pausa', fim:ms (correndo), resta:s (pausado), acabou:'foco'|'pausa', dia, feitos, som:false }
+   ========================================================= */
+const POM_K='caderno-pomodoro', POM_FOCO=25*60, POM_CURTA=5*60, POM_LONGA=15*60;
+const pomLer=()=>{ try{ return JSON.parse(localStorage.getItem(POM_K))||{}; }catch(e){ return {}; } };
+let pom=pomLer();
+function pomSalva(){ try{ localStorage.setItem(POM_K,JSON.stringify(pom)); }catch(e){} }
+const pomResta=()=>pom.fim?Math.max(0,Math.ceil((pom.fim-Date.now())/1000)):(pom.resta||0);
+const pomFeitos=()=>pom.dia===hoje()?(pom.feitos||0):0;
+function pomEstado(){
+  if(pom.acabou) return 'pom-fim';
+  if(pom.fim) return pom.modo==='pausa'?'pom-pausa':'pom-foco';
+  return pom.resta?'pom-parado':'pom-livre';
+}
+// no cabeçalho, só os minutos (arredondados para cima: com 40 segundos ainda aparece 1)
+function pomCurto(){ const e=pomEstado(); return e==='pom-livre'||e==='pom-fim'?'':String(Math.ceil(pomResta()/60)); }
+function pomRot(){
+  const e=pomEstado(), m=Math.ceil(pomResta()/60), min=m+(m===1?' minuto':' minutos');
+  return 'Pomodoro: '+({'pom-livre':'parado','pom-fim':(pom.acabou==='foco'?'fim do foco':'fim da pausa'),'pom-foco':min+' de foco',
+    'pom-pausa':min+' de pausa','pom-parado':'pausado com '+min})[e];
+}
+function pomPill(noFoco){
+  return '<button class="pom-b '+pomEstado()+(noFoco?' pom-f':'')+'" type="button" data-pom="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="pom-pop" aria-label="'+pomRot()+'">'+ic('i-pomo')+'<span class="pom-t">'+pomCurto()+'</span></button>';
+}
+// som: três notas baixas; o áudio só é liberado depois de um clique, por isso cada botão do quadro o acorda
+let pomAud=null;
+function pomAudio(){
+  try{ pomAud=pomAud||new (window.AudioContext||window.webkitAudioContext)(); if(pomAud.state==='suspended') pomAud.resume(); }catch(e){ pomAud=null; }
+  return pomAud;
+}
+function pomToque(){
+  const a=pomAudio(); if(!a) return;
+  try{
+    [523.25,659.25,783.99].forEach((f,k)=>{
+      const o=a.createOscillator(), g=a.createGain(), t=a.currentTime+.05+k*.32;
+      o.type='sine'; o.frequency.value=f; o.connect(g); g.connect(a.destination);
+      g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+.03); g.gain.exponentialRampToValueAtTime(0.0001,t+1.1);
+      o.start(t); o.stop(t+1.2);
+    });
+  }catch(e){}
+}
+function pomComeca(modo,seg){ pom.modo=modo; pom.fim=Date.now()+seg*1000; pom.resta=0; pom.acabou=''; pomSalva(); }
+function pomAcaba(){
+  const atual=pomLer(); if(atual.fim!==pom.fim){ pom=atual; return; } // outra aba já cuidou do fim
+  const fim=pom.fim, dia=dstr(new Date(fim));
+  if(pom.modo==='foco'){ if(pom.dia!==dia){ pom.dia=dia; pom.feitos=0; } pom.feitos=(pom.feitos||0)+1; }
+  pom.acabou=pom.modo; pom.fim=0; pom.resta=0; pomSalva();
+  if(pom.som!==false&&Date.now()-fim<90000) pomToque(); // site fechado na hora do fim: não toca quando reabre
+}
+let pomTxt=null;
+function pomPinta(tudo){
+  if(pom.fim&&Date.now()>=pom.fim){ pomAcaba(); tudo=true; }
+  const e=pomEstado(), t=pomCurto(), chave=e+'|'+t;
+  if(chave!==pomTxt||tudo===true){
+    pomTxt=chave;
+    $$('.pom-b').forEach(b=>{
+      const x=$('.pom-t',b); if(x.textContent!==t) x.textContent=t;
+      ['pom-livre','pom-foco','pom-pausa','pom-parado','pom-fim'].forEach(c=>b.classList.toggle(c,c===e));
+      b.setAttribute('aria-label',pomRot());
+    });
+  }
+  const p=$('#pom-pop'); if(!p||p.hidden) return;
+  if(tudo===true) pomPopPinta();
+  else{ const a=$('.rel-agora b',p); if(a&&(pom.fim||pom.resta)) a.textContent=relFmt(pomResta()); }
+}
+function pomPopPinta(){
+  const e=pomEstado(), f=pomFeitos(), bt=(a,txt,pri)=>'<button class="btn mini '+(pri?'pri':'out')+'" type="button" data-pomf="'+a+'">'+txt+'</button>';
+  let h='<span class="sep">Pomodoro</span>';
+  if(e==='pom-livre') h+='<p class="rel-regra">25 minutos de foco e depois uma pausa. O tempo continua correndo se você trocar de página ou fechar o site.</p><div class="pom-bts">'+bt('foco','Foco · 25 min',1)+bt('curta','Pausa · 5')+bt('longa','Pausa · 15')+'</div>';
+  else if(e==='pom-fim') h+=(pom.acabou==='foco'
+      ?'<p class="rel-agora"><b class="pom-msg">Fim do foco</b></p><p class="rel-regra">Hora de uma pausa.'+(f&&f%4===0?' Já foram '+f+' focos hoje: vale a pausa longa.':'')+'</p><div class="pom-bts">'+bt('curta','Pausa · 5',!(f&&f%4===0))+bt('longa','Pausa · 15',!!(f&&f%4===0))+bt('foco','Outro foco')+'</div>'
+      :'<p class="rel-agora"><b class="pom-msg">Fim da pausa</b></p><div class="pom-bts">'+bt('foco','Foco · 25 min',1)+'</div>');
+  else h+='<p class="rel-agora"><b>'+relFmt(pomResta())+'</b><span>'+(e==='pom-parado'?'pausado':pom.modo==='pausa'?'de pausa':'de foco')+'</span></p><div class="pom-bts">'+
+      (e==='pom-parado'?bt('continua','Continuar',1):bt('pausa','Pausar'))+bt('para','Parar')+'</div>';
+  h+=(f?'<p class="rel-l"><span>Focos completos hoje</span><b>'+f+'</b></p>':'')+
+     '<p class="rel-l"><span>Som no fim</span><button class="pom-som" type="button" data-pomf="som" aria-pressed="'+(pom.som!==false)+'">'+(pom.som!==false?'Ligado':'Desligado')+'</button></p>';
+  $('#pom-pop').innerHTML=h;
+}
+function pomPop(abrir,botao){
+  const p=$('#pom-pop'); if(!p) return;
+  const estava=!p.hidden;
+  p.hidden=!abrir; $$('.pom-b').forEach(b=>b.setAttribute('aria-expanded',abrir&&b===botao?'true':'false'));
+  if(abrir){ pomPopPinta(); const r=botao.getBoundingClientRect(); p.style.top=Math.round(r.bottom+8)+'px'; p.style.right=Math.max(16,Math.round(innerWidth-r.right))+'px'; p._de=botao; }
+  else if(estava&&pom.acabou){ pom.acabou=''; pomSalva(); pomPinta(true); } // viu o aviso: o ícone volta ao normal
+}
+function pomAcao(a){
+  pomAudio();
+  if(a==='foco') pomComeca('foco',POM_FOCO);
+  else if(a==='curta') pomComeca('pausa',POM_CURTA);
+  else if(a==='longa') pomComeca('pausa',POM_LONGA);
+  else if(a==='pausa'){ pom.resta=pomResta(); pom.fim=0; pomSalva(); }
+  else if(a==='continua'){ pom.fim=Date.now()+(pom.resta||0)*1000; pom.resta=0; pomSalva(); }
+  else if(a==='para'){ pom.fim=0; pom.resta=0; pom.acabou=''; pomSalva(); }
+  else if(a==='som'){ pom.som=pom.som===false; pomSalva(); if(pom.som) pomToque(); pomPopPinta(); return; }
+  pomPop(false); pomPinta(true);
+}
+document.addEventListener('click',e=>{
+  const f=e.target.closest('[data-pomf]'); if(f){ pomAcao(f.dataset.pomf); return; }
+  const b=e.target.closest('[data-pom]'), p=$('#pom-pop');
+  if(b){ pomAudio(); pomPop(p.hidden||p._de!==b,b); return; }
+  if(p&&!p.hidden&&!p.contains(e.target)) pomPop(false);
+});
+// captura: o Esc fecha só o quadro, sem sair da revisão
+document.addEventListener('keydown',e=>{ const p=$('#pom-pop'); if(e.key==='Escape'&&p&&!p.hidden){ e.stopImmediatePropagation(); e.preventDefault(); const b=p._de; pomPop(false); if(b&&document.contains(b)) b.focus(); } },true);
+// outra aba mexeu no pomodoro: segue o que ela gravou
+addEventListener('storage',e=>{ if(e.key===POM_K){ pom=pomLer(); pomPinta(true); } });
+setInterval(pomPinta,1000);
+document.addEventListener('visibilitychange',()=>{ if(!document.hidden) pomPinta(true); });
+pomPinta(true);
 
 /* =========================================================
    Ferramentas de Análise Combinatória (aulas cmb-*)
@@ -65182,7 +65320,7 @@ function renderFoco(){
   if(sessao.i>=sessao.fila.length) return resumoFoco();
   const k=sessao.fila[sessao.i], [id,n]=k.split('|'), it=rev()[k]||{cx:1}, r=rotuloCap(id), res=sessao.res[k], base=sessao.base||0, tot=base+sessao.fila.length, feitas=base+Object.keys(sessao.res).length, revModo=sessao.modo==='rev', simModo=sessao.modo==='sim';
   const cx=res&&res.cxA?res.cxA:it.cx;
-  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(base+sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+relPill(true)+(simModo||sessao.falta?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
+  foco.innerHTML='<header class="f-top"><button class="btn fant" data-f="sair" title="Sair (Esc)" aria-label="Sair">'+ic('i-sair')+'<span class="lab">Sair</span></button><b class="f-tit">'+(revModo?'Revisão':simModo?(sessao.tit||'Simulado'):(sessao.tit||'Refazer salvas'))+'</b><span class="mono f-n">'+(base+sessao.i+1)+' de '+tot+'</span><span class="pg-bar" role="progressbar" aria-label="Progresso da sessão" aria-valuemin="0" aria-valuemax="'+tot+'" aria-valuenow="'+feitas+'"><i style="width:'+pct(feitas,tot)+'%"></i></span>'+(revModo?'<span class="chip">Caixa '+cx+' · '+diasTxt(INTERV[(cx||1)-1])+'</span>':'')+relPill(true)+pomPill(true)+(simModo||sessao.falta?'':'<button class="btn fant perigo" data-f="tirar" title="Tirar esta questão da revisão (também desmarca Salva)" aria-label="Tirar da '+(revModo?'revisão':'lista')+'"><span class="tir-tx">Tirar</span><span class="lab"> da '+(revModo?'revisão':'lista')+'</span></button>')+'<button class="btn out" data-f="hist" aria-label="Histórico desta questão" aria-expanded="'+sessao.hist+'" aria-controls="f-painel">'+ic('i-hist')+'<span class="lab">Histórico</span></button></header>'+
     '<div class="f-corpo'+(sessao.hist?' com-painel':'')+'"><div class="f-q"><div class="f-orig">'+(r.video?'<span class="chip suave">Questões dos vídeos<span class="f-nome"> · '+esc(DADOS[id].questoes[n].assunto||'')+'</span></span>':'<span class="chip suave">'+esc(r.ap)+' › Aula '+r.num+'<span class="f-nome"> · '+esc(r.nome)+'</span></span><a class="link" href="#/aula/'+id+'/'+encodeURIComponent(k)+'" data-f="aula">'+ic('i-aula')+'Abrir a aula<span class="lab"> ↗</span></a>')+'</div><div id="f-box"></div></div>'+
     (sessao.hist?'<aside class="f-painel" id="f-painel" aria-label="Histórico desta questão"><h2 class="ct">Histórico desta questão</h2>'+(rev()[k]?'<p class="mut peq">Na revisão desde '+fdata(it.desde)+' · motivo: '+motivoTxt(it)+' · próxima '+fdata(it.prox)+'</p>':'')+histHtml(k)+'</aside>':'')+'</div>'+
     '<footer class="f-barra"><span class="atalhos">1–5 marcam · 0 chute · N anota · Enter confirma · Esc sai</span><button class="btn fant" data-f="ant" aria-label="Anterior"'+(sessao.i?'':' disabled')+'>←<span class="lab"> Anterior</span></button><button class="btn chu" data-f="chute" aria-pressed="false">'+ic('i-chute')+'Chute</button><button class="btn out" data-f="pular">Pular</button><button class="btn pri" data-f="ok" disabled>Confirmar</button></footer>';
