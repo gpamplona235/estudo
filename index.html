@@ -2167,8 +2167,24 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 .pom-bts{display:flex;flex-wrap:wrap;gap:6px;margin:2px 0 10px}
 .pom-msg{font:600 18px/1.3 var(--f-ui)!important}
 .pom-som{border:0;background:none;padding:0;font:600 14px var(--f-ui);color:var(--pri-forte);cursor:pointer}
-.pom-som[aria-pressed="false"]{color:var(--mut)}
 .pom-som:hover{text-decoration:underline}
+/* ajustes: tempos e som, abertos pela linha Ajustes do quadro */
+.pom-pop{width:min(320px,calc(100vw - 32px));max-height:calc(100vh - 80px);overflow-y:auto}
+.pom-resumo{text-align:right}
+.pom-cfg{display:flex;flex-direction:column;gap:7px;padding:8px 0 2px;border-top:1px solid var(--lin)}
+.pom-cfg-t{margin:6px 0 0;font:500 11px/1 var(--f-mono);letter-spacing:.12em;text-transform:uppercase;color:var(--mut)}
+.pom-cfg-nota{margin:0;font-size:12.5px;line-height:1.4;color:var(--mut)}
+.pom-lin{display:flex;align-items:center;justify-content:space-between;gap:12px;font-size:14px;color:var(--tx2)}
+.pom-lin input[type=number],.pom-lin select{padding:4px 8px;border:1px solid var(--lin-forte);border-radius:8px;background:var(--campo);color:var(--tx)}
+.pom-lin input[type=number]{width:72px;font:600 14px var(--f-mono);font-variant-numeric:tabular-nums;text-align:right}
+.pom-lin select{font:500 14px var(--f-ui)}
+.pom-lin input[type=range]{flex:1;max-width:170px;accent-color:var(--pri)}
+.pom-lin input:focus-visible,.pom-lin select:focus-visible,.pom-seg button:focus-visible{outline:2px solid var(--pri);outline-offset:1px}
+.pom-seg{display:flex;flex-wrap:wrap;gap:4px}
+.pom-seg button{border:1px solid var(--lin-forte);background:none;border-radius:999px;padding:4px 10px;font:500 13px var(--f-ui);color:var(--tx2);cursor:pointer}
+.pom-seg button:hover{background:var(--campo)}
+.pom-seg button[aria-pressed="true"]{background:var(--pri-suave);border-color:var(--pri);color:var(--pri-forte)}
+.pom-testa{align-self:flex-start;margin-top:2px}
 @media (max-width:767px),(hover:none) and (pointer:coarse){
   .pom-b,.pom-pop{display:none!important}
 }
@@ -63359,15 +63375,22 @@ addEventListener('nuvem-pronta',()=>relPinta(true));
    Pomodoro (pedido do usuário, 2026-11-15): só no computador; no celular e no tablet o CSS esconde.
    Discreto como o relógio: no cabeçalho fica só o ícone e, com o tempo correndo, os minutos que
    faltam (o número muda uma vez por minuto). O tempo exato e os botões aparecem ao clicar.
-   Foco de 25 minutos, pausa de 5 ou de 15. No fim, um toque baixo de três notas, e o ícone fica
-   colorido até o quadro ser aberto e fechado. O tempo corre mesmo trocando de página ou fechando o site.
+   No fim, toca o som escolhido, e o ícone fica colorido até o quadro ser aberto e fechado.
+   O tempo corre mesmo trocando de página ou fechando o site.
+   Ajustes (pedido do mesmo dia, "quero poder configurar os tempos" e o som, "achei um pouco discreto"):
+   na linha Ajustes do quadro: minutos de foco, pausa curta e pausa longa; som (sino, campainha, bipe
+   ou nenhum), volume, quantas vezes toca e botão de testar. Os tempos valem a partir do próximo início.
    O estado fica só neste aparelho (localStorage 'caderno-pomodoro'), FORA do progresso (est) e da nuvem.
-   pom = { modo:'foco'|'pausa', fim:ms (correndo), resta:s (pausado), acabou:'foco'|'pausa', dia, feitos, som:false }
+   pom = { modo:'foco'|'pausa', fim:ms (correndo), resta:s (pausado), acabou:'foco'|'pausa', dia, feitos,
+           cfg:{foco,curta,longa (minutos), som:'sino'|'campainha'|'bipe'|'nenhum', vol:1-10, rep:1-3} }
    ========================================================= */
-const POM_K='caderno-pomodoro', POM_FOCO=25*60, POM_CURTA=5*60, POM_LONGA=15*60;
+const POM_K='caderno-pomodoro', POM_LIM={foco:[1,180],curta:[1,60],longa:[1,60]};
+const POM_SONS={sino:'Sino',campainha:'Campainha',bipe:'Bipe',nenhum:'Nenhum'};
 const pomLer=()=>{ try{ return JSON.parse(localStorage.getItem(POM_K))||{}; }catch(e){ return {}; } };
-let pom=pomLer();
+let pom=pomLer(), pomAj=false;
 function pomSalva(){ try{ localStorage.setItem(POM_K,JSON.stringify(pom)); }catch(e){} }
+// som:false é da primeira versão (só ligado/desligado)
+const pomCfg=()=>Object.assign({foco:25,curta:5,longa:15,som:pom.som===false?'nenhum':'sino',vol:6,rep:2},pom.cfg||{});
 const pomResta=()=>pom.fim?Math.max(0,Math.ceil((pom.fim-Date.now())/1000)):(pom.resta||0);
 const pomFeitos=()=>pom.dia===hoje()?(pom.feitos||0):0;
 function pomEstado(){
@@ -63385,30 +63408,33 @@ function pomRot(){
 function pomPill(noFoco){
   return '<button class="pom-b '+pomEstado()+(noFoco?' pom-f':'')+'" type="button" data-pom="pop" aria-haspopup="dialog" aria-expanded="false" aria-controls="pom-pop" aria-label="'+pomRot()+'">'+ic('i-pomo')+'<span class="pom-t">'+pomCurto()+'</span></button>';
 }
-// som: três notas baixas; o áudio só é liberado depois de um clique, por isso cada botão do quadro o acorda
+// som: o áudio só é liberado depois de um clique, por isso cada clique no pomodoro o acorda
 let pomAud=null;
 function pomAudio(){
   try{ pomAud=pomAud||new (window.AudioContext||window.webkitAudioContext)(); if(pomAud.state==='suspended') pomAud.resume(); }catch(e){ pomAud=null; }
   return pomAud;
 }
-function pomToque(){
-  const a=pomAudio(); if(!a) return;
+function pomToque(tipo,vol,rep){
+  const a=pomAudio(); if(!a||tipo==='nenhum') return;
   try{
-    [523.25,659.25,783.99].forEach((f,k)=>{
-      const o=a.createOscillator(), g=a.createGain(), t=a.currentTime+.05+k*.32;
-      o.type='sine'; o.frequency.value=f; o.connect(g); g.connect(a.destination);
-      g.gain.setValueAtTime(0.0001,t); g.gain.exponentialRampToValueAtTime(0.12,t+.03); g.gain.exponentialRampToValueAtTime(0.0001,t+1.1);
-      o.start(t); o.stop(t+1.2);
-    });
+    const G=0.08*vol, saida=a.createDynamicsCompressor(); saida.connect(a.destination);
+    const nota=(f,ini,dur,onda,ganho)=>{ const o=a.createOscillator(), g=a.createGain(); o.type=onda; o.frequency.value=f; o.connect(g); g.connect(saida);
+      g.gain.setValueAtTime(0.0001,ini); g.gain.exponentialRampToValueAtTime(ganho,ini+.01); g.gain.exponentialRampToValueAtTime(0.0001,ini+dur); o.start(ini); o.stop(ini+dur+.05); };
+    let t=a.currentTime+.05;
+    for(let r=0;r<rep;r++){
+      if(tipo==='sino'){ [523.25,659.25,783.99,1046.5].forEach((f,k)=>{ nota(f,t+k*.28,1.4,'sine',G); nota(f*2,t+k*.28,.8,'sine',G*.25); }); t+=1.9; }
+      else if(tipo==='campainha'){ for(let k=0;k<14;k++) nota(k%2?1318.5:1046.5,t+k*.07,.06,'triangle',G); t+=1.3; }
+      else{ for(let k=0;k<4;k++) nota(1000,t+k*.22,.13,'square',G*.35); t+=1.2; }
+    }
   }catch(e){}
 }
-function pomComeca(modo,seg){ pom.modo=modo; pom.fim=Date.now()+seg*1000; pom.resta=0; pom.acabou=''; pomSalva(); }
+function pomComeca(modo,min){ pom.modo=modo; pom.fim=Date.now()+min*60000; pom.resta=0; pom.acabou=''; pomSalva(); }
 function pomAcaba(){
   const atual=pomLer(); if(atual.fim!==pom.fim){ pom=atual; return; } // outra aba já cuidou do fim
-  const fim=pom.fim, dia=dstr(new Date(fim));
+  const fim=pom.fim, dia=dstr(new Date(fim)), c=pomCfg();
   if(pom.modo==='foco'){ if(pom.dia!==dia){ pom.dia=dia; pom.feitos=0; } pom.feitos=(pom.feitos||0)+1; }
   pom.acabou=pom.modo; pom.fim=0; pom.resta=0; pomSalva();
-  if(pom.som!==false&&Date.now()-fim<90000) pomToque(); // site fechado na hora do fim: não toca quando reabre
+  if(Date.now()-fim<90000) pomToque(c.som,c.vol,c.rep); // site fechado na hora do fim: não toca quando reabre
 }
 let pomTxt=null;
 function pomPinta(tudo){
@@ -63426,42 +63452,69 @@ function pomPinta(tudo){
   if(tudo===true) pomPopPinta();
   else{ const a=$('.rel-agora b',p); if(a&&(pom.fim||pom.resta)) a.textContent=relFmt(pomResta()); }
 }
+// os números dos ajustes ficam em <span data-n>: mudar um tempo atualiza o texto sem redesenhar o quadro
+const pomN=k=>'<span data-n="'+k+'">'+pomCfg()[k]+'</span>';
+const pomResumo=c=>c.foco+' · '+c.curta+' · '+c.longa+' min · '+POM_SONS[c.som];
+function pomRotulos(){ const c=pomCfg(), p=$('#pom-pop'); if(!p) return; $$('[data-n]',p).forEach(s=>s.textContent=c[s.dataset.n]); const r=$('.pom-resumo',p); if(r) r.textContent=pomResumo(c); }
+function pomCfgHtml(c){
+  const num=(k,rot)=>'<label class="pom-lin"><span>'+rot+'</span><input type="number" min="'+POM_LIM[k][0]+'" max="'+POM_LIM[k][1]+'" step="1" value="'+c[k]+'" data-pomc="'+k+'" inputmode="numeric"></label>';
+  return '<div class="pom-cfg" id="pom-cfg"><p class="pom-cfg-t">Tempos, em minutos</p>'+num('foco','Foco')+num('curta','Pausa curta')+num('longa','Pausa longa')+
+    '<p class="pom-cfg-nota">Os tempos valem a partir do próximo início.</p><p class="pom-cfg-t">Som no fim</p>'+
+    '<div class="pom-seg" role="group" aria-label="Som no fim">'+Object.keys(POM_SONS).map(s=>'<button type="button" data-pomf="som" data-v="'+s+'" aria-pressed="'+(c.som===s)+'">'+POM_SONS[s]+'</button>').join('')+'</div>'+
+    '<label class="pom-lin"><span>Volume</span><input type="range" min="1" max="10" step="1" value="'+c.vol+'" data-pomc="vol" aria-label="Volume do som"></label>'+
+    '<label class="pom-lin"><span>Tocar</span><select data-pomc="rep">'+[1,2,3].map(n=>'<option value="'+n+'"'+(c.rep===n?' selected':'')+'>'+n+(n===1?' vez':' vezes')+'</option>').join('')+'</select></label>'+
+    '<button class="btn mini out pom-testa" type="button" data-pomf="testar">Testar o som</button></div>';
+}
 function pomPopPinta(){
-  const e=pomEstado(), f=pomFeitos(), bt=(a,txt,pri)=>'<button class="btn mini '+(pri?'pri':'out')+'" type="button" data-pomf="'+a+'">'+txt+'</button>';
+  const c=pomCfg(), e=pomEstado(), f=pomFeitos(), longa=f&&f%4===0, bt=(a,txt,pri)=>'<button class="btn mini '+(pri?'pri':'out')+'" type="button" data-pomf="'+a+'">'+txt+'</button>';
+  const bFoco=t=>bt('foco',t||'Foco · '+pomN('foco')+' min',!t), bCurta=p=>bt('curta','Pausa · '+pomN('curta'),p), bLonga=p=>bt('longa','Pausa · '+pomN('longa'),p);
   let h='<span class="sep">Pomodoro</span>';
-  if(e==='pom-livre') h+='<p class="rel-regra">25 minutos de foco e depois uma pausa. O tempo continua correndo se você trocar de página ou fechar o site.</p><div class="pom-bts">'+bt('foco','Foco · 25 min',1)+bt('curta','Pausa · 5')+bt('longa','Pausa · 15')+'</div>';
+  if(e==='pom-livre') h+='<p class="rel-regra">'+pomN('foco')+' minutos de foco e depois uma pausa. O tempo continua correndo se você trocar de página ou fechar o site.</p><div class="pom-bts">'+bFoco()+bCurta()+bLonga()+'</div>';
   else if(e==='pom-fim') h+=(pom.acabou==='foco'
-      ?'<p class="rel-agora"><b class="pom-msg">Fim do foco</b></p><p class="rel-regra">Hora de uma pausa.'+(f&&f%4===0?' Já foram '+f+' focos hoje: vale a pausa longa.':'')+'</p><div class="pom-bts">'+bt('curta','Pausa · 5',!(f&&f%4===0))+bt('longa','Pausa · 15',!!(f&&f%4===0))+bt('foco','Outro foco')+'</div>'
-      :'<p class="rel-agora"><b class="pom-msg">Fim da pausa</b></p><div class="pom-bts">'+bt('foco','Foco · 25 min',1)+'</div>');
+      ?'<p class="rel-agora"><b class="pom-msg">Fim do foco</b></p><p class="rel-regra">Hora de uma pausa.'+(longa?' Já foram '+f+' focos hoje: vale a pausa longa.':'')+'</p><div class="pom-bts">'+bCurta(!longa)+bLonga(longa)+bFoco('Outro foco')+'</div>'
+      :'<p class="rel-agora"><b class="pom-msg">Fim da pausa</b></p><div class="pom-bts">'+bFoco()+'</div>');
   else h+='<p class="rel-agora"><b>'+relFmt(pomResta())+'</b><span>'+(e==='pom-parado'?'pausado':pom.modo==='pausa'?'de pausa':'de foco')+'</span></p><div class="pom-bts">'+
       (e==='pom-parado'?bt('continua','Continuar',1):bt('pausa','Pausar'))+bt('para','Parar')+'</div>';
   h+=(f?'<p class="rel-l"><span>Focos completos hoje</span><b>'+f+'</b></p>':'')+
-     '<p class="rel-l"><span>Som no fim</span><button class="pom-som" type="button" data-pomf="som" aria-pressed="'+(pom.som!==false)+'">'+(pom.som!==false?'Ligado':'Desligado')+'</button></p>';
+     '<p class="rel-l"><span>Ajustes</span><button class="pom-som pom-resumo" type="button" data-pomf="aj" aria-expanded="'+pomAj+'" aria-controls="pom-cfg">'+pomResumo(c)+'</button></p>'+
+     (pomAj?pomCfgHtml(c):'');
   $('#pom-pop').innerHTML=h;
 }
 function pomPop(abrir,botao){
   const p=$('#pom-pop'); if(!p) return;
   const estava=!p.hidden;
   p.hidden=!abrir; $$('.pom-b').forEach(b=>b.setAttribute('aria-expanded',abrir&&b===botao?'true':'false'));
-  if(abrir){ pomPopPinta(); const r=botao.getBoundingClientRect(); p.style.top=Math.round(r.bottom+8)+'px'; p.style.right=Math.max(16,Math.round(innerWidth-r.right))+'px'; p._de=botao; }
+  if(abrir){ pomAj=false; pomPopPinta(); const r=botao.getBoundingClientRect(); p.style.top=Math.round(r.bottom+8)+'px'; p.style.right=Math.max(16,Math.round(innerWidth-r.right))+'px'; p._de=botao; }
   else if(estava&&pom.acabou){ pom.acabou=''; pomSalva(); pomPinta(true); } // viu o aviso: o ícone volta ao normal
 }
-function pomAcao(a){
+function pomMudaCfg(k,v){ pom.cfg=Object.assign(pomCfg(),{[k]:v}); delete pom.som; pomSalva(); pomRotulos(); }
+function pomAcao(a,el){
   pomAudio();
-  if(a==='foco') pomComeca('foco',POM_FOCO);
-  else if(a==='curta') pomComeca('pausa',POM_CURTA);
-  else if(a==='longa') pomComeca('pausa',POM_LONGA);
+  const c=pomCfg();
+  if(a==='aj'){ pomAj=!pomAj; pomPopPinta(); return; }
+  if(a==='som'){ pomMudaCfg('som',el.dataset.v); $$('.pom-seg button').forEach(b=>b.setAttribute('aria-pressed',String(b===el))); pomToque(el.dataset.v,c.vol,1); return; }
+  if(a==='testar'){ pomToque(c.som,c.vol,c.rep); return; }
+  if(a==='foco') pomComeca('foco',c.foco);
+  else if(a==='curta') pomComeca('pausa',c.curta);
+  else if(a==='longa') pomComeca('pausa',c.longa);
   else if(a==='pausa'){ pom.resta=pomResta(); pom.fim=0; pomSalva(); }
   else if(a==='continua'){ pom.fim=Date.now()+(pom.resta||0)*1000; pom.resta=0; pomSalva(); }
   else if(a==='para'){ pom.fim=0; pom.resta=0; pom.acabou=''; pomSalva(); }
-  else if(a==='som'){ pom.som=pom.som===false; pomSalva(); if(pom.som) pomToque(); pomPopPinta(); return; }
   pomPop(false); pomPinta(true);
 }
 document.addEventListener('click',e=>{
-  const f=e.target.closest('[data-pomf]'); if(f){ pomAcao(f.dataset.pomf); return; }
+  const f=e.target.closest('[data-pomf]'); if(f){ pomAcao(f.dataset.pomf,f); return; }
   const b=e.target.closest('[data-pom]'), p=$('#pom-pop');
   if(b){ pomAudio(); pomPop(p.hidden||p._de!==b,b); return; }
   if(p&&!p.hidden&&!p.contains(e.target)) pomPop(false);
+});
+// ajustes: o número vale ao sair do campo ou apertar Enter; fora dos limites, fica no limite
+document.addEventListener('change',e=>{
+  const x=e.target.closest&&e.target.closest('[data-pomc]'); if(!x) return;
+  const k=x.dataset.pomc, c=pomCfg();
+  if(k==='vol'||k==='rep'){ pomMudaCfg(k,+x.value); if(k==='vol') pomToque(c.som,+x.value,1); return; }
+  let v=Math.round(+x.value); if(!x.value||!isFinite(v)) v=c[k];
+  v=Math.min(POM_LIM[k][1],Math.max(POM_LIM[k][0],v)); x.value=v; pomMudaCfg(k,v);
 });
 // captura: o Esc fecha só o quadro, sem sair da revisão
 document.addEventListener('keydown',e=>{ const p=$('#pom-pop'); if(e.key==='Escape'&&p&&!p.hidden){ e.stopImmediatePropagation(); e.preventDefault(); const b=p._de; pomPop(false); if(b&&document.contains(b)) b.focus(); } },true);
