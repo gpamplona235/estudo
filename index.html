@@ -24635,15 +24635,15 @@ fimpara</pre>
 <header class="aula-cab">
   <span class="tag">AULA 01</span>
   <h1>Vetor</h1>
-  <p>O vetor do jeito que a prova cobra: cada fato em uma linha, com o nome oficial em negrito e o porquê na mesma frase. Sem código. A IBFC tem 7 questões nesta aula. A única da IBGP sobre vetor saiu por erro no gabarito.</p>
+  <p>Esta aula usa um modelo só, do começo ao fim: a memória como uma fileira de espaços numerados. Cada nome que a banca cobra aparece acontecendo nesse modelo. Cada parte começa com uma pergunta para você prever e termina com uma questão resolvida passo a passo. Sem código.</p>
   <p>Cada seção traz a explicação, o passo a passo, exemplos e um desafio rápido antes das questões.</p>
   <div class="meta"><span>27 questões do caderno nesta aula</span><span>23 no meio da explicação, 4 no treino</span><span>7 da IBFC/IBGP</span></div>
   <p><button type="button" class="zerar-aula">↺ Refazer a aula do zero</button></p>
 </header>
 <nav class="sumario" aria-label="Nesta aula">
-  <a href="#vm1-oque"><span>1</span>O que é um vetor</a>
-  <a href="#vm1-indice"><span>2</span>O índice e a declaração</a>
-  <a href="#vm1-memoria"><span>3</span>Na memória, e o que se faz com ele</a>
+  <a href="#vm1-oque"><span>1</span>Para que serve um vetor</a>
+  <a href="#vm1-indice"><span>2</span>O índice: a posição e o valor</a>
+  <a href="#vm1-memoria"><span>3</span>Na memória: por que é rápido e por que não cresce</a>
   <a href="#vm1-outras"><span>4</span>Vetor ou outra estrutura?</a>
   <a href="#vm1-treino"><span>5</span>Treino</a>
 </nav>
@@ -24651,23 +24651,19 @@ fimpara</pre>
 <!-- 1 -->
 <section class="sec" id="vm1-oque">
   <div class="sec-main">
-    <h2><span class="n">1.</span><span class="t">O que é um vetor</span></h2>
-    <p>Comece pela variável, que você viu na apostila de Algoritmos.</p>
-    <ul class="vm-ficha">
-      <li class="ler"><span class="cel">A <b>variável simples</b>, ou <b>tipo primitivo</b>, guarda um valor só: um inteiro, um real, um caractere ou um lógico.</span></li>
-      <li class="ler"><span class="cel">O <b>vetor</b> guarda vários valores com <b>um nome só</b>. Por isso ele é uma <b>variável composta</b>, também chamada de <b>tipo estruturado</b>.</span></li>
-      <li class="ler"><span class="cel">O vetor é <b>homogêneo</b>: todos os valores são do <b>mesmo tipo</b>. Pode ser de números, de textos ou de lógicos, mas de um tipo só.</span></li>
-      <li class="ler"><span class="cel">O vetor é <b>unidimensional</b>: os valores formam uma fileira, e <b>um número só</b>, o índice, acha cada um.</span></li>
-      <li class="ler"><span class="cel">O vetor é <b>linear</b>: os valores vêm um depois do outro, em sequência.</span></li>
-      <li class="ler"><span class="cel">Juntando: o vetor é uma <b>variável composta homogênea unidimensional</b>. Em inglês, <b>array</b>; a banca também diz <b>arranjo</b> ou <b>array unidimensional</b>.</span></li>
-      <li class="ler"><span class="cel">Guardar <b>tipos diferentes</b> sob um nome, como um inteiro, um texto e um lógico, <b>não é vetor</b>: é o <b>registro</b>.</span></li>
-      <li class="ler"><span class="cel">Vetor em outras matérias: na física, uma seta com intensidade, direção e sentido; na geometria, segmentos orientados. Os pontos de uma imagem são os <b>pixels</b>. Nenhum é o vetor da estrutura de dados.</span></li>
-      <li class="ler"><span class="cel">Da apostila de Algoritmos: <b>algoritmo</b> é uma sequência finita de passos; ele é escrito em <b>fluxograma</b> ou em <b>pseudocódigo</b>; <b>procedimentos</b> dividem o programa em módulos.</span></li>
-    </ul>
-    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">Um vetor pode guardar, ao mesmo tempo, a idade e o nome de uma pessoa.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">Quantos tipos de dado?</span><span class="cel prl-teste">idade é número; nome é texto: dois tipos</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">O vetor aceita dois tipos?</span><span class="cel prl-teste">não: é homogêneo</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">errado. Isso seria um registro.</span></p></figure>
-    <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Um vetor guarda os nomes de 30 alunos. Ele é homogêneo?</p><div class="dq-op"><button type="button" data-ok="1">Sim: todos são texto</button><button type="button">Não: são 30 valores</button></div><p class="dq-exp" hidden>Homogêneo fala do tipo, e não da quantidade. Trinta textos são um tipo só.</p></div>
+    <h2><span class="n">1.</span><span class="t">Para que serve um vetor</span></h2>
+    <div class="desafio"><p class="rot">Antes de ler: o que você acha?</p>
+      <div class="dq"><p class="dq-frase">Um programa precisa guardar as notas de 30 alunos. Se cada variável guarda um valor só, quantas variáveis seriam?</p><div class="dq-op"><button type="button" data-ok="1">30</button><button type="button">1</button></div><p class="dq-exp" hidden>Trinta, uma para cada nota. É esse o problema que o vetor resolve.</p></div>
     </div>
+    <p>Na apostila de Algoritmos, cada variável guardava um valor só. A banca chama essa variável de <b>variável simples</b>, ou <b>tipo primitivo</b>: inteiro, real, caractere ou lógico.</p>
+    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">endereço</th><th>100</th><th>101</th><th>102</th><th>103</th><th>104</th></tr><tr><th class="canto">guarda</th><td></td><td><b>idade = 34</b></td><td></td><td></td><td></td></tr></table></div><figcaption>A memória é uma fileira de espaços numerados. O número de cada espaço é o endereço. A variável idade ocupa um espaço.</figcaption></figure>
+    <p>O <b>vetor</b> é uma variável que ocupa <b>vários espaços seguidos</b>, com <b>um nome só</b>. Como guarda vários valores, ele é uma <b>variável composta</b>, também chamada de <b>tipo estruturado</b>.</p>
+    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">endereço</th><th>200</th><th>201</th><th>202</th><th>203</th><th>204</th></tr><tr><th class="canto">guarda</th><td>7</td><td>5</td><td>9</td><td>6</td><td>8</td></tr></table></div><figcaption>O vetor notas ocupa cinco espaços seguidos, com um nome só.</figcaption></figure>
+    <p>Os cinco espaços guardam notas, valores <b>do mesmo tipo</b>. Por isso o vetor é <b>homogêneo</b>. Ele pode guardar números, textos ou lógicos, mas sempre um tipo só. Misturar tipos sob um nome, como um inteiro e um texto, é outra estrutura: o <b>registro</b>.</p>
+    <p>Os valores formam uma fileira: o vetor tem uma dimensão, é <b>unidimensional</b>. E é <b>linear</b>: um valor vem depois do outro.</p>
+    <p>Juntando tudo, a definição que a banca usa: o vetor é uma <b>variável composta homogênea unidimensional</b>. Em inglês, <b>array</b>; a banca também diz <b>arranjo</b>.</p>
+    <p>Duas misturas que a banca faz nas alternativas. A palavra vetor também é a seta da física, os segmentos da geometria e, sem querer, os pixels de uma imagem; nenhum é este vetor. E conceitos de Algoritmos: algoritmo é uma sequência finita de passos, escrita em fluxograma ou pseudocódigo, e procedimentos dividem o programa em módulos.</p>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">Um vetor guarda, juntos, as notas e os nomes dos alunos.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1: conte os tipos</span><span class="cel">Notas são números; nomes são textos.</span><span class="cel prl-teste">dois tipos</span></li><li class="ler"><span class="cel prl-rot">Passo 2: lembre a regra</span><span class="cel">O vetor é homogêneo: um tipo só.</span><span class="cel prl-teste">não aceita dois tipos</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">errado. Isso seria um registro.</span></p></figure>
     <div class="cilada"><span class="rot">O que a banca troca</span>Dizer que o vetor guarda tipos diferentes, ou que ele serve só para números, ou só para textos.</div>
     <div data-questao="16"></div>
     <div data-questao="76"></div>
@@ -24686,35 +24682,28 @@ fimpara</pre>
 <!-- 2 -->
 <section class="sec" id="vm1-indice">
   <div class="sec-main">
-    <h2><span class="n">2.</span><span class="t">O índice e a declaração</span></h2>
-    <p>Cada valor do vetor fica numa posição numerada. É assim que as questões mostram um vetor:</p>
-    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">valor</th><td>7</td><td>5</td><td>9</td><td>6</td><td>8</td></tr><tr><th class="canto">índice</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr></table></div><figcaption>Um vetor de 5 posições: em cima, os valores; embaixo, o índice de cada posição.</figcaption></figure>
-    <ul class="vm-ficha">
-      <li class="ler"><span class="cel">O <b>índice</b> é o número da posição. A banca também diz <b>subscrição</b>.</span></li>
-      <li class="ler"><span class="cel">O índice vai <b>entre colchetes</b> depois do nome: <b>v[2]</b> é o valor da posição 2. No vetor acima, v[2] vale 9.</span></li>
-      <li class="ler"><span class="cel">Na maioria das linguagens, o <b>primeiro índice é 0</b>. O motivo: o índice conta quantas posições existem <b>antes</b> daquela, e antes da primeira não há nenhuma.</span></li>
-      <li class="ler"><span class="cel">Por isso, um vetor de 5 posições tem os índices de <b>0 a 4</b>. Continuam sendo <b>5 posições</b>, com 5 valores.</span></li>
-      <li class="ler"><span class="cel">Um vetor de <b>N</b> posições guarda <b>N</b> valores, nem um a menos.</span></li>
-      <li class="ler"><span class="cel">No <b>pseudocódigo</b> da prova, o intervalo vem escrito: <b>vetor[1..5]</b> começa no índice 1 e vai até o 5.</span></li>
-      <li class="ler"><span class="cel"><b>Declarar</b> o vetor é criá-lo, dizendo <b>nome, tipo e tamanho</b>. No pseudocódigo: <b>notas : vetor[1..5] de real</b>. Alguns livros escrevem <b>conjunto</b> no lugar de vetor.</span></li>
-      <li class="ler"><span class="cel">Os <b>colchetes</b> aparecem na declaração e no uso: declaram o tamanho e apontam o elemento.</span></li>
-      <li class="ler"><span class="cel">A declaração só cria a variável. Ela <b>não chama nem define função</b>, e não tem parâmetros.</span></li>
-      <li class="ler"><span class="cel">Usar uma posição que <b>não existe</b>, como a 15 num vetor de 10, é <b>índice fora dos limites</b>. O <b>compilador</b>, que traduz o programa antes de ele rodar, não confere o índice: o problema só aparece <b>na execução</b>, com resultado imprevisto ou o programa parando.</span></li>
-    </ul>
-    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">idades : vetor[1..8] de inteiro. Quantos valores esse vetor guarda, e qual é o último índice?</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">Leia o intervalo entre colchetes.</span><span class="cel prl-teste">de 1 até 8</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">Conte as posições.</span><span class="cel prl-teste">de 1 a 8 são 8 posições</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">8 valores, e o último índice é 8.</span></p></figure>
-    <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Num vetor de 10 posições que começa no índice 0, qual é o último índice?</p><div class="dq-op"><button type="button" data-ok="1">9</button><button type="button">10</button></div><p class="dq-exp" hidden>De 0 a 9 são 10 posições: o último índice é 9.</p></div>
+    <h2><span class="n">2.</span><span class="t">O índice: a posição e o valor</span></h2>
+    <div class="desafio"><p class="rot">Antes de ler: o que você acha?</p>
+      <div class="dq"><p class="dq-frase">Um vetor v guarda 7, 5, 9, 6 e 8, com os índices de 0 a 4. Quanto vale v[3]?</p><div class="dq-op"><button type="button" data-ok="1">6</button><button type="button">3</button></div><p class="dq-exp" hidden>v[3] é o valor guardado na posição 3, e ele é o 6. O 3 é só o número da posição.</p></div>
     </div>
-    <div class="cilada"><span class="rot">O que a banca troca</span>Dizer que um vetor de N posições guarda N − 1 valores, confundir o índice com o valor guardado, ou dizer que o compilador barra o índice que não existe.</div>
+    <p>Cada espaço do vetor tem um número de posição: o <b>índice</b>, também chamado de <b>subscrição</b>. O índice diz <b>onde</b>; o valor é <b>o que está guardado</b> ali. Essa é a confusão que mais derruba na prova.</p>
+    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">índice</th><th>0</th><th>1</th><th>2</th><th>3</th><th>4</th></tr><tr><th class="canto">valor</th><td>7</td><td>5</td><td>9</td><td><b>6</b></td><td>8</td></tr></table></div><figcaption>Em cima, o índice de cada posição; embaixo, o valor guardado. v[3] é o 6.</figcaption></figure>
+    <p>Para usar uma posição, escreve-se o nome e o índice entre <b>colchetes</b>: v[3]. Os colchetes também aparecem quando o vetor é criado.</p>
+    <p>Por que o primeiro índice é 0? O índice conta quantas posições existem <b>antes</b> daquela. Antes da primeira, não há nenhuma. Por isso um vetor de 5 posições vai do índice 0 ao 4, e continua com <b>5 posições e 5 valores</b>: um vetor de N posições guarda N valores.</p>
+    <p>No pseudocódigo da prova, o intervalo vem escrito: <b>vetor[1..5]</b> vai do índice 1 ao 5.</p>
+    <p><b>Declarar</b> o vetor é criá-lo, dizendo <b>nome, tipo e tamanho</b>, como em notas : vetor[1..5] de real. Alguns livros escrevem <b>conjunto</b> no lugar de vetor. A declaração só cria a variável: não chama nem define função.</p>
+    <p>E se o programa usar uma posição que não existe, como v[15] num vetor de 10? É <b>índice fora dos limites</b>. O <b>compilador</b>, que traduz o programa antes de ele rodar, não confere o índice. O problema só aparece <b>ao executar</b>: resultado imprevisto, ou o programa para.</p>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">idades : vetor[1..8] de inteiro. Quantos valores esse vetor guarda, e qual é o último índice?</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1: leia o intervalo</span><span class="cel">Os colchetes dizem de onde a onde.</span><span class="cel prl-teste">de 1 até 8</span></li><li class="ler"><span class="cel prl-rot">Passo 2: conte as posições</span><span class="cel">De 1 a 8.</span><span class="cel prl-teste">8 posições</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">8 valores, e o último índice é 8.</span></p></figure>
+    <div class="cilada"><span class="rot">O que a banca troca</span>Confundir o índice com o valor, dizer que um vetor de N posições guarda N − 1 valores, ou dizer que o compilador barra o índice que não existe.</div>
     <div data-questao="43"></div>
     <div data-questao="90"></div>
     <div data-questao="83"></div>
     <div data-questao="8"></div>
     <div data-questao="82"></div>
-    <p class="ponte">Agora, onde o vetor fica e o que se faz com ele.</p>
+    <p class="ponte">Agora, o que acontece na memória, que explica os outros nomes da banca.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">v[2]: a posição 2.</div>
+    <div class="mao">Índice: onde. Valor: o que está guardado.</div>
     <div class="mao aten">N posições, N valores.</div>
     <div class="carimbo"><b>Já caiu</b>Instituto Verbena 2024<br>QUADRIX 2019<br>AOCP 2026<br>UFPR 2019</div>
   </aside>
@@ -24723,29 +24712,25 @@ fimpara</pre>
 <!-- 3 -->
 <section class="sec" id="vm1-memoria">
   <div class="sec-main">
-    <h2><span class="n">3.</span><span class="t">Na memória, e o que se faz com ele</span></h2>
-    <p>Agora, onde o vetor fica e o que se faz com ele.</p>
-    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">endereço</th><th>1000</th><th>1004</th><th>1008</th><th>1012</th><th>1016</th></tr><tr><th class="canto">guarda</th><td>v[0]</td><td>v[1]</td><td>v[2]</td><td>v[3]</td><td>v[4]</td></tr></table></div><figcaption>As posições do vetor na memória, uma ao lado da outra. O endereço é o número de cada espaço da memória.</figcaption></figure>
-    <ul class="vm-ficha">
-      <li class="ler"><span class="cel">Quando o vetor é criado, ele recebe um bloco da memória do <b>tamanho exato</b> dele, com as posições <b>uma ao lado da outra</b>.</span></li>
-      <li class="ler"><span class="cel">A banca descreve isso como <b>posições contíguas</b>, <b>consecutivas</b>, <b>alocadas sequencialmente</b>, ou <b>sequência de bytes sucessivos</b>. Alocar é reservar espaço na memória.</span></li>
-      <li class="ler"><span class="cel">Como as posições estão lado a lado, o computador <b>calcula</b> onde fica qualquer uma a partir da primeira. É o <b>acesso direto</b>, também chamado de <b>acesso aleatório</b>: chegar à posição 2 ou à 2.000 leva o mesmo tempo.</span></li>
-      <li class="ler"><span class="cel">Pelo mesmo motivo, o vetor pode ser percorrido <b>em qualquer direção</b>, do começo para o fim ou do fim para o começo.</span></li>
-      <li class="ler"><span class="cel">O vetor clássico é <b>estático</b>: o tamanho é fixado na criação e <b>não muda em tempo de execução</b>, isto é, enquanto o programa roda. O espaço logo depois dele pode já estar ocupado.</span></li>
-      <li class="ler"><span class="cel">É assim nas <b>linguagens imperativas</b>, como C e Pascal, em que o programa é uma sequência de ordens.</span></li>
-      <li class="ler"><span class="cel">Algumas linguagens têm o <b>vetor dinâmico</b>: quando o espaço enche, ele reserva mais sozinho. Para isso, guarda a <b>quantidade de elementos</b> e a <b>última posição ocupada</b>.</span></li>
-      <li class="ler"><span class="cel">Os valores ficam <b>na ordem em que foram colocados</b>, e não em ordem crescente. Qualquer posição recebe qualquer valor, sem depender das outras.</span></li>
-      <li class="ler"><span class="cel">As operações são de dois tipos. <b>Consulta</b>: ler, buscar e percorrer; o conteúdo não muda. <b>Atualização</b>: inserir, apagar e alterar, como somar a um valor; o conteúdo muda.</span></li>
-      <li class="ler"><span class="cel">Num vetor já criado, os valores são atribuídos <b>um de cada vez</b>: o programa muda o índice e põe o valor naquela posição.</span></li>
-      <li class="ler"><span class="cel"><b>Percorrer</b> é passar por todas as posições. Quem repete é o <b>laço de repetição</b>: <b>para</b> no pseudocódigo, <b>for</b> nas linguagens. O <b>if</b>, o se, é decisão; o <b>var</b> declara variáveis.</span></li>
-      <li class="ler"><span class="cel"><b>Inserir ou remover no meio</b> custa caro: os elementos seguintes precisam andar uma posição. É o <b>deslocamento</b>.</span></li>
-      <li class="ler"><span class="cel"><b>Busca binária</b>: num vetor <b>ordenado</b>, o valor buscado é comparado com o <b>do meio</b>; a metade onde ele não pode estar é descartada, e isso se repete até achar.</span></li>
-    </ul>
-    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">Num vetor de 1.000 posições, chegar à posição 900 demora mais que chegar à posição 2?</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">Como o computador acha a posição?</span><span class="cel prl-teste">calcula o endereço a partir da primeira</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">Ele passa pelas posições anteriores?</span><span class="cel prl-teste">não</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">não: o acesso é direto, e o tempo é o mesmo.</span></p></figure>
-    <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Somar 1 a uma nota guardada no vetor é uma operação de...</p><div class="dq-op"><button type="button" data-ok="1">atualização</button><button type="button">consulta</button></div><p class="dq-exp" hidden>O conteúdo do vetor mudou: é atualização.</p></div>
+    <h2><span class="n">3.</span><span class="t">Na memória: por que é rápido e por que não cresce</span></h2>
+    <div class="desafio"><p class="rot">Antes de ler: o que você acha?</p>
+      <div class="dq"><p class="dq-frase">Num vetor de 1.000 posições, o computador demora mais para chegar à posição 900 do que à posição 2?</p><div class="dq-op"><button type="button" data-ok="1">Não: o tempo é o mesmo</button><button type="button">Sim: passa pelas 899 antes</button></div><p class="dq-exp" hidden>O tempo é o mesmo: ele calcula onde está a posição e vai direto.</p></div>
     </div>
-    <div class="cilada"><span class="rot">O que a banca troca</span>Dizer que as posições ficam em lugares aleatórios da memória, que o vetor clássico muda de tamanho enquanto o programa roda, ou que os valores ficam em ordem crescente.</div>
+    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">endereço</th><th>200</th><th>201</th><th>202</th><th>203</th><th>204</th></tr><tr><th class="canto">guarda</th><td>notas[0]</td><td>notas[1]</td><td>notas[2]</td><td><b>notas[3]</b></td><td>notas[4]</td></tr></table></div><figcaption>O vetor na memória: as posições ocupam espaços seguidos, a partir do endereço 200.</figcaption></figure>
+    <p>Quando o vetor é criado, ele recebe espaços <b>seguidos</b>, um encostado no outro. Reservar espaço se chama <b>alocar</b>. A banca descreve isso como posições <b>contíguas</b>, <b>consecutivas</b>, <b>alocadas sequencialmente</b> ou <b>bytes sucessivos</b>.</p>
+    <p>Por estarem seguidos, o computador acha qualquer posição com uma conta: <b>início mais índice</b>. Neste exemplo, a posição 3 fica em 200 + 3, o endereço 203. Ele vai direto, sem passar pelas outras. É o <b>acesso direto</b>, que a banca também chama de <b>acesso aleatório</b>. Pelo mesmo motivo, o vetor pode ser percorrido <b>em qualquer direção</b>.</p>
+    <p>A conta só funciona se todos os espaços tiverem o mesmo tamanho. É mais um motivo para o vetor ser homogêneo.</p>
+    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">endereço</th><th>200</th><th>201</th><th>202</th><th>203</th><th>204</th><th>205</th></tr><tr><th class="canto">guarda</th><td>7</td><td>5</td><td>9</td><td>6</td><td>8</td><td><b>outra variável</b></td></tr></table></div><figcaption>O espaço logo depois do vetor já pertence a outra variável.</figcaption></figure>
+    <p>Por isso o vetor clássico não cresce: ele é <b>estático</b>. O tamanho é fixado na criação e não muda <b>em tempo de execução</b>, isto é, enquanto o programa roda. É o vetor das <b>linguagens imperativas</b>, como C e Pascal.</p>
+    <p>Algumas linguagens têm o <b>vetor dinâmico</b>: quando os espaços enchem, ele reserva sozinho um bloco maior. Para isso, guarda a <b>quantidade de elementos</b> e a <b>última posição ocupada</b>.</p>
+    <p>Os valores ficam na ordem em que foram colocados, e não em ordem crescente. E cada posição recebe qualquer valor, sem depender das outras.</p>
+    <h3>O que se faz com um vetor</h3>
+    <p>As operações se separam pelo efeito. <b>Consulta</b> só lê: acessar uma posição, buscar um valor, percorrer. <b>Atualização</b> muda o conteúdo: inserir, apagar, alterar, como somar 1 a uma nota. Num vetor já criado, os valores entram <b>um de cada vez</b>, mudando o índice.</p>
+    <p><b>Percorrer</b> é visitar todas as posições. Quem repete a visita é o <b>laço de repetição</b>: <b>para</b> no pseudocódigo, <b>for</b> nas linguagens. O <b>if</b>, o se, é decisão; o <b>var</b> declara variáveis.</p>
+    <p><b>Inserir ou remover no meio</b> obriga os valores seguintes a andar uma posição: é o <b>deslocamento</b>. Por isso essas operações custam caro no vetor.</p>
+    <p><b>Busca binária</b>: num vetor <b>ordenado</b>, o valor buscado é comparado com o <b>do meio</b>, e a metade onde ele não pode estar é descartada, até achar.</p>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">Os dados de um vetor ficam em posições aleatórias da memória.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1: lembre como o vetor é criado</span><span class="cel">Ele recebe espaços seguidos.</span><span class="cel prl-teste">contíguos</span></li><li class="ler"><span class="cel prl-rot">Passo 2: veja de onde vem o "aleatório"</span><span class="cel">Acesso aleatório fala do acesso direto a qualquer posição.</span><span class="cel prl-teste">não fala de onde os dados ficam</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">errado.</span></p></figure>
+    <div class="cilada"><span class="rot">O que a banca troca</span>Dizer que as posições ficam em lugares aleatórios, que o vetor clássico muda de tamanho enquanto o programa roda, ou que os valores ficam em ordem crescente.</div>
     <div data-questao="59"></div>
     <div data-questao="87"></div>
     <div data-questao="74"></div>
@@ -24755,8 +24740,8 @@ fimpara</pre>
     <p class="ponte">Falta separar o vetor das outras estruturas que aparecem nas alternativas.</p>
   </div>
   <aside class="sec-lado">
-    <div class="mao">Contíguo: acesso direto.</div>
-    <div class="mao aten">Estático: tamanho fixo.</div>
+    <div class="mao">Espaços seguidos: acesso direto.</div>
+    <div class="mao aten">Vizinho ocupado: estático.</div>
     <div class="carimbo"><b>Já caiu</b>PROGEPE-UFRPE 2022<br>FCC 2019<br>QUADRIX 2021<br>QUADRIX 2019<br>IBFC 2025<br>IBFC 2014</div>
   </aside>
 </section>
@@ -24765,25 +24750,16 @@ fimpara</pre>
 <section class="sec" id="vm1-outras">
   <div class="sec-main">
     <h2><span class="n">4.</span><span class="t">Vetor ou outra estrutura?</span></h2>
-    <p>Muitas alternativas trazem outras estruturas. Para eliminá-las, basta a ideia de cada uma.</p>
-    <ul class="vm-ficha">
-      <li class="ler"><span class="cel"><b>Lista sequencial</b>, ou <b>lista indexada</b>: é o próprio vetor. Elementos contíguos, acesso pelo índice.</span></li>
-      <li class="ler"><span class="cel"><b>Lista encadeada</b>, ou <b>ligada</b>: os elementos ficam <b>espalhados</b> na memória, e cada um guarda o <b>endereço do próximo</b>, o <b>ponteiro</b>.</span></li>
-      <li class="ler"><span class="cel">Na lista encadeada, inserir e remover <b>não desloca</b> ninguém. Mas o acesso começa <b>pelo primeiro</b> e vai de um em um, sem pular direto.</span></li>
-      <li class="ler"><span class="cel">Variações da lista encadeada: <b>duplamente encadeada</b>, com o endereço do próximo e do anterior; <b>circular</b>, em que o último aponta para o primeiro; <b>dinâmica</b>, que cresce conforme precisa.</span></li>
-      <li class="ler"><span class="cel"><b>Pilha</b>, em inglês <b>stack</b>: insere e retira <b>só pelo topo</b>, uma extremidade. O último que entra é o primeiro que sai.</span></li>
-      <li class="ler"><span class="cel"><b>Fila</b>, em inglês <b>queue</b>: entra pelo fim e sai pelo início. O primeiro que entra é o primeiro que sai.</span></li>
-      <li class="ler"><span class="cel"><b>Árvore</b>: uma <b>hierarquia</b> que começa no elemento principal, a <b>raiz</b>. Na <b>árvore binária de busca</b>, cada elemento tem até dois filhos e fica organizado pelo valor.</span></li>
-      <li class="ler"><span class="cel"><b>Grafo</b>: representa as <b>relações</b> entre os elementos, como pontos ligados por linhas.</span></li>
-      <li class="ler"><span class="cel"><b>Hash</b>, ou <b>hashing</b>: uma conta transforma a <b>chave</b>, como um nome ou um CPF, na posição do dado. Em Java, o <b>HashMap</b> guarda pares de chave e valor. O <b>Set</b> é um conjunto sem repetidos.</span></li>
-      <li class="ler"><span class="cel"><b>Matriz</b>: como o vetor, mas com <b>duas ou mais dimensões</b>. É o assunto da Aula 2. <b>String</b> é um texto, uma cadeia de caracteres.</span></li>
-      <li class="ler"><span class="cel">Não são estruturas de dados: <b>constante</b>, um valor que não muda; <b>condicional</b>, o comando se; <b>thread</b>, uma linha de execução de um programa.</span></li>
-      <li class="ler"><span class="cel">Em <b>Java</b>, o array é um <b>objeto</b>: a variável guarda uma referência a ele. Por isso a banca diz que arrays são <b>tipos por referência</b>.</span></li>
-    </ul>
-    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">Estrutura em que é possível inserir um elemento no meio sem deslocar os outros.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">O vetor desloca os seguintes?</span><span class="cel prl-teste">sim: então não é o vetor</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">Qual não desloca ninguém?</span><span class="cel prl-teste">a que liga os elementos por endereço</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">a lista encadeada.</span></p></figure>
-    <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Os elementos ficam espalhados na memória, e cada um tem o endereço do próximo. É...</p><div class="dq-op"><button type="button" data-ok="1">a lista encadeada</button><button type="button">o vetor</button></div><p class="dq-exp" hidden>Espalhados e ligados por endereço: lista encadeada. O vetor fica contíguo.</p></div>
+    <div class="desafio"><p class="rot">Antes de ler: o que você acha?</p>
+      <div class="dq"><p class="dq-frase">Os elementos ficam espalhados pela memória, e cada um guarda o endereço do próximo. Isso é um vetor?</p><div class="dq-op"><button type="button" data-ok="1">Não</button><button type="button">Sim</button></div><p class="dq-exp" hidden>Não: o vetor fica em espaços seguidos. Isso é a lista encadeada.</p></div>
     </div>
+    <figure class="ed-fig"><div class="tabela-rolagem ico"><table class="ed-matriz"><tr><th class="canto">endereço</th><th>150</th><th>200</th><th>305</th></tr><tr><th class="canto">guarda</th><td>9 · fim</td><td>7 · próximo: 305</td><td>5 · próximo: 150</td></tr></table></div><figcaption>Uma lista encadeada no mesmo modelo: os valores espalhados, cada um com o endereço do próximo. A ordem é 7, 5, 9.</figcaption></figure>
+    <p>Compare com o vetor. Lá, os espaços eram seguidos. Aqui, cada elemento guarda o endereço do próximo, o <b>ponteiro</b>. É a <b>lista encadeada</b>, ou <b>ligada</b>. Ela insere e remove no meio <b>sem deslocar</b> ninguém, mas, para chegar ao terceiro elemento, passa pelo primeiro e pelo segundo: não tem acesso direto.</p>
+    <p>Variações dela: <b>duplamente encadeada</b>, com o endereço do próximo e do anterior; <b>circular</b>, em que o último aponta para o primeiro; <b>dinâmica</b>, que cresce conforme precisa. Já a lista em espaços seguidos, com índice, é a <b>lista sequencial</b>, ou <b>indexada</b>: é o próprio vetor.</p>
+    <h3>A palavra que entrega a estrutura</h3>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">O método</span><span class="cel prl-fr">para eliminar as alternativas que não são vetor</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Índice, posição, mesmo tipo?</span><span class="cel">vetor; com linhas e colunas, matriz</span></li><li class="ler"><span class="cel prl-rot">Topo; o último que entra é o primeiro que sai?</span><span class="cel">pilha, em inglês stack</span></li><li class="ler"><span class="cel prl-rot">Início e fim; o primeiro que entra é o primeiro que sai?</span><span class="cel">fila, em inglês queue</span></li><li class="ler"><span class="cel prl-rot">Ponteiro, próximo, elementos espalhados?</span><span class="cel">lista encadeada</span></li><li class="ler"><span class="cel prl-rot">Raiz, hierarquia, pai e filho?</span><span class="cel">árvore; na binária de busca, até dois filhos</span></li><li class="ler"><span class="cel prl-rot">Relações entre os elementos?</span><span class="cel">grafo</span></li><li class="ler"><span class="cel prl-rot">Chave e uma conta que dá a posição?</span><span class="cel">tabela hash, ou hashing; em Java, HashMap</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">a palavra-chave diz a estrutura.</span></p></figure>
+    <p>Alguns nomes das alternativas nem são estruturas de dados: <b>constante</b> é um valor que não muda; <b>condicional</b> é o comando se; <b>thread</b> é uma linha de execução de um programa. <b>String</b> é um texto. Em Java, <b>Set</b> é um conjunto sem repetidos, e o array é um <b>objeto</b>, que a variável guarda <b>por referência</b>.</p>
+    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Como a banca pergunta</span><span class="cel prl-fr">Estrutura em que é possível inserir um elemento no meio sem deslocar os outros.</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1: o vetor desloca?</span><span class="cel">Sim, os seguintes andam uma posição.</span><span class="cel prl-teste">então não é o vetor</span></li><li class="ler"><span class="cel prl-rot">Passo 2: qual não desloca?</span><span class="cel">A que liga os elementos por endereço.</span><span class="cel prl-teste">ponteiro</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">a lista encadeada.</span></p></figure>
     <div class="cilada"><span class="rot">O que a banca troca</span>Dar ao vetor a definição da lista encadeada, da pilha ou da fila.</div>
     <div data-questao="67"></div>
     <div data-questao="14"></div>
@@ -24796,7 +24772,7 @@ fimpara</pre>
   </div>
   <aside class="sec-lado">
     <div class="mao">Espalhado e ligado: lista encadeada.</div>
-    <div class="mao aten">Topo: pilha. Pontas: fila.</div>
+    <div class="mao aten">A palavra-chave diz a estrutura.</div>
     <div class="carimbo"><b>Já caiu</b>SELECON 2022<br>CETAP 2025<br>Unifil 2021<br>GAMA 2025<br>FUNDATEC 2026<br>AOCP 2025</div>
   </aside>
 </section>
@@ -24813,7 +24789,7 @@ fimpara</pre>
     <div class="treino-lista"></div>
   </div>
   <aside class="sec-lado">
-    <div class="mao">Mesmo tipo, um índice, contíguo: vetor.</div>
+    <div class="mao">Índice, espaços seguidos, um tipo só: vetor.</div>
   </aside>
 </section>
 
