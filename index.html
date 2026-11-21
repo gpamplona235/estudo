@@ -2884,6 +2884,7 @@ body.cad-em-estudo #nv-selo{display:none}
 .bp.ouro i{background:var(--dest-forte)}
 .ed-barra{display:flex;flex-wrap:wrap;align-items:center;gap:10px 14px;margin:30px 0 14px}
 .ed-barra .seg{margin:0}
+.barra-esc .seg{margin:0}
 .ed-busca{flex:1;min-width:180px;height:42px;border:1.5px solid var(--lin-forte);border-radius:999px;padding:0 16px;background:var(--card);font-size:15px}
 .ed-mat{background:var(--card);border:1px solid var(--lin);border-radius:var(--r2);margin:0 0 12px;box-shadow:var(--som);scroll-margin-top:80px}
 .ed-mat.completa{border-color:var(--dest-forte)}
@@ -73886,7 +73887,10 @@ function capsDoEscopo(e){
     return true;
   }));
 }
-const noSet=(set,k)=>set.has(k.split('|')[0]);
+/* Filtro de banca da revisão (pedido do usuário, 2026-11-21: "permita eu classificar a revisão, como só IBGP"):
+   o conjunto de aulas ganha a marca .ibgp, e então só entram as questões cuja fonte começa por IBGP */
+const ehIbgpK=k=>{const [i,n]=k.split('|'),d=DADOS[i],q=d&&d.questoes&&d.questoes[n];return !!q&&/^\s*IBGP(?![A-Za-z])/.test(q.fonte||'');};
+const noSet=(set,k)=>set.has(k.split('|')[0])&&(!set.ibgp||ehIbgpK(k));
 const evResp=set=>LOG().filter(e=>e.tipo==='resp'&&noSet(set,e.k));
 function opcoesEscopo(atual){
   return '<option value="">Todas as matérias</option>'+MAPA.filter(m=>m.apostilas.length).map(m=>'<optgroup label="'+esc(m.nome)+'"><option value="m:'+esc(m.nome)+'"'+(atual==='m:'+m.nome?' selected':'')+'>'+esc(m.nome)+' · matéria inteira</option>'+m.apostilas.map(ap=>'<option value="ap:'+ap.id+'"'+(atual==='ap:'+ap.id?' selected':'')+'>'+esc(ap.nome)+'</option>').join('')+'</optgroup>').join('');
@@ -74131,6 +74135,9 @@ function abrirAula(id,k){
 
 /* ---------- Revisão (painel) ---------- */
 let abaRev='hoje', escRev='', filtroFila='todas', pagFila=0, pagHist=0, abertoHist=null;
+// banca da revisão: '' (todas) ou 'ibgp'; fica neste navegador (conveniência; não entra no salve)
+let bancaRev=(()=>{try{return localStorage.getItem('caderno-banca-rev')||'';}catch(e){return '';}})();
+function escopoRev(){const s=capsDoEscopo(escRev); if(bancaRev==='ibgp') s.ibgp=true; return s;}
 function paginador(total,por,pag,attr){const n=Math.ceil(total/por); if(n<=1) return '';
   return '<div class="paginas"><button class="btn out mini" '+attr+'="'+(pag-1)+'"'+(pag?'':' disabled')+'>← anterior</button><span class="mono">página '+(pag+1)+' de '+n+'</span><button class="btn out mini" '+attr+'="'+(pag+1)+'"'+(pag<n-1?'':' disabled')+'>próxima →</button></div>';}
 function conferencia(set){
@@ -74162,10 +74169,12 @@ function vidHtml(){
   return s;
 }
 function renderRevisao(){
-  const pg=$('#pg-revisao'), h=hoje(), set=capsDoEscopo(escRev), cf=conferencia(set), its=cf.its, dev=devidas(set);
+  const pg=$('#pg-revisao'), h=hoje(), set=escopoRev(), cf=conferencia(set), its=cf.its, dev=devidas(set);
+  const setTodas=capsDoEscopo(escRev), nIbgp=itens().filter(([k])=>noSet(setTodas,k)&&ehIbgpK(k)).length, nTodas=itens().filter(([k])=>noSet(setTodas,k)).length;
   let html='<header class="pg-cab peq"><h1>Revisão espaçada</h1><p class="sub">As questões que você salvou voltam no dia certo, uma por vez. Tudo fica registrado.</p></header>';
   if(sessao&&sessao.ativa) html+='<div class="aviso">'+ic('i-rev')+'<span>Você tem uma sessão em andamento: questão '+((sessao.base||0)+sessao.i+1)+' de '+((sessao.base||0)+sessao.fila.length)+'.</span><button class="btn pri" data-acao="retomar">Continuar sessão</button></div>';
-  html+='<div class="barra-esc"><label class="esc">Mostrar <select id="rev-esc">'+opcoesEscopo(escRev)+'</select></label></div>'+
+  html+='<div class="barra-esc"><label class="esc">Mostrar <select id="rev-esc">'+opcoesEscopo(escRev)+'</select></label>'+
+    '<div class="seg" role="group" aria-label="Banca das questões">'+[['','Todas as bancas',nTodas],['ibgp','Só IBGP',nIbgp]].map(([b,t,c])=>'<button data-banca="'+b+'" aria-pressed="'+(bancaRev===b)+'">'+t+' <span>'+c+'</span></button>').join('')+'</div></div>'+
     abas([['hoje','Hoje',dev.length],['fila','Fila',its.length],['hist','Histórico',null],['sim','Simulado',null],['vid','Vídeos',vidKeys().length],['nota','Anotações',notasTotal()],['conf','Conferência',cf.problemas?'⚠ '+cf.problemas:'✓',cf.problemas]],abaRev,'data-abarev')+'<div class="aba-corpo" role="tabpanel">';
   if(abaRev==='hoje'){
     const revHoje=LOG().filter(e=>e.tipo==='resp'&&e.onde==='revisao'&&noSet(set,e.k)&&dstr(new Date(e.t))===h).length;
@@ -74926,9 +74935,9 @@ document.addEventListener('click',e=>{
   const a=b.dataset.acao;
   if(a==='tema') alternarTema();
   else if(a==='foco-hoje') abrirFoco(devidas(),'rev','',{base:revFeitasHoje()});
-  else if(a==='comecar'){ const set=capsDoEscopo(escRev); abrirFoco(devidas(set),'rev','',{base:revFeitasHoje(set)}); }
+  else if(a==='comecar'){ const set=escopoRev(); abrirFoco(devidas(set),'rev','',{base:revFeitasHoje(set)}); }
   else if(a==='retomar'||a==='voltar-rev') retomarFoco();
-  else if(a==='adiantar'){ const h=hoje(),set=capsDoEscopo(escRev); abrirFoco(itens().filter(([k,it])=>noSet(set,k)&&it.prox>h).sort((x,y)=>x[1].prox.localeCompare(y[1].prox)).slice(0,10).map(([k])=>k),'rev'); }
+  else if(a==='adiantar'){ const h=hoje(),set=escopoRev(); abrirFoco(itens().filter(([k,it])=>noSet(set,k)&&it.prox>h).sort((x,y)=>x[1].prox.localeCompare(y[1].prox)).slice(0,10).map(([k])=>k),'rev'); }
   else if(a==='incluir-err'){ const removidas=new Set(LOG().filter(x=>x.tipo==='saiu').map(x=>x.k)); Object.keys(DADOS).forEach(id=>{const st=est['q:'+id]||{};Object.keys(st).forEach(n=>{const q=DADOS[id].questoes[n],k=id+'|'+n;if(q&&st[n]!==q.gab&&!rev()[k]&&!removidas.has(k)) entrar(k,'e','sistema',hoje());});}); salvar(); renderRevisao(); atualizarContadores(); }
   else if(a==='incluir-sal'){ salvas().filter(k=>valida(k)&&!(rev()[k]&&rev()[k].s)).forEach(k=>entrar(k,'s','sistema',hoje())); salvar(); renderRevisao(); atualizarContadores(); }
   else if(b.dataset.sim!==undefined){ const c=$('[data-simerr]',b.closest('.sim')||document.body); abrirSimulado(b.dataset.simesc||'',+b.dataset.sim,!!(c&&c.checked)); }
@@ -74938,6 +74947,7 @@ document.addEventListener('click',e=>{
   else if(b.dataset.vidum){ abrirFoco([b.dataset.vidum],'livre','Questões dos vídeos'); }
   else if(b.dataset.vidvolta){ const k=b.dataset.vidvolta, l=salvas(); if(!l.includes(k)) l.push(k); entrar(k,'s','video'); salvar(); renderRevisao(); atualizarContadores(); }
   else if(b.dataset.abarev){ abaRev=b.dataset.abarev; renderRevisao(); focarAba('data-abarev',abaRev); }
+  else if(b.dataset.banca!==undefined){ bancaRev=b.dataset.banca; try{localStorage.setItem('caderno-banca-rev',bancaRev);}catch(e){} pagFila=0; pagHist=0; renderRevisao(); }
   else if(b.dataset.fila){ filtroFila=b.dataset.fila; pagFila=0; renderRevisao(); }
   else if(b.dataset.pagfila!==undefined){ pagFila=+b.dataset.pagfila; renderRevisao(); }
   else if(b.dataset.paghist!==undefined){ pagHist=+b.dataset.paghist; renderRevisao(); }
