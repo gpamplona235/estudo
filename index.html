@@ -1988,6 +1988,12 @@ blockquote.lei{margin:10px 0 14px;padding:12px 16px 12px 18px;border-left:5px so
 /* Escrituração (20/11): o texto literal da norma e das leis em letra maior, perto do texto da aula */
 [data-cap^="esc-"] .seg-doc-p,[data-cap^="cib-"] .seg-doc-p{font-size:18px;line-height:1.5}
 [data-cap^="esc-"] .seg-doc-t,[data-cap^="cib-"] .seg-doc-t{font-size:18px}
+/* Tópicos simples (22/11): lista com marcadores, sem caixa nem etiqueta, depois de um parágrafo curto (pedido dele: nem quadro de passos, nem etiquetas, nem só texto corrido) */
+.sec .topicos{margin:4px 0 16px;padding-left:1.5em;display:grid;gap:6px;line-height:1.55}
+.sec ul.topicos{list-style:disc}
+.sec ol.topicos{list-style:decimal}
+.sec .topicos li{padding-left:.2em}
+.sec .topicos li::marker{color:var(--marinho);font-weight:700}
 
 /* Anotações do raciocínio: botão na questão, painel ao lado (ou embaixo) e aba na Revisão */
 :root{--nota-l:clamp(340px,31vw,440px);--nc-1:#c62828;--nc-2:#b85c00;--nc-3:#1b7f4b;--nc-4:#1f5fbf;--nc-5:#7b3fc4}
@@ -16204,52 +16210,90 @@ body.em-foco{overflow:hidden}
     <blockquote class="lei">
       <p class="lei-ref">O que diz a lei · Art. 8º</p>
       <p>Art. 8º Até trinta dias após a publicação dos orçamentos, nos termos em que dispuser a lei de diretrizes orçamentárias e observado o disposto na alínea c do inciso I do art. 4º, o Poder Executivo estabelecerá a programação financeira e o cronograma de execução mensal de desembolso.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <p>Até trinta dias depois de publicado o orçamento, <mark class="dest">o Poder Executivo faz dois documentos</mark>:</p>
+    <ul class="topicos">
+      <li>a programação financeira: quanto dinheiro entra e quanto pode sair em cada mês;</li>
+      <li>o cronograma de execução mensal de desembolso: o calendário mensal dos pagamentos.</li>
+    </ul>
+    <p>O orçamento diz quanto pode gastar no ano. <mark class="dest">A programação diz quando, mês a mês</mark>, conforme o dinheiro entra.</p>
+    <p>No mesmo prazo, o art. 13 manda dividir a receita prevista em metas de arrecadação de cada bimestre. Assim o governo percebe cedo se a receita está abaixo do esperado.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">A programação financeira e o cronograma de desembolso saem em até...</p><div class="dq-op"><button type="button" data-ok="1">30 dias depois da publicação dos orçamentos</button><button type="button">90 dias depois da publicação</button><button type="button">30 dias antes do fim do ano</button></div><p class="dq-exp" hidden>Art. 8º: até trinta dias após a publicação dos orçamentos, pelo Poder Executivo.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 8º, parágrafo único</p>
       <p class="inc">Parágrafo único. Os recursos legalmente vinculados a finalidade específica serão utilizados exclusivamente para atender ao objeto de sua vinculação, ainda que em exercício diverso daquele em que ocorrer o ingresso.</p>
     </blockquote>
     <p class="exp-rot">Explicando</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Prazo:</span> <span class="cel">até trinta dias depois da publicação dos orçamentos.</span></li>
-      <li><span class="ex-t">Quem:</span> <span class="cel">o Poder Executivo.</span></li>
-      <li><span class="ex-t">Programação financeira:</span> <span class="cel">o plano de quanto dinheiro entra e quanto pode sair em cada mês.</span></li>
-      <li><span class="ex-t">Cronograma de desembolso:</span> <span class="cel">o calendário mensal dos pagamentos.</span></li>
-    </ul>
-    <p>O orçamento diz quanto pode gastar no ano. A programação diz quando, mês a mês, conforme o dinheiro vai entrando. No mesmo prazo, o art. 13 manda dividir a receita prevista em metas de arrecadação para cada bimestre. É assim que o governo percebe cedo se a receita está abaixo do esperado.</p>
-    <p>O parágrafo único trata do dinheiro vinculado.</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Recurso vinculado:</span> <span class="cel">dinheiro que a lei já mandou usar numa coisa só.</span> <small class="cel">como o mínimo da saúde e da educação, ou o dinheiro de um fundo</small></li>
-      <li><span class="ex-t">A regra:</span> <span class="cel">é usado exclusivamente no seu objeto, ainda que em outro ano.</span> <small class="cel">sobrou no fim do ano? Fica guardado para o mesmo fim</small></li>
-    </ul>
+    <p>Recurso vinculado é o dinheiro que a lei já mandou usar numa coisa só, como o mínimo da saúde e da educação ou o dinheiro de um fundo. <mark class="dest">Ele é usado exclusivamente nisso, ainda que em outro ano</mark>.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">Sobrou dinheiro de um fundo da saúde no fim do ano. No ano seguinte, ele...</p><div class="dq-op"><button type="button" data-ok="1">continua só para a saúde</button><button type="button">pode ir para qualquer despesa</button><button type="button">volta para o caixa geral</button></div><p class="dq-exp" hidden>Parágrafo único do art. 8º: exclusivamente no seu objeto, ainda que em outro exercício.</p></div>
+    </div>
     <h3>A limitação de empenho</h3>
+    <p>Na apostila de PPA, LDO e LOA, a limitação de empenho apareceu como o freio do gasto. Empenho é a reserva do dinheiro para uma despesa; <mark class="dest">limitar é segurar parte dessa reserva</mark>. As bancas chamam isso de contingenciamento.</p>
     <blockquote class="lei">
-      <p class="lei-ref">O que diz a lei · Art. 9º</p>
+      <p class="lei-ref">O que diz a lei · Art. 9º, caput</p>
       <p>Art. 9º Se verificado, ao final de um bimestre, que a realização da receita poderá não comportar o cumprimento das metas de resultado primário ou nominal estabelecidas no Anexo de Metas Fiscais, os Poderes e o Ministério Público promoverão, por ato próprio e nos montantes necessários, nos trinta dias subseqüentes, limitação de empenho e movimentação financeira, segundo os critérios fixados pela lei de diretrizes orçamentárias.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <p>O caput diz como o freio funciona:</p>
+    <ul class="topicos">
+      <li>a conta é feita ao final de cada bimestre, a cada dois meses;</li>
+      <li>o freio entra se a receita não der para cumprir as metas de resultado primário ou nominal;</li>
+      <li>quem segura o gasto são os Poderes e o Ministério Público, cada um por ato próprio;</li>
+      <li>o prazo é de trinta dias;</li>
+      <li>as regras do corte são as que a LDO fixou.</li>
+    </ul>
+    <p>Veja um caso. No fim de abril, que fecha o bimestre de março e abril, a arrecadação mostra que a meta de resultado primário não vai sair. Até o fim de maio, a Prefeitura e a Câmara cortam, cada uma, parte dos seus empenhos, pelas regras da LDO.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">Ao final do bimestre, a receita não dá para a meta. Quanto tempo os Poderes têm para limitar o empenho?</p><div class="dq-op"><button type="button" data-ok="1">trinta dias</button><button type="button">sessenta dias</button><button type="button">até o fim do ano</button></div><p class="dq-exp" hidden>Art. 9º: nos trinta dias subsequentes.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 9º, §§ 1º e 2º</p>
       <p class="inc">§ 1º No caso de restabelecimento da receita prevista, ainda que parcial, a recomposição das dotações cujos empenhos foram limitados dar-se-á de forma proporcional às reduções efetivadas.</p>
       <p class="inc">§ 2º Não serão objeto de limitação as despesas que constituam obrigações constitucionais e legais do ente, inclusive aquelas destinadas ao pagamento do serviço da dívida, as relativas à inovação e ao desenvolvimento científico e tecnológico custeadas por fundo criado para tal finalidade e as ressalvadas pela lei de diretrizes orçamentárias.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <ul class="topicos">
+      <li>Se a receita voltar, mesmo que em parte, as dotações cortadas são recompostas na proporção do que foi cortado.</li>
+      <li>Ficam fora do corte as obrigações da Constituição e das leis, a dívida, a inovação paga por fundo próprio e o que a LDO ressalvar.</li>
+      <li>O corte cai nas despesas que o governo escolhe fazer, como uma obra nova.</li>
+    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">O pagamento da dívida pública pode ter o empenho limitado?</p><div class="dq-op"><button type="button" data-ok="1">não: fica fora do corte</button><button type="button">sim: é o primeiro a ser cortado</button><button type="button">só se a LDO mandar</button></div><p class="dq-exp" hidden>Parágrafo 2º: o serviço da dívida não é objeto de limitação.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 9º, § 3º</p>
       <p class="inc">§ 3º No caso de os Poderes Legislativo e Judiciário e o Ministério Público não promoverem a limitação no prazo estabelecido no caput, é o Poder Executivo autorizado a limitar os valores financeiros segundo os critérios fixados pela lei de diretrizes orçamentárias.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <p>Se os outros Poderes não cortarem, o § 3º autoriza o Executivo a cortar por eles. Está escrito na lei, mas o STF declarou essa regra inconstitucional em 2020: <mark class="dest">cada Poder corta o seu</mark>.</p>
+    <p>Na prova: se a questão copiar o texto, a banca costuma dar como certo. Se perguntar o que o STF decidiu, ele não vale.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">Pelo texto da LRF, se a Câmara não fizer a limitação no prazo, o Executivo...</p><div class="dq-op"><button type="button" data-ok="1">está autorizado a limitar por ela, mas o STF derrubou essa regra</button><button type="button">não pode fazer nada</button><button type="button">aplica multa à Câmara</button></div><p class="dq-exp" hidden>O § 3º autoriza o Executivo; o STF declarou essa autorização inconstitucional em 2020.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 9º, §§ 4º e 5º</p>
       <p class="inc">§ 4º Até o final dos meses de maio, setembro e fevereiro, o Ministro ou Secretário de Estado da Fazenda demonstrará e avaliará o cumprimento das metas fiscais de cada quadrimestre e a trajetória da dívida, em audiência pública na comissão referida no § 1º do art. 166 da Constituição Federal ou conjunta com as comissões temáticas do Congresso Nacional ou equivalente nas Casas Legislativas estaduais e municipais.</p>
       <p class="inc">§ 5º No prazo de noventa dias após o encerramento de cada semestre, o Banco Central do Brasil apresentará, em reunião conjunta das comissões temáticas pertinentes do Congresso Nacional, avaliação do cumprimento dos objetivos e metas das políticas monetária, creditícia e cambial, evidenciando o impacto e o custo fiscal de suas operações e os resultados demonstrados nos balanços.</p>
     </blockquote>
     <p class="exp-rot">Explicando</p>
-    <p>Na apostila de PPA, LDO e LOA, a limitação de empenho apareceu como o freio do gasto. Empenho é a reserva do dinheiro para uma despesa. Limitar é segurar parte dessa reserva. O apelido que as bancas usam é contingenciamento.</p>
-    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo resolvido</span><span class="cel prl-fr">Fim de abril. A arrecadação mostra que a meta de resultado primário não vai ser cumprida. O que acontece?</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">Quando a conta é feita?</span><span class="cel prl-teste">ao final de cada bimestre: aqui, o de março e abril</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">Quem segura o gasto?</span><span class="cel prl-teste">cada Poder e o Ministério Público, por ato próprio</span></li><li class="ler"><span class="cel prl-rot">Passo 3</span><span class="cel">Em quanto tempo?</span><span class="cel prl-teste">nos trinta dias seguintes</span></li><li class="ler"><span class="cel prl-rot">Passo 4</span><span class="cel">Por quais regras?</span><span class="cel prl-teste">os critérios que a LDO fixou</span></li><li class="ler"><span class="cel prl-rot">Passo 5</span><span class="cel">O que fica fora do corte?</span><span class="cel prl-teste">as obrigações da Constituição e das leis, a dívida, a inovação paga por fundo próprio e o que a LDO ressalvou</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Limitação de empenho e movimentação financeira, em até trinta dias.</span></p></figure>
-    <ul class="ex-lista">
-      <li><span class="ex-t">§ 1º A receita voltou:</span> <span class="cel">as dotações são recompostas na proporção do que foi cortado.</span></li>
-      <li><span class="ex-t">§ 2º Fora do corte:</span> <span class="cel">as despesas obrigatórias.</span> <small class="cel">o corte cai nas discricionárias: as que o governo escolhe fazer, como uma obra nova</small></li>
-      <li><span class="ex-t">§ 3º O Executivo cortando pelos outros:</span> <span class="cel">está escrito, mas o STF declarou inconstitucional em 2020.</span> <small class="cel">cada Poder corta o seu</small></li>
-      <li><span class="ex-t">§ 4º Prestação de contas:</span> <span class="cel">até o fim de maio, setembro e fevereiro, a Fazenda mostra as metas de cada quadrimestre em audiência pública na comissão de orçamento.</span> <small class="cel">no Município, na comissão equivalente da Câmara</small></li>
-      <li><span class="ex-t">§ 5º Banco Central:</span> <span class="cel">noventa dias depois de cada semestre, avalia no Congresso as políticas monetária, creditícia e cambial.</span></li>
+    <ul class="topicos">
+      <li>Até o fim de maio, setembro e fevereiro, a Fazenda mostra as metas de cada quadrimestre em audiência pública, na comissão de orçamento; no Município, na comissão equivalente da Câmara.</li>
+      <li>Noventa dias depois de cada semestre, o Banco Central avalia no Congresso as políticas monetária, creditícia e cambial.</li>
     </ul>
-    <p>Sobre o § 3º: se a questão copiar o texto, a banca costuma dar como certo, porque é o que está escrito. Se perguntar o que o STF decidiu, ele não vale.</p>
-    <p>Por que maio, setembro e fevereiro? O ano tem três quadrimestres: janeiro a abril, maio a agosto e setembro a dezembro. A audiência é no mês seguinte ao fim de cada um.</p>
+    <p>Por que maio, setembro e fevereiro? O ano tem três quadrimestres: janeiro a abril, maio a agosto e setembro a dezembro. <mark class="dest">A audiência é no mês seguinte ao fim de cada um</mark>.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">A audiência pública das metas acontece até o fim de...</p><div class="dq-op"><button type="button" data-ok="1">maio, setembro e fevereiro</button><button type="button">abril, agosto e dezembro</button><button type="button">março, junho, setembro e dezembro</button></div><p class="dq-exp" hidden>É o mês seguinte ao fim de cada quadrimestre.</p></div>
+    </div>
     <blockquote class="lei">
       <p class="lei-ref">O que diz a lei · Art. 10</p>
       <p>Art. 10. A execução orçamentária e financeira identificará os beneficiários de pagamento de sentenças judiciais, por meio de sistema de contabilidade e administração financeira, para fins de observância da ordem cronológica determinada no art. 100 da Constituição.</p>
     </blockquote>
     <p class="exp-rot">Explicando</p>
     <p>Quando o governo perde um processo e tem de pagar, paga por precatório, numa fila pela ordem de chegada. O sistema identifica quem recebe, para a fila ser respeitada.</p>
-    <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">Ao final do bimestre, a receita não dá para a meta. Quanto tempo os Poderes têm para limitar o empenho?</p><div class="dq-op"><button type="button" data-ok="1">trinta dias</button><button type="button">sessenta dias</button></div><p class="dq-exp" hidden>Art. 9º: nos trinta dias subsequentes.</p></div>
-    </div>
     <div class="cilada"><span class="rot">O que a banca troca</span>Programação financeira: até <b>trinta</b> dias após a publicação dos <b>orçamentos</b>, pelo <b>Executivo</b>. A banca troca por noventa dias, pela LDO ou pelo Legislativo. <br>Vinculado: <b>exclusivamente</b> no seu objeto, <b>ainda que</b> em outro exercício. A banca escreve salvo se. <br>Limitação: ao final de cada <b>bimestre</b>, nos <b>trinta</b> dias seguintes, pelos <b>Poderes e o Ministério Público</b>, com critérios da <b>LDO</b>. <br>Audiência das metas: <b>pública</b>, na comissão de orçamento. Banco Central: <b>noventa</b> dias após o semestre.</div>
     <div data-questao="200"></div>
     <div data-questao="207"></div>
@@ -16281,26 +16325,51 @@ body.em-foco{overflow:hidden}
       <p class="inc">Parágrafo único. É vedada a realização de transferências voluntárias para o ente que não observe o disposto no caput, no que se refere aos impostos.</p>
     </blockquote>
     <p class="exp-rot">Explicando</p>
-    <p>Cada ente tem os seus tributos. O Município, por exemplo, cobra IPTU, ISS e taxas. A LRF diz que criar esses tributos por lei, prever quanto vão render e cobrar de verdade são requisitos essenciais da gestão responsável.</p>
-    <p>Quem falha nisso com os impostos perde as transferências voluntárias: o dinheiro que outro ente repassaria por vontade própria, sem obrigação, como um convênio do Estado para uma obra. A Aula 4 trata delas.</p>
+    <p>Cada ente tem os seus tributos; o Município cobra IPTU, ISS e taxas. <mark class="dest">Três coisas são requisitos essenciais da gestão responsável</mark>:</p>
+    <ul class="topicos">
+      <li>instituir os tributos, quer dizer, criá-los por lei;</li>
+      <li>prever quanto vão render;</li>
+      <li>arrecadar de verdade.</li>
+    </ul>
+    <p><mark class="dest">Quem falha nisso com os impostos perde as transferências voluntárias</mark>: o dinheiro que outro ente repassaria por vontade própria, como um convênio do Estado para uma obra. A Aula 4 trata delas.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">O Município que não arrecada os seus impostos fica sem...</p><div class="dq-op"><button type="button" data-ok="1">as transferências voluntárias</button><button type="button">todo repasse de outro ente</button><button type="button">o direito de fazer orçamento</button></div><p class="dq-exp" hidden>Parágrafo único do art. 11: ficam vedadas as transferências voluntárias, e a regra fala dos impostos.</p></div>
+    </div>
     <blockquote class="lei">
-      <p class="lei-ref">O que diz a lei · Art. 12</p>
+      <p class="lei-ref">O que diz a lei · Art. 12, caput</p>
       <p>Art. 12. As previsões de receita observarão as normas técnicas e legais, considerarão os efeitos das alterações na legislação, da variação do índice de preços, do crescimento econômico ou de qualquer outro fator relevante e serão acompanhadas de demonstrativo de sua evolução nos últimos três anos, da projeção para os dois seguintes àquele a que se referirem, e da metodologia de cálculo e premissas utilizadas.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <p>A previsão da receita segue as normas técnicas e legais e considera:</p>
+    <ul class="topicos">
+      <li>as mudanças na lei;</li>
+      <li>a inflação, que a lei chama de variação do índice de preços;</li>
+      <li>o crescimento da economia;</li>
+      <li>qualquer outro fator relevante.</li>
+    </ul>
+    <p>Ela vem com <mark class="dest">a evolução da receita nos últimos três anos, a projeção para os dois seguintes</mark> e a metodologia de cálculo.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">A previsão de receita mostra a evolução de quantos anos para trás?</p><div class="dq-op"><button type="button" data-ok="1">três</button><button type="button">dois</button><button type="button">cinco</button></div><p class="dq-exp" hidden>Três anos para trás e projeção para os dois seguintes.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 12, §§ 1º e 2º</p>
       <p class="inc">§ 1º Reestimativa de receita por parte do Poder Legislativo só será admitida se comprovado erro ou omissão de ordem técnica ou legal.</p>
       <p class="inc">§ 2º O montante previsto para as receitas de operações de crédito não poderá ser superior ao das despesas de capital constantes do projeto de lei orçamentária.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <ul class="topicos">
+      <li>O Legislativo só muda a previsão se provar erro ou omissão técnica ou legal: a Câmara não pode aumentar a receita prevista só para caber mais gasto.</li>
+      <li>A receita de operações de crédito, os empréstimos, não pode passar das despesas de capital. É a regra de ouro: empréstimo paga obra e equipamento, e não salário.</li>
+    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">A Câmara quer aumentar a receita prevista no projeto da LOA para caber uma obra. Pode?</p><div class="dq-op"><button type="button" data-ok="1">só se provar erro ou omissão técnica ou legal</button><button type="button">pode, se a maioria aprovar</button><button type="button">pode, se a obra for de saúde</button></div><p class="dq-exp" hidden>Art. 12, § 1º.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 12, § 3º</p>
       <p class="inc">§ 3º O Poder Executivo de cada ente colocará à disposição dos demais Poderes e do Ministério Público, no mínimo trinta dias antes do prazo final para encaminhamento de suas propostas orçamentárias, os estudos e as estimativas das receitas para o exercício subseqüente, inclusive da corrente líquida, e as respectivas memórias de cálculo.</p>
     </blockquote>
     <p class="exp-rot">Explicando</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Como prever:</span> <span class="cel">pelas normas técnicas e legais, considerando mudança de lei, inflação, crescimento da economia e outros fatores.</span></li>
-      <li><span class="ex-t">O que acompanha:</span> <span class="cel">a evolução nos últimos três anos, a projeção para os dois seguintes e a metodologia de cálculo.</span></li>
-      <li><span class="ex-t">§ 1º Legislativo:</span> <span class="cel">só muda a previsão se provar erro ou omissão técnica ou legal.</span> <small class="cel">a Câmara não pode aumentar a receita prevista só para caber mais gasto</small></li>
-      <li><span class="ex-t">§ 2º Empréstimo:</span> <span class="cel">a receita de operações de crédito não pode passar das despesas de capital.</span> <small class="cel">é a regra de ouro: empréstimo paga obra e equipamento, e não salário</small></li>
-      <li><span class="ex-t">§ 3º Estudos:</span> <span class="cel">o Executivo entrega aos outros Poderes e ao Ministério Público os estudos da receita, trinta dias antes do prazo final das propostas deles.</span> <small class="cel">inclusive a estimativa da RCL</small></li>
-    </ul>
-    <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">A Câmara quer aumentar a receita prevista no projeto da LOA para caber uma obra. Pode?</p><div class="dq-op"><button type="button" data-ok="1">só se provar erro ou omissão técnica ou legal na previsão</button><button type="button">pode, se a maioria aprovar</button></div><p class="dq-exp" hidden>Art. 12, § 1º.</p></div>
-    </div>
+    <p>O Executivo entrega aos outros Poderes e ao Ministério Público os estudos da receita, inclusive da RCL, trinta dias antes do prazo final das propostas deles.</p>
     <div class="cilada"><span class="rot">O que a banca troca</span>Previsão: evolução nos últimos <b>três</b> anos e projeção para os <b>dois</b> seguintes, com a <b>metodologia</b>. <br>Reestimativa pelo Legislativo: <b>só</b> com erro ou omissão técnica ou legal. A banca escreve salvo se, ou livremente. <br>Operações de crédito: <b>não poderão ser superiores</b> às despesas de capital. <br>Sem transferências voluntárias quem não arrecada os <b>impostos</b>: a banca acrescenta as taxas.</div>
     <div data-questao="241"></div>
     <div data-questao="1262"></div>
@@ -16319,48 +16388,68 @@ body.em-foco{overflow:hidden}
 <section class="sec" id="lrf3-renuncia">
   <div class="sec-main">
     <h2><span class="n">3.</span><span class="t">Renúncia de receita</span></h2>
-    <p>Na Aula 1, a renúncia de receita apareceu na lista do § 1º do art. 1º: o governo abre mão de cobrar uma receita. O art. 14 diz o que ela é e o que precisa para ser concedida. É a parte da LRF que a IBGP cobrou no caderno, pela lista das espécies.</p>
+    <p>Na Aula 1, a renúncia de receita apareceu na lista do § 1º do art. 1º: <mark class="dest">o governo abre mão de cobrar uma receita</mark>. O art. 14 diz o que ela é e o que precisa para ser concedida. É a parte da LRF que a IBGP cobrou no caderno, pela lista das espécies.</p>
     <blockquote class="lei">
-      <p class="lei-ref">O que diz a lei · Art. 14, §§ 1º e 3º</p>
+      <p class="lei-ref">O que diz a lei · Art. 14, § 1º</p>
       <p class="inc">§ 1º A renúncia compreende anistia, remissão, subsídio, crédito presumido, concessão de isenção em caráter não geral, alteração de alíquota ou modificação de base de cálculo que implique redução discriminada de tributos ou contribuições, e outros benefícios que correspondam a tratamento diferenciado.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <p>A lista do § 1º, em palavras simples:</p>
+    <ul class="topicos">
+      <li>anistia: perdão da multa pela infração; o tributo continua devido;</li>
+      <li>remissão: perdão da própria dívida do tributo, total ou parcial;</li>
+      <li>subsídio: o governo paga parte do preço de algo para baratear;</li>
+      <li>crédito presumido: um crédito que o governo dá ao contribuinte para descontar do imposto, como se ele tivesse pago antes; é comum no ICMS;</li>
+      <li>isenção em caráter não geral: dispensa do tributo só para alguns;</li>
+      <li>alíquota ou base de cálculo menor, de forma discriminada, só para alguns;</li>
+      <li>outros benefícios que sejam tratamento diferenciado.</li>
+    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">Perdoar só a multa, e manter o tributo devido, é...</p><div class="dq-op"><button type="button" data-ok="1">anistia</button><button type="button">remissão</button><button type="button">isenção</button></div><p class="dq-exp" hidden>Anistia perdoa a multa; remissão perdoa a própria dívida do tributo.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 14, § 3º</p>
       <p class="inc">§ 3º O disposto neste artigo não se aplica:</p>
       <p class="inc">I - às alterações das alíquotas dos impostos previstos nos incisos I, II, IV e V do art. 153 da Constituição, na forma do seu § 1º;</p>
       <p class="inc">II - ao cancelamento de débito cujo montante seja inferior ao dos respectivos custos de cobrança.</p>
     </blockquote>
     <p class="exp-rot">Explicando</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Anistia:</span> <span class="cel">perdão da multa pela infração.</span> <small class="cel">o tributo continua devido</small></li>
-      <li><span class="ex-t">Remissão:</span> <span class="cel">perdão da própria dívida do tributo, total ou parcial.</span> <small class="cel">por motivo previsto em lei, como o valor ser menor que o custo de cobrar</small></li>
-      <li><span class="ex-t">Subsídio:</span> <span class="cel">o governo paga parte do preço de algo para baratear.</span></li>
-      <li><span class="ex-t">Crédito presumido:</span> <span class="cel">um crédito que o governo dá ao contribuinte para descontar do imposto, como se ele tivesse pago antes.</span> <small class="cel">comum no ICMS</small></li>
-      <li><span class="ex-t">Isenção em caráter não geral:</span> <span class="cel">dispensa do tributo só para alguns.</span> <small class="cel">a isenção para todos, a geral, não entra</small></li>
-      <li><span class="ex-t">Alíquota ou base menor:</span> <span class="cel">redução do tributo de forma discriminada, só para alguns.</span></li>
-      <li><span class="ex-t">Outros benefícios:</span> <span class="cel">qualquer tratamento diferenciado.</span></li>
+    <p>E o que não é renúncia:</p>
+    <ul class="topicos">
+      <li>parcelamento: o governo recebe tudo, em parcelas;</li>
+      <li>majoração: é aumento do tributo, o contrário;</li>
+      <li>isenção geral: vale para todos, sem tratamento diferenciado;</li>
+      <li>mudar a alíquota dos impostos de importação e de exportação, do IPI e do IOF, que o governo federal usa para regular a economia;</li>
+      <li>cancelar dívida menor que o custo de cobrá-la.</li>
     </ul>
-    <p>E o que não é renúncia.</p>
-    <ul class="ex-lista">
-      <li><span class="ex-t">Parcelamento:</span> <span class="cel">o governo recebe tudo, em parcelas.</span></li>
-      <li><span class="ex-t">Majoração:</span> <span class="cel">é aumento do tributo, o contrário.</span></li>
-      <li><span class="ex-t">Isenção geral:</span> <span class="cel">vale para todos, sem tratamento diferenciado.</span></li>
-      <li><span class="ex-t">§ 3º, I:</span> <span class="cel">mudar a alíquota dos impostos de importação e de exportação, do IPI e do IOF.</span> <small class="cel">impostos que o governo federal usa para regular a economia</small></li>
-      <li><span class="ex-t">§ 3º, II:</span> <span class="cel">cancelar dívida menor que o custo de cobrá-la.</span></li>
-    </ul>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">O Município deixa o contribuinte pagar o IPTU atrasado em dez parcelas. Isso é renúncia de receita?</p><div class="dq-op"><button type="button" data-ok="1">não: ele recebe tudo, só que parcelado</button><button type="button">sim: é um benefício</button><button type="button">sim: é uma remissão</button></div><p class="dq-exp" hidden>Parcelamento não está na lista do § 1º: o governo não abre mão de nada.</p></div>
+    </div>
     <blockquote class="lei">
-      <p class="lei-ref">O que diz a lei · Art. 14, caput e § 2º</p>
+      <p class="lei-ref">O que diz a lei · Art. 14, caput</p>
       <p>Art. 14. A concessão, ampliação ou prorrogação de incentivo ou benefício de natureza tributária da qual decorra renúncia de receita deverá estar acompanhada de estimativa do impacto orçamentário-financeiro no exercício em que deva iniciar sua vigência e nos 2 (dois) exercícios subsequentes e atender ao disposto na lei de diretrizes orçamentárias e a pelo menos 1 (uma) das seguintes condições:</p>
       <p class="inc">I - demonstração pelo proponente de que a renúncia foi considerada na estimativa de receita da lei orçamentária, na forma do art. 12, e de que não afetará as metas de resultados fiscais previstas no anexo próprio da lei de diretrizes orçamentárias;</p>
       <p class="inc">II - estar acompanhada de medidas de compensação, no período mencionado no caput, por meio do aumento de receita, proveniente da elevação de alíquotas, ampliação da base de cálculo, majoração ou criação de tributo ou contribuição.</p>
+    </blockquote>
+    <p class="exp-rot">Explicando</p>
+    <p>Para conceder, ampliar ou prorrogar uma renúncia, a lei exige três coisas:</p>
+    <ol class="topicos">
+      <li>estimar o impacto no ano em que começa e nos dois seguintes;</li>
+      <li>atender ao que a LDO dispuser;</li>
+      <li>cumprir pelo menos uma de duas condições: mostrar que a renúncia já estava na estimativa de receita da LOA e não afeta as metas, ou compensar com aumento de receita, por alíquota maior, base maior, tributo novo ou majorado.</li>
+    </ol>
+    <p>Repare: <mark class="dest">a compensação é sempre por aumento de receita</mark>. Cortar outra despesa não serve.</p>
+    <div class="desafio"><p class="rot">Desafio rápido</p>
+      <div class="dq"><p class="dq-frase">A compensação de uma renúncia pode ser feita...</p><div class="dq-op"><button type="button" data-ok="1">só com aumento de receita</button><button type="button">com corte de outra despesa</button><button type="button">com dinheiro da saúde e da educação</button></div><p class="dq-exp" hidden>Inciso II: aumento de receita, por alíquota, base de cálculo, majoração ou criação de tributo.</p></div>
+    </div>
+    <blockquote class="lei">
+      <p class="lei-ref">O que diz a lei · Art. 14, § 2º</p>
       <p class="inc">§ 2º Se o ato de concessão ou ampliação do incentivo ou benefício de que trata o caput deste artigo decorrer da condição contida no inciso II, o benefício só entrará em vigor quando implementadas as medidas referidas no mencionado inciso.</p>
     </blockquote>
     <p class="exp-rot">Explicando</p>
-    <p>Para conceder, ampliar ou prorrogar uma renúncia, são três exigências.</p>
-    <figure class="ed-fig"><div class="seg-cadeia"><div class="seg-elo ler"><span class="cel seg-nome">1. Estimar</span><span class="seg-ls"><span class="cel seg-l"><b class="seg-rot">O impacto</b> no ano em que começa e nos dois seguintes</span></span></div><span class="seg-seta ico" aria-hidden="true">↓</span><div class="seg-elo ler"><span class="cel seg-nome">2. Atender</span><span class="seg-ls"><span class="cel seg-l"><b class="seg-rot">A LDO</b> o que ela dispuser</span></span></div><span class="seg-seta ico" aria-hidden="true">↓</span><div class="seg-elo ler"><span class="cel seg-nome">3. Cumprir uma condição</span><span class="seg-ls"><span class="cel seg-l"><b class="seg-rot">Condição I</b> a renúncia já estava na estimativa de receita da LOA e não afeta as metas</span><span class="cel seg-l"><b class="seg-rot">Condição II</b> compensar com aumento de receita: alíquota maior, base maior, tributo novo ou majorado</span></span></div></div></figure>
-    <p>Repare: a compensação da condição II é sempre por aumento de receita. Cortar outra despesa não serve. E, nesse caso, o § 2º diz que o benefício só entra em vigor quando o aumento estiver valendo.</p>
-    <figure class="ed-fig prl-res"><p class="ler prl-res-tit"><span class="cel prl-rot">Exemplo resolvido</span><span class="cel prl-fr">A Prefeitura quer reduzir o ISS só para empresas de tecnologia. O que a LRF exige?</span></p><ol class="prl-res-p"><li class="ler"><span class="cel prl-rot">Passo 1</span><span class="cel">É renúncia?</span><span class="cel prl-teste">sim: redução discriminada, só para um setor</span></li><li class="ler"><span class="cel prl-rot">Passo 2</span><span class="cel">Estimar o impacto.</span><span class="cel prl-teste">no ano em que começa e nos dois seguintes</span></li><li class="ler"><span class="cel prl-rot">Passo 3</span><span class="cel">Atender à LDO.</span></li><li class="ler"><span class="cel prl-rot">Passo 4</span><span class="cel">Cumprir uma condição.</span><span class="cel prl-teste">já estar na previsão de receita da LOA sem afetar as metas, ou compensar aumentando outra receita</span></li></ol><p class="ler prl-res-fim"><span class="cel prl-rot">Resposta</span><span class="cel">Se escolher compensar, a redução só vale quando o aumento de receita estiver em vigor.</span></p></figure>
-    <p>Em 2025, a lei passou a incluir também a prorrogação do benefício, e criou o art. 14-A: benefício para empresas precisa de prazo de até cinco anos e de metas de desempenho. Nenhuma questão do caderno cobra esse artigo ainda.</p>
-    <div class="desafio"><p class="rot">Desafio rápido</p>
-      <div class="dq"><p class="dq-frase">O Município deixa o contribuinte pagar o IPTU atrasado em dez parcelas. Isso é renúncia de receita?</p><div class="dq-op"><button type="button" data-ok="1">não: ele recebe tudo, só que parcelado</button><button type="button">sim: é um benefício</button></div><p class="dq-exp" hidden>Parcelamento não está na lista do § 1º: o governo não abre mão de nada.</p></div>
-    </div>
+    <p>Se a escolha for compensar, <mark class="dest">o benefício só entra em vigor quando o aumento de receita estiver valendo</mark>.</p>
+    <p>Veja o caso de uma Prefeitura que quer reduzir o ISS só para empresas de tecnologia. É renúncia, porque a redução é discriminada. Ela estima o impacto em três anos, atende à LDO e escolhe uma condição; se compensar, a redução só vale quando o aumento de outra receita estiver em vigor.</p>
+    <p>Em 2025, a lei passou a incluir também a prorrogação e criou o art. 14-A: benefício para empresas precisa de prazo de até cinco anos e de metas de desempenho. Nenhuma questão do caderno cobra esse artigo ainda.</p>
     <div class="cilada"><span class="rot">O que a banca troca</span>Isenção em caráter <b>não geral</b>; redução <b>discriminada</b>; tratamento <b>diferenciado</b>. A banca troca por geral, aumento e igualitário. <br><b>Parcelamento</b> e <b>majoração</b> não são renúncia. <br>Impacto: no ano de início e nos <b>dois</b> seguintes. A banca escreve três. <br>Compensação: <b>aumento de receita</b>. A banca aceita corte de despesa, ou tirar dinheiro da saúde e da educação. <br>A LRF <b>não proíbe</b> a renúncia: põe condições.</div>
     <div class="definicao"><span class="rot">Como usar na questão</span>Na lista de espécies, procure o intruso: parcelamento, majoração ou isenção geral não são renúncia.</div>
     <div data-questao="50010"></div>
